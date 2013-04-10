@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bug Shooter Editor</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/knockout.js"></script>
+    <script src="js/raphael.js"></script>
+    <script src="editor.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/editor.css" />
+</head>
+<body>
+    <div id="toolbar">
+        <b data-bind="text: ActiveInstrument"></b>
+        <a data-bind="click: setPointer" class="toolbar-btn">pointer</a>
+        <a data-bind="click: setRectangle" class="toolbar-btn">rectangle</a>
+        <a data-bind="click: setArrow" class="toolbar-btn">arrow</a>
+        <a data-bind="click: setText" class="toolbar-btn">text</a>
+    </div>
+    <canvas id="canvas"></canvas>
+    <div data-bind="event: {mousedown: editorDown, mouseup: editorUp, mousemove: editorMove}" id="editor"></div>
+    <textarea id="texted" rows="1" data-bind="visible: IsTextMode, value: ActiveText, valueUpdate: 'afterkeydown'"></textarea>
+</body>
+</html>

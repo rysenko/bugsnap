@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "background": {
+        "page": "background.html"
+    },
+    "name": "Bug Shooter",
+    "description": "This extension demonstrates a browser action with kittens.",
+    "version": "1.0",
+    "icons": {
+        "16": "img/16.png",
+        "48": "img/48.png",
+        "128": "img/128.png"
+    },
+    "browser_action": {
+        "default_icon": "img/16.png"
+    },
+    "optional_permissions": [ "clipboardRead" ],
+    "permissions": ["tabs", "file://*/*", "http://*/*", "https://*/*", "notifications"],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

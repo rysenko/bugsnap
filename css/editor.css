@@ -1,0 +1,19 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+#canvas, #editor, #texted {
+    position: absolute;
+}
+
+#texted {
+    border-style: none;
+    background: none;
+    outline: none;
+    resize: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+}
