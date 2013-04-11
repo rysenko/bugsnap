@@ -117,9 +117,9 @@ $(function () {
             } else if (activeInstrument == 'Text') {
                 var textEditor = $('#texted');
                 activeObject = this.Paper.text(event.offsetX, event.offsetY, '');
-                $(activeObject[0]).css({'text-anchor': 'start', 'font-size': '14px', 'font-family': 'Arial'});
+                $(activeObject[0]).css({'text-anchor': 'start', 'font-size': '16px', 'font-family': 'Arial'});
                 textEditor.val('').focus();
-                textEditor.css({'left': event.offsetX, 'top': event.offsetY + 12, 'font-size': '14px', 'font-family': 'Arial'});
+                textEditor.css({'left': event.clientX, 'top': event.clientY - 9, 'font-size': '16px', 'font-family': 'Arial'});
             }
             if (activeInstrument != 'Text') {
                 activeObject.attr('stroke', this.ActiveColor());

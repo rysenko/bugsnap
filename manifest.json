@@ -4,7 +4,7 @@
         "page": "background.html"
     },
     "name": "Bug Shooter",
-    "description": "This extension demonstrates a browser action with kittens.",
+    "description": "Draft of screenshot editing and posting issues.",
     "version": "1.0",
     "icons": {
         "16": "img/16.png",
