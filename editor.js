@@ -47,8 +47,22 @@ $(function () {
         return GeminiCommunicator;
     })();
 
+    var DetailsViewModel = (function () {
+        function DetailsViewModel(options) {
+            this.Parent = options.Parent;
+            this.Comment = ko.observable();
+            this.IssueId = ko.observable();
+            this.ProjectId = ko.observable();
+        }
+        DetailsViewModel.prototype.send = function () {
+            var imageData = this.Parent.Editor.getImageData();
+        };
+        return DetailsViewModel;
+    })();
+
     var EditorViewModel = (function () {
-        function EditorViewModel() {
+        function EditorViewModel(options) {
+            this.Parent = options.Parent;
             this.ActiveInstrument = ko.observable('Pointer');
             this.ActiveObject = ko.observable();
             this.ActiveColor = ko.observable('black');
@@ -153,9 +167,17 @@ $(function () {
             var output = document.getElementById('output');
             canvg(output, document.getElementById('editor').outerHTML);
             var img = output.toDataURL("image/png");
-            alert(img);
+            return img; // TODO: Convert to binary
         };
         return EditorViewModel;
     })();
-    ko.applyBindings(new EditorViewModel());
+
+    var PageViewModel = (function () {
+        function PageViewModel() {
+            this.Details = new DetailsViewModel({Parent: this});
+            this.Editor = new EditorViewModel({Parent: this});
+        }
+        return PageViewModel;
+    })();
+    ko.applyBindings(new PageViewModel());
 });

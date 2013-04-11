@@ -3,34 +3,29 @@
 <head>
     <title>Bug Shooter Editor</title>
     <script src="js/jquery.js"></script>
+    <script src="js/jquery.base64.js"></script>
+    <script src="js/jquery-ui.js"></script>
     <script src="js/knockout.js"></script>
     <script src="js/raphael.js"></script>
     <script src="js/rgbcolor.js"></script>
     <script src="js/canvg.js"></script>
     <script src="editor.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css.css" />
     <link rel="stylesheet" type="text/css" href="css/editor.css" />
 </head>
 <body>
-    <div class="details">
-        <input type="hidden" id="user_id" />
+    <div data-bind="with: Details" class="details">
         <div class="ui-widget">
             <input id="issue" />
-            <input type="hidden" id="issueId" />
-            <input type="hidden" id="project_id" />
-        </div>
-        <div id="issue">
-            <div id="issue_id"></div>
-            <div id="issue_title"></div>
-            <div id="issue_priority"></div>
         </div>
         <div>
-            <textarea id="comment" ></textarea>
+            <textarea data-bind="value: Comment"></textarea>
         </div>
         <div>
-            <input type="button" id="submit" value="submit"/>
+            <input data-bind="click: send" type="button" value="submit"/>
         </div>
     </div>
-    <div class="screen">
+    <div data-bind="with: Editor" class="screen">
         <div id="toolbar">
             <b data-bind="text: ActiveInstrument"></b>
             <a data-bind="click: setPointer" class="toolbar-btn">pointer</a>
