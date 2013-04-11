@@ -5,19 +5,44 @@
     <script src="js/jquery.js"></script>
     <script src="js/knockout.js"></script>
     <script src="js/raphael.js"></script>
+    <script src="js/rgbcolor.js"></script>
+    <script src="js/canvg.js"></script>
     <script src="editor.js"></script>
     <link rel="stylesheet" type="text/css" href="css/editor.css" />
 </head>
 <body>
-    <div id="toolbar">
-        <b data-bind="text: ActiveInstrument"></b>
-        <a data-bind="click: setPointer" class="toolbar-btn">pointer</a>
-        <a data-bind="click: setRectangle" class="toolbar-btn">rectangle</a>
-        <a data-bind="click: setArrow" class="toolbar-btn">arrow</a>
-        <a data-bind="click: setText" class="toolbar-btn">text</a>
+    <div class="details">
+        <input type="hidden" id="user_id" />
+        <div class="ui-widget">
+            <input id="issue" />
+            <input type="hidden" id="issueId" />
+            <input type="hidden" id="project_id" />
+        </div>
+        <div id="issue">
+            <div id="issue_id"></div>
+            <div id="issue_title"></div>
+            <div id="issue_priority"></div>
+        </div>
+        <div>
+            <textarea id="comment" ></textarea>
+        </div>
+        <div>
+            <input type="button" id="submit" value="submit"/>
+        </div>
     </div>
-    <canvas id="canvas"></canvas>
-    <div data-bind="event: {mousedown: editorDown, mouseup: editorUp, mousemove: editorMove}" id="editor"></div>
-    <textarea id="texted" rows="1" data-bind="visible: IsTextMode, value: ActiveText, valueUpdate: 'afterkeydown'"></textarea>
+    <div class="screen">
+        <div id="toolbar">
+            <b data-bind="text: ActiveInstrument"></b>
+            <a data-bind="click: setPointer" class="toolbar-btn">pointer</a>
+            <a data-bind="click: setRectangle" class="toolbar-btn">rectangle</a>
+            <a data-bind="click: setArrow" class="toolbar-btn">arrow</a>
+            <a data-bind="click: setText" class="toolbar-btn">text</a>
+            <a data-bind="click: getImageData" class="toolbar-btn">save</a>
+        </div>
+        <canvas id="canvas"></canvas>
+        <canvas id="output"></canvas>
+        <div data-bind="event: {mousedown: editorDown, mouseup: editorUp, mousemove: editorMove}" id="editor"></div>
+        <textarea id="texted" rows="1" data-bind="visible: IsTextMode, value: ActiveText, valueUpdate: 'afterkeydown'"></textarea>
+    </div>
 </body>
 </html>

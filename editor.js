@@ -1,13 +1,52 @@
 $(function () {
-    var canvas = document.getElementById('canvas');
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-    var context = canvas.getContext('2d');
-    var imageObj = new Image();
-    imageObj.onload = function() {
-        context.drawImage(this, 0, 0);
-    };
-    imageObj.src = localStorage.getItem('screenshot');
+    var GeminiCommunicator = (function () {
+        function GeminiCommunicator() {
+            this.geminiUrl = "http://pxaltair/gemini/api/";
+            this.geminiUsername = $.base64.btoa('manager:wzhhx2ratj'); // user:apikey
+        }
+        GeminiCommunicator.prototype.search = function (query) {
+            return $.ajax({
+                url: this.geminiUrl + "items/filtered",
+                type: "POST",
+                data: {
+                    SearchKeywords: query,
+                    IncludeClosed: "false",
+                    Projects: "ALL"
+                },
+                headers: { "Authorization": "Basic " + this.geminiUsername }
+            });
+        };
+        GeminiCommunicator.prototype.comment = function (projectId, issueId, comment) {
+            return $.ajax({
+                url: this.geminiUrl + "items/" + issueId + "/comments",
+                type: "POST",
+                data: {
+                    ProjectId: projectId,
+                    IssueId: issueId,
+                    UserId: "1",
+                    Comment: comment
+                },
+                headers: { "Authorization": "Basic " + this.geminiUsername }
+            });
+        };
+        GeminiCommunicator.prototype.attach = function (projectId, issueId, fileContent) {
+            return $.ajax({
+                url: this.geminiUrl + "items/" + issueId + "/attachments",
+                type: "POST",
+                data: {
+                    ProjectId: projectId,
+                    IssueId: issueId,
+                    UserId: "1",
+                    Name: "screenshot.png",
+                    Content: fileContent,
+                    ContentType: "image/png"
+                },
+                headers: { "Authorization": "Basic " + this.geminiUsername }
+            });
+        };
+        return GeminiCommunicator;
+    })();
+
     var EditorViewModel = (function () {
         function EditorViewModel() {
             this.ActiveInstrument = ko.observable('Pointer');
@@ -25,6 +64,19 @@ $(function () {
             this.init();
         }
         EditorViewModel.prototype.init = function () {
+            var fillWindow = function (canvas) {
+                canvas.width  = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
+            var canvas = document.getElementById('canvas');
+            fillWindow(canvas);
+            fillWindow(document.getElementById("output"));
+            var context = canvas.getContext('2d');
+            var imageObj = new Image();
+            imageObj.onload = function() {
+                context.drawImage(this, 0, 0);
+            };
+            imageObj.src = localStorage.getItem('screenshot');
             this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
         };
         EditorViewModel.prototype.setPointer = function () {
@@ -50,16 +102,10 @@ $(function () {
                 activeObject = this.Paper.path('M0,0');
             } else if (activeInstrument == 'Text') {
                 var textEditor = $('#texted');
-                textEditor.val('');
                 activeObject = this.Paper.text(event.offsetX, event.offsetY, '');
-                $(activeObject[0]).css('text-anchor', 'start');
-                $(activeObject[0]).css('font-size', '14px');
-                $(activeObject[0]).css('font-family', 'Arial');
-                textEditor.focus();
-                textEditor.css('left', event.offsetX);
-                textEditor.css('top', event.offsetY + 12);
-                textEditor.css('font-size', '14px');
-                textEditor.css('font-family', 'Arial');
+                $(activeObject[0]).css({'text-anchor': 'start', 'font-size': '14px', 'font-family': 'Arial'});
+                textEditor.val('').focus();
+                textEditor.css({'left': event.offsetX, 'top': event.offsetY + 12, 'font-size': '14px', 'font-family': 'Arial'});
             }
             if (activeInstrument != 'Text') {
                 activeObject.attr('stroke', this.ActiveColor());
@@ -102,6 +148,12 @@ $(function () {
                 this.IsDrawing(false);
                 this.ActiveObject(null);
             }
+        };
+        EditorViewModel.prototype.getImageData = function () {
+            var output = document.getElementById('output');
+            canvg(output, document.getElementById('editor').outerHTML);
+            var img = output.toDataURL("image/png");
+            alert(img);
         };
         return EditorViewModel;
     })();
