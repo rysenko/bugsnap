@@ -3,8 +3,21 @@ html, body {
     padding: 0;
 }
 
-#canvas, #editor, #texted {
+.details {
+    float: left;
+    width: 200px;
+}
+
+.screen {
+    float: left;
+}
+
+#canvas, #editor, #texted, #output {
     position: absolute;
+}
+
+#output {
+    display: none;
 }
 
 #texted {
