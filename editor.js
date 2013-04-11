@@ -2,7 +2,7 @@ $(function () {
     var GeminiCommunicator = (function () {
         function GeminiCommunicator() {
             this.geminiUrl = "http://rysenkocomp.dlinkddns.com/gemini/api/";
-            this.geminiUsername = $.base64.btoa('manager:xvitjc5bmm'); // user:apikey
+            this.geminiUsername = window.btoa('manager:xvitjc5bmm'); // user:apikey
         }
         GeminiCommunicator.prototype.search = function (query) {
             return $.ajax({
@@ -30,17 +30,19 @@ $(function () {
             });
         };
         GeminiCommunicator.prototype.attach = function (projectId, issueId, fileContent) {
+            var request = $.param({
+                ProjectId: projectId,
+                IssueId: issueId,
+                UserId: "1",
+                Name: "screenshot.png",
+                ContentType: "image/png"
+            });
+            request = request + '&Content=' + escape(fileContent);
             return $.ajax({
                 url: this.geminiUrl + "items/" + issueId + "/attachments",
                 type: "POST",
-                data: {
-                    ProjectId: projectId,
-                    IssueId: issueId,
-                    UserId: "1",
-                    Name: "screenshot.png",
-                    Content: fileContent,
-                    ContentType: "image/png"
-                },
+                data: request,
+                processData: false,
                 headers: { "Authorization": "Basic " + this.geminiUsername }
             });
         };
@@ -59,7 +61,13 @@ $(function () {
                 }
                 return null;
             }, this);
-            this.ProjectId = ko.observable();
+            this.ProjectId = ko.computed(function () {
+                var issue = this.Issue();
+                if (issue != null) {
+                    return issue.Project.Id;
+                }
+                return null;
+            }, this);
             this.Communicator = new GeminiCommunicator();
             this.init();
         }
@@ -78,18 +86,26 @@ $(function () {
                     });
                 },
                 focus: function( event, ui ) {
-                    $("#issue").val( ui.item.Title );
+                    $("#issue").val(ui.item.Title);
                     return false;
                 },
-                select: function( event, ui ) {
-                    $( "#issue" ).val( ui.item.Title );
+                select: function(event, ui) {
+                    $("#issue").val(ui.item.Title);
                     self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
                     return false;
                 }
             });
         };
         DetailsViewModel.prototype.send = function () {
-            var imageData = this.Parent.Editor.getImageData();
+            if (this.Issue() != null) {
+                var imageData = this.Parent.Editor.getImageData();
+                var self = this;
+                this.Communicator.comment(this.ProjectId(), this.IssueId(), this.Comment()).then(function () {
+                    return self.Communicator.attach(self.ProjectId(), self.IssueId(), imageData);
+                }).done(function () {
+                    alert('Saved!')
+                });
+            }
         };
         return DetailsViewModel;
     })();
@@ -199,9 +215,11 @@ $(function () {
         };
         EditorViewModel.prototype.getImageData = function () {
             var output = document.getElementById('output');
-            canvg(output, document.getElementById('editor').outerHTML);
-            var img = output.toDataURL("image/png");
-            return img; // TODO: Convert to binary
+            //TODO: Draw screenshot to output canvas
+            canvg(output, document.getElementById('editor').innerHTML);
+            var img = output.toDataURL('image/png');
+            img = img.replace('data:image/png;base64,', '');
+            return window.atob(img);
         };
         return EditorViewModel;
     })();
