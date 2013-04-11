@@ -1,8 +1,8 @@
 $(function () {
     var GeminiCommunicator = (function () {
         function GeminiCommunicator() {
-            this.geminiUrl = "http://pxaltair/gemini/api/";
-            this.geminiUsername = $.base64.btoa('manager:wzhhx2ratj'); // user:apikey
+            this.geminiUrl = "http://rysenkocomp.dlinkddns.com/gemini/api/";
+            this.geminiUsername = $.base64.btoa('manager:xvitjc5bmm'); // user:apikey
         }
         GeminiCommunicator.prototype.search = function (query) {
             return $.ajax({
@@ -51,9 +51,43 @@ $(function () {
         function DetailsViewModel(options) {
             this.Parent = options.Parent;
             this.Comment = ko.observable();
-            this.IssueId = ko.observable();
+            this.Issue = ko.observable();
+            this.IssueId = ko.computed(function () {
+                var issue = this.Issue();
+                if (issue != null) {
+                    return issue.Id;
+                }
+                return null;
+            }, this);
             this.ProjectId = ko.observable();
+            this.Communicator = new GeminiCommunicator();
+            this.init();
         }
+        DetailsViewModel.prototype.init = function () {
+            var self = this;
+            $("#issue").autocomplete({
+                minLength: 0,
+                source: function(request, response) {
+                    self.Communicator.search(request.term).done(function (data) {
+                        var labeledData = $.map(data, function (item) {
+                            item.label = item.Title;
+                            item.value = item.Id;
+                            return item;
+                        })
+                        response(labeledData);
+                    });
+                },
+                focus: function( event, ui ) {
+                    $("#issue").val( ui.item.Title );
+                    return false;
+                },
+                select: function( event, ui ) {
+                    $( "#issue" ).val( ui.item.Title );
+                    self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
+                    return false;
+                }
+            });
+        };
         DetailsViewModel.prototype.send = function () {
             var imageData = this.Parent.Editor.getImageData();
         };
