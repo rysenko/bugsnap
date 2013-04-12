@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bug Shooter Editor</title>
+</head>
+<body>
+    <div id="toolbar">
+        <b>Screen shot will be on this page!</b>
+    </div>
+    <script>
+        window.onload = function () {
+            var pageWindow = top.gBrowser.selectedBrowser.contentWindow,
+                canvas = document.getElementById('canvas'),
+                ctx = canvas.getContext('2d'),
+                scrollX = pageWindow.pageXOffset,
+                scrollY = pageWindow.pageYOffset,
+                x = pageWindow.innerWidth,
+                y = pageWindow.innerHeight;
+            canvas.width = x;
+            canvas.height = y;
+            ctx.drawWindow(pageWindow, scrollX, scrollY, x, y, 'rgb(255,255,255)');
+        };
+    </script>
+</body>
+</html>
