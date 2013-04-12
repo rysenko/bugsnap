@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://bugshooter/skin/skin.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://bugshooter/locale/translations.dtd">
+<overlay id="sample" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script src="bugShooterInit.js" />
+    <script src="addBugShooterIconToToolbar.js"/>
+    <toolbarpalette id="BrowserToolbarPalette">
+	<toolbarbutton id="bugshooter-toolbar-button" 
+		class="toolbarbutton-1 chromeclass-toolbar-additional" label="Bug Shooter" 
+		tooltiptext="Bug Shooter" oncommand="bugShooter.run()"/>
+	</toolbarpalette>
+	<hbox id="browser">
+        	<iframe id="bugshooter-takeover-frame" flex="10000" insertbefore="appcontent" src="about:blank" style="min-width:99%; background-color:#FFF;" hidden="true" />
+	</hbox>
+</overlay>
