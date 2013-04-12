@@ -215,8 +215,7 @@ $(function () {
         };
         EditorViewModel.prototype.getImageData = function () {
             var output = document.getElementById('output');
-            //TODO: Fix canvg overwriting existing background ima
-            canvg(output, document.getElementById('editor').innerHTML);
+            canvg(output, document.getElementById('editor').innerHTML, {ignoreDimensions: true, ignoreClear: true});
             var img = output.toDataURL('image/png');
             img = img.replace('data:image/png;base64,', '');
             return img;
