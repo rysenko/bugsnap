@@ -36,7 +36,6 @@ $(function () {
                 data: JSON.stringify({
                     ProjectId: projectId,
                     IssueId: issueId,
-                    UserId: "1",
                     Name: "screenshot.png",
                     ContentType: "image/png",
                     Content: fileContent
@@ -216,7 +215,7 @@ $(function () {
         };
         EditorViewModel.prototype.getImageData = function () {
             var output = document.getElementById('output');
-            //TODO: Draw screenshot to output canvas
+            //TODO: Fix canvg overwriting existing background ima
             canvg(output, document.getElementById('editor').innerHTML);
             var img = output.toDataURL('image/png');
             img = img.replace('data:image/png;base64,', '');
