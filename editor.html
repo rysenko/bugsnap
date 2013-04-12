@@ -13,15 +13,21 @@
     <link rel="stylesheet" type="text/css" href="css/editor.css" />
 </head>
 <body>
-    <div data-bind="with: Details" class="details">
-        <div class="ui-widget">
-            <input id="issue" />
+    <div id="issue_dialog" title="Submit screenshot to an issue" data-bind="with: Details">
+        <div class="divLabel">
+			<label for="issue">Issue:</label>
+		</div>
+		<div class="divControl">
+			<input id="issue" />
+        </div>
+        <div class="divLabel">
+			<label for="comment">Comment:</label>
+		</div>
+		<div class="divControl">
+			<textarea id="comment" data-bind="value: Comment"></textarea>
         </div>
         <div>
-            <textarea data-bind="value: Comment"></textarea>
-        </div>
-        <div>
-            <input data-bind="click: send" type="button" value="submit"/>
+            <input data-bind="click: send" type="button" value="Submit"/>
         </div>
     </div>
     <div data-bind="with: Editor" class="screen">
@@ -31,7 +37,7 @@
             <a data-bind="click: setRectangle" class="toolbar-btn">rectangle</a>
             <a data-bind="click: setArrow" class="toolbar-btn">arrow</a>
             <a data-bind="click: setText" class="toolbar-btn">text</a>
-            <a data-bind="click: getImageData" class="toolbar-btn">save</a>
+            <a data-bind="click: getImageData" class="toolbar-btn">submit</a>
         </div>
         <canvas id="canvas"></canvas>
         <canvas id="output"></canvas>

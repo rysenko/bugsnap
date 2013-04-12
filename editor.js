@@ -72,12 +72,14 @@ $(function () {
         }
         DetailsViewModel.prototype.init = function () {
             var self = this;
+			$( "input[type=submit], a, button" ).button();
             $("#issue").autocomplete({
-                minLength: 0,
+				appendTo: "#issue_dialog",
+                minLength: 1,
                 source: function(request, response) {
                     self.Communicator.search(request.term).done(function (data) {
                         var labeledData = $.map(data, function (item) {
-                            item.label = item.Title;
+                            item.label = item.IssueKey + " " + item.Title;
                             item.value = item.Id;
                             return item;
                         })
@@ -85,24 +87,32 @@ $(function () {
                     });
                 },
                 focus: function( event, ui ) {
-                    $("#issue").val(ui.item.Title);
+                    $("#issue").val(ui.item.label);
                     return false;
                 },
                 select: function(event, ui) {
-                    $("#issue").val(ui.item.Title);
+                    $("#issue").val(ui.item.label);
                     self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
                     return false;
                 }
             });
+			$("#issue_dialog").dialog(
+				{ 
+					autoOpen: false,
+					width: 500, 
+					height: 500
+				}
+			);
         };
         DetailsViewModel.prototype.send = function () {
             if (this.Issue() != null) {
                 var imageData = this.Parent.Editor.getImageData();
                 var self = this;
+				$("#issue_dialog").addClass("loading");
                 this.Communicator.comment(this.ProjectId(), this.IssueId(), this.Comment()).then(function () {
                     return self.Communicator.attach(self.ProjectId(), self.IssueId(), imageData);
                 }).done(function () {
-                    alert('Saved!')
+                   $("#issue_dialog").removeClass("loading").dialog("close");
                 });
             }
         };
@@ -218,6 +228,7 @@ $(function () {
             canvg(output, document.getElementById('editor').innerHTML, {ignoreDimensions: true, ignoreClear: true});
             var img = output.toDataURL('image/png');
             img = img.replace('data:image/png;base64,', '');
+			$("#issue_dialog").dialog("open");
             return img;
         };
         return EditorViewModel;
