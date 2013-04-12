@@ -4,8 +4,8 @@
         "page": "background.html"
     },
     "name": "Bug Shooter",
-    "description": "Draft of screenshot editing and posting issues.",
-    "version": "1.0",
+    "description": "Shoot your bug and send photo.",
+    "version": "0.0.1",
     "icons": {
         "16": "img/16.png",
         "48": "img/48.png",
