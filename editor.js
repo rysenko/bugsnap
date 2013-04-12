@@ -30,19 +30,19 @@ $(function () {
             });
         };
         GeminiCommunicator.prototype.attach = function (projectId, issueId, fileContent) {
-            var request = $.param({
-                ProjectId: projectId,
-                IssueId: issueId,
-                UserId: "1",
-                Name: "screenshot.png",
-                ContentType: "image/png"
-            });
-            request = request + '&Content=' + escape(fileContent);
             return $.ajax({
                 url: this.geminiUrl + "items/" + issueId + "/attachments",
                 type: "POST",
-                data: request,
+                data: JSON.stringify({
+                    ProjectId: projectId,
+                    IssueId: issueId,
+                    UserId: "1",
+                    Name: "screenshot.png",
+                    ContentType: "image/png",
+                    Content: fileContent
+                }),
                 processData: false,
+                contentType: 'application/json',
                 headers: { "Authorization": "Basic " + this.geminiUsername }
             });
         };
@@ -133,12 +133,13 @@ $(function () {
                 canvas.height = window.innerHeight;
             };
             var canvas = document.getElementById('canvas');
+            var output = document.getElementById('output');
             fillWindow(canvas);
-            fillWindow(document.getElementById("output"));
-            var context = canvas.getContext('2d');
+            fillWindow(output);
             var imageObj = new Image();
             imageObj.onload = function() {
-                context.drawImage(this, 0, 0);
+                canvas.getContext('2d').drawImage(this, 0, 0);
+                output.getContext('2d').drawImage(this, 0, 0);
             };
             imageObj.src = localStorage.getItem('screenshot');
             this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
@@ -219,7 +220,7 @@ $(function () {
             canvg(output, document.getElementById('editor').innerHTML);
             var img = output.toDataURL('image/png');
             img = img.replace('data:image/png;base64,', '');
-            return window.atob(img);
+            return img;
         };
         return EditorViewModel;
     })();
