@@ -236,6 +236,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 var x = activeObject.attr('x'), y = activeObject.attr('y');
                 var width = activeObject.attr('width'), height = activeObject.attr('height');
                 this.Paper.setViewBox(x, y, width, height);
+                var oldOffset = this.Offset();
                 this.Offset({x: x, y: y});
                 this.Paper.setSize(width, height);
                 var sourceCanvas = document.getElementById('canvas');
@@ -246,7 +247,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 outputCanvas.width = width;
                 outputCanvas.height = height;
                 var croppedContext = croppedCanvas.getContext('2d');
-                croppedContext.drawImage(sourceCanvas, x, y, width, height, 0, 0, width, height);
+                croppedContext.drawImage(sourceCanvas, x - oldOffset.x, y - oldOffset.y, width, height, 0, 0, width, height);
                 sourceCanvas.width = width;
                 sourceCanvas.height = height;
                 var sourceContext = sourceCanvas.getContext('2d');
