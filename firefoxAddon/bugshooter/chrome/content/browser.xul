@@ -9,7 +9,7 @@
 		class="toolbarbutton-1 chromeclass-toolbar-additional" label="Bug Shooter" 
 		tooltiptext="Bug Shooter" oncommand="bugShooter.run()"/>
 	</toolbarpalette>
-	<hbox id="browser">
-        	<iframe id="bugshooter-takeover-frame" flex="10000" insertbefore="appcontent" src="about:blank" style="min-width:99%; background-color:#FFF;" hidden="true" />
-	</hbox>
+	<keyset id="mainKeyset">
+		<key id="bugShooter_run" key="Q" modifiers="shift alt" oncommand="bugShooter.run()"/>
+	</keyset>
 </overlay>
