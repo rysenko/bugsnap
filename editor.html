@@ -2,13 +2,7 @@
 <html>
 <head>
     <title>Bug Shooter Editor</title>
-    <script src="js/jquery.js"></script>
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/knockout.js"></script>
-    <script src="js/raphael.js"></script>
-    <script src="js/rgbcolor.js"></script>
-    <script src="js/canvg.js"></script>
-    <script src="editor.js"></script>
+    <script src="js/require.js" data-main="editor.js"></script>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="css/editor.css" />
 </head>
@@ -37,6 +31,7 @@
             <a data-bind="click: setRectangle" class="toolbar-btn">rectangle</a>
             <a data-bind="click: setArrow" class="toolbar-btn">arrow</a>
             <a data-bind="click: setText" class="toolbar-btn">text</a>
+            <a data-bind="click: setCrop" class="toolbar-btn">crop</a>
             <a data-bind="click: getImageData" class="toolbar-btn">submit</a>
         </div>
         <canvas id="canvas"></canvas>

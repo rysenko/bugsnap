@@ -1,8 +1,8 @@
-$(function () {
+define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], function ($, ko, Raphael, canvg) {
     var GeminiCommunicator = (function () {
         function GeminiCommunicator() {
             this.geminiUrl = "http://rysenkocomp.dlinkddns.com/gemini/api/";
-            this.geminiUsername = window.btoa('manager:xvitjc5bmm'); // user:apikey
+            this.geminiUsername = window.btoa('manager:e44knrbhxb'); // user:apikey
         }
         GeminiCommunicator.prototype.search = function (query) {
             return $.ajax({
@@ -72,9 +72,9 @@ $(function () {
         }
         DetailsViewModel.prototype.init = function () {
             var self = this;
-			$( "input[type=submit], a, button" ).button();
+            $("input[type=submit], a, button").button();
             $("#issue").autocomplete({
-				appendTo: "#issue_dialog",
+                appendTo: "#issue_dialog",
                 minLength: 1,
                 source: function(request, response) {
                     self.Communicator.search(request.term).done(function (data) {
@@ -96,19 +96,19 @@ $(function () {
                     return false;
                 }
             });
-			$("#issue_dialog").dialog(
-				{ 
-					autoOpen: false,
-					width: 500, 
-					height: 500
-				}
-			);
+            $("#issue_dialog").dialog(
+                { 
+                    autoOpen: false,
+                    width: 500, 
+                    height: 500
+                }
+            );
         };
         DetailsViewModel.prototype.send = function () {
             if (this.Issue() != null) {
                 var imageData = this.Parent.Editor.getImageData();
                 var self = this;
-				$("#issue_dialog").addClass("loading");
+                $("#issue_dialog").addClass("loading");
                 this.Communicator.comment(this.ProjectId(), this.IssueId(), this.Comment()).then(function () {
                     return self.Communicator.attach(self.ProjectId(), self.IssueId(), imageData);
                 }).done(function () {
@@ -134,6 +134,7 @@ $(function () {
             this.ActiveText.subscribe(function (value) {
                 this.ActiveObject().attr('text', value);
             }, this);
+            this.Offset = ko.observable({x: 0, y: 0});
             this.init();
         }
         EditorViewModel.prototype.init = function () {
@@ -165,21 +166,32 @@ $(function () {
         EditorViewModel.prototype.setText = function () {
             this.ActiveInstrument('Text');
         };
+        EditorViewModel.prototype.setCrop = function () {
+            this.ActiveInstrument('Crop');
+        };
+        EditorViewModel.prototype.getOffset = function (event) {
+            var initialOffset = this.Offset();
+            return {x: initialOffset.x + event.offsetX, y: initialOffset.y + event.offsetY};
+        };
         EditorViewModel.prototype.editorDown = function (data, event) {
             this.IsDrawing(true);
-            this.StartPoint({x: event.offsetX, y: event.offsetY});
+            var offset = this.getOffset(event);
+            this.StartPoint({x: offset.x, y: offset.y});
             var activeInstrument = this.ActiveInstrument();
             var activeObject = null;
             if (activeInstrument == 'Rectangle') {
-                activeObject = this.Paper.rect(event.offsetX, event.offsetY, 0, 0);
+                activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
             } else if (activeInstrument == 'Arrow') {
                 activeObject = this.Paper.path('M0,0');
             } else if (activeInstrument == 'Text') {
                 var textEditor = $('#texted');
-                activeObject = this.Paper.text(event.offsetX, event.offsetY, '');
+                activeObject = this.Paper.text(offset.x, offset.y, '');
                 $(activeObject[0]).css({'text-anchor': 'start', 'font-size': '16px', 'font-family': 'Arial'});
                 textEditor.val('').focus();
                 textEditor.css({'left': event.clientX, 'top': event.clientY - 9, 'font-size': '16px', 'font-family': 'Arial'});
+            } else if (activeInstrument == 'Crop') {
+                activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
+                activeObject.attr('stroke-dasharray', '1,3');
             }
             if (activeInstrument != 'Text') {
                 activeObject.attr('stroke', this.ActiveColor());
@@ -189,13 +201,14 @@ $(function () {
         };
         EditorViewModel.prototype.editorMove = function (data, event) {
             var activeObject = this.ActiveObject();
+            var offset = this.getOffset(event);
             if (this.IsDrawing() && activeObject) {
                 var startPoint = this.StartPoint();
-                if (this.ActiveInstrument() == 'Rectangle') {
-                    var minX = Math.min(startPoint.x, event.offsetX);
-                    var maxX = Math.max(startPoint.x, event.offsetX);
-                    var minY = Math.min(startPoint.y, event.offsetY);
-                    var maxY = Math.max(startPoint.y, event.offsetY);
+                if (this.ActiveInstrument() == 'Rectangle' || this.ActiveInstrument() == 'Crop') {
+                    var minX = Math.min(startPoint.x, offset.x);
+                    var maxX = Math.max(startPoint.x, offset.x);
+                    var minY = Math.min(startPoint.y, offset.y);
+                    var maxY = Math.max(startPoint.y, offset.y);
                     activeObject.attr('x', minX);
                     activeObject.attr('y', minY);
                     activeObject.attr('width', maxX - minX);
@@ -213,11 +226,35 @@ $(function () {
                             "M"+x2+" "+y2+"L"+x2a+" "+y2a+
                             "M"+x2+" "+y2+"L"+x2b+" "+y2b;
                     };
-                    activeObject.attr('path', arrowPath(startPoint.x, startPoint.y, event.offsetX, event.offsetY, 10));
+                    activeObject.attr('path', arrowPath(startPoint.x, startPoint.y, offset.x, offset.y, 10));
                 }
             }
         };
         EditorViewModel.prototype.editorUp = function (data, event) {
+            if (this.ActiveInstrument() == 'Crop') {
+                var activeObject = this.ActiveObject();
+                var x = activeObject.attr('x'), y = activeObject.attr('y');
+                var width = activeObject.attr('width'), height = activeObject.attr('height');
+                this.Paper.setViewBox(x, y, width, height);
+                var oldOffset = this.Offset();
+                this.Offset({x: x, y: y});
+                this.Paper.setSize(width, height);
+                var sourceCanvas = document.getElementById('canvas');
+                var outputCanvas = document.getElementById('output');
+                var croppedCanvas = document.createElement('canvas');
+                croppedCanvas.width = width;
+                croppedCanvas.height = height;
+                outputCanvas.width = width;
+                outputCanvas.height = height;
+                var croppedContext = croppedCanvas.getContext('2d');
+                croppedContext.drawImage(sourceCanvas, x - oldOffset.x, y - oldOffset.y, width, height, 0, 0, width, height);
+                sourceCanvas.width = width;
+                sourceCanvas.height = height;
+                var sourceContext = sourceCanvas.getContext('2d');
+                sourceContext.drawImage(croppedCanvas, 0, 0);
+                activeObject.remove();
+                this.ActiveInstrument('Pointer');
+            }
             if (!this.IsTextMode()) {
                 this.IsDrawing(false);
                 this.ActiveObject(null);
@@ -228,7 +265,7 @@ $(function () {
             canvg(output, document.getElementById('editor').innerHTML, {ignoreDimensions: true, ignoreClear: true});
             var img = output.toDataURL('image/png');
             img = img.replace('data:image/png;base64,', '');
-			$("#issue_dialog").dialog("open");
+            $("#issue_dialog").dialog("open");
             return img;
         };
         return EditorViewModel;
