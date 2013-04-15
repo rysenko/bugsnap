@@ -18,26 +18,16 @@
     "permissions": ["tabs", "file://*/*", "http://*/*", "https://*/*", "notifications"],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 	"commands": {
-    "toggle-bugshooter-on": {
-      "suggested_key": {
-        "default": "Ctrl+Y",
-        "mac": "Command+Y"
-      },
-      "description": "Toggle bugshooter on"
-    },
     "_execute_browser_action": {
       "suggested_key": {
-        "windows": "Ctrl+Y",
-        "mac": "Command+Y",
-        "chromeos": "Ctrl+Y",
-        "linux": "Ctrl+Y"
+        "default": "Shift+Alt+0"
+
       }
     },
     "_execute_page_action": {
       "suggested_key": {
-        "default": "Ctrl+Y",
-        "windows": "Ctrl+Y"
-        
+        "default": "Ctrl+1"
+       
       }
     }
   }
