@@ -247,7 +247,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 outputCanvas.width = width;
                 outputCanvas.height = height;
                 var croppedContext = croppedCanvas.getContext('2d');
+                var outputContext = outputCanvas.getContext('2d');
+                //TODO: Store and don't touch original screenshot and make a copy according to viewbox
                 croppedContext.drawImage(sourceCanvas, x - oldOffset.x, y - oldOffset.y, width, height, 0, 0, width, height);
+                outputContext.drawImage(sourceCanvas, x - oldOffset.x, y - oldOffset.y, width, height, 0, 0, width, height);
                 sourceCanvas.width = width;
                 sourceCanvas.height = height;
                 var sourceContext = sourceCanvas.getContext('2d');
