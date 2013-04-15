@@ -4,22 +4,31 @@
     <title>Bug Shooter Editor</title>
 </head>
 <body>
-    <div id="toolbar">
-        <b>Screen shot will be on this page!</b>
-    </div>
+    <canvas id="canvas"></canvas>
     <script>
-        window.onload = function () {
-            var pageWindow = top.gBrowser.selectedBrowser.contentWindow,
-                canvas = document.getElementById('canvas'),
-                ctx = canvas.getContext('2d'),
-                scrollX = pageWindow.pageXOffset,
-                scrollY = pageWindow.pageYOffset,
-                x = pageWindow.innerWidth,
-                y = pageWindow.innerHeight;
-            canvas.width = x;
-            canvas.height = y;
-            ctx.drawWindow(pageWindow, scrollX, scrollY, x, y, 'rgb(255,255,255)');
+        url = 'chrome://bugshooter/content/editor.html';
+        var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
+        var uri = ios.newURI(url, null, null);
+        var cookieService = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
+        var cookieRes = cookieService.getCookieString(uri, null);
+
+        var screenshotParts = cookieRes.split(';');
+        var base64Img = '';
+
+        for (var i = 0; i < screenshotParts.length; i++) {
+            var part = screenshotParts[i];
+            base64Img += part.substring(part.indexOf('=') + 1) + (i == 0 ? ';' : '')
         };
+
+        var canvas = document.getElementById('canvas');
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            canvas.getContext('2d').drawImage(this, 0, 0);
+        };
+        imageObj.src = base64Img;
     </script>
 </body>
 </html>
