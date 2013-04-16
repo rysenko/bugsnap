@@ -1,8 +1,16 @@
 define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], function ($, ko, Raphael, canvg) {
+
+    var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
+
     var GeminiCommunicator = (function () {
         function GeminiCommunicator() {
-            this.geminiUrl = localStorage["GeminiUrl"]+ "/api/";
-            this.geminiUsername = window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]); // user:apikey
+            if(isFF) { // add options page for FF later
+                this.geminiUrl = "http://rysenkocomp.dlinkddns.com/gemini/api/";
+                this.geminiUsername = window.btoa('manager:e44knrbhxb'); // user:apikey
+            } else {
+                this.geminiUrl = localStorage["GeminiUrl"]+ "/api/";
+                this.geminiUsername = window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]); // user:apikey
+            }
         }
         GeminiCommunicator.prototype.search = function (query) {
             return $.ajax({
@@ -121,7 +129,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
 
     var EditorViewModel = (function () {
         function EditorViewModel(options) {
-            this.isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
             this.Parent = options.Parent;
             this.ActiveInstrument = ko.observable('Pointer');
             this.ActiveObject = ko.observable();
@@ -139,7 +146,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             this.init();
         }
         EditorViewModel.prototype.init = function () {
-            if(this.isFF){
+            if(isFF){
                 var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
                 var uri = ios.newURI(window.location.href, null, null);
                 var cookieService = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
@@ -165,7 +172,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 canvas.getContext('2d').drawImage(this, 0, 0);
                 output.getContext('2d').drawImage(this, 0, 0);
             };
-            imageObj.src = this.isFF ? base64Img : localStorage.getItem('screenshot');
+            imageObj.src = isFF ? base64Img : localStorage.getItem('screenshot');
 
             this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
         };
@@ -187,8 +194,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
         EditorViewModel.prototype.getOffset = function (event) {
             var initialOffset = this.Offset();
             return {
-                     x: initialOffset.x + (this.isFF ? event.layerX : event.offsetX),
-                     y: initialOffset.y + (this.isFF ? event.layerY :event.offsetY)
+                     x: initialOffset.x + (isFF ? event.layerX : event.offsetX),
+                     y: initialOffset.y + (isFF ? event.layerY :event.offsetY)
                    };
         };
         EditorViewModel.prototype.editorDown = function (data, event) {
