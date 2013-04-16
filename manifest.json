@@ -3,6 +3,7 @@
     "background": {
         "page": "background.html"
     },
+	"options_page": "options.html",
     "name": "Bug Shooter",
     "description": "Shoot your bug and send photo.",
     "version": "0.0.1",

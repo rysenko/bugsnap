@@ -1,8 +1,8 @@
 define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], function ($, ko, Raphael, canvg) {
     var GeminiCommunicator = (function () {
         function GeminiCommunicator() {
-            this.geminiUrl = "http://rysenkocomp.dlinkddns.com/gemini/api/";
-            this.geminiUsername = window.btoa('manager:e44knrbhxb'); // user:apikey
+            this.geminiUrl = localStorage["GeminiUrl"]+ "/api/";
+            this.geminiUsername = window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]); // user:apikey
         }
         GeminiCommunicator.prototype.search = function (query) {
             return $.ajax({

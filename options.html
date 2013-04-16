@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>Bug Shooter Options</title>
+<script src="js/require.js" data-main="options.js"></script>
+</head>
+
+<body>
+<div id="options" title="Submit screenshot to an issue" data-bind="with: OptionsPage">
+<div class="label"><label for="">Gemini URL:</label></div><div> <input type="text" id="geminiUrl" data-bind="value: GeminiUrl"></div>
+<div class="label"><label for="">User Name:</label></div><div> <input type="text" id="userName" data-bind="value: UserName"></div>
+<div class="label"><label for="">Password:</label></div><div> <input type="text" id="password" data-bind="value: Password"></div>
+<div class="label"><label for="">API Key:</label></div><div> <input type="text" id="apiKey" data-bind="value: APIKey"></div>
+
+<br>
+<div id="status"></div>
+<input data-bind="click: save" type="button" value="Save"/>
+</div>
+</body>
+
+
+
+</html>
