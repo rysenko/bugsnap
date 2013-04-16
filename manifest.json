@@ -6,7 +6,7 @@
 	"options_page": "options.html",
     "name": "Bug Shooter",
     "description": "Shoot your bug and send photo.",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "icons": {
         "16": "img/16.png",
         "48": "img/48.png",
