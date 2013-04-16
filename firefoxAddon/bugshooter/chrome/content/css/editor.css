@@ -1,0 +1,73 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.details {
+    float: left;
+    width: 200px;
+}
+
+.screen {
+    float: left;
+}
+
+#canvas, #editor, #texted, #output {
+    position: absolute;
+}
+
+#output {
+    display: none;
+}
+
+#texted {
+    border-style: none;
+    background: none;
+    outline: none;
+    resize: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+}
+/*Submit dialog*/
+#issue_dialog {
+	display: none;
+}
+#issue {
+    width: 100%;
+}
+#comment {
+	width: 100%;
+}
+#issue_dialog .divLabel
+{
+	width: 20%;
+}
+
+#issue_dialog .divControl
+{
+	width: 80%;
+}
+
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('../img/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+body.loading {
+    overflow: hidden;   
+}
+
+body.loading .modal {
+    display: block;
+}

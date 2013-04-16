@@ -1,0 +1,1 @@
+define(['js/jquery', 'js/jquery.ui.src'], function () {});

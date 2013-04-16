@@ -14,7 +14,7 @@ bugShooter.run = function() {
 
     var canvas = document.createElement('canvas');
     canvas.width = w; 
-    canvas.height = h; // need refinement
+    canvas.height = h;
     canvas.style.display = 'none';
     document.body.appendChild(canvas);
     
@@ -25,10 +25,10 @@ bugShooter.run = function() {
 
     var data = canvas.toDataURL();
 
+    // TODO: find better way to send data to target page
     var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
     var uri = ios.newURI(url, null, null);
     var cookieService = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-
     var arr = [], i = 1;
     arr[0] = data.substring(0, data.indexOf(';') + 1);
     data = data.substring(arr[0].length);
