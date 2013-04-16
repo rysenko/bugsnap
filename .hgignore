@@ -1,2 +1,8 @@
 syntax: glob
 .idea
+chrome\common\
+firefox\chrome\content\common\
+
+syntax: regexp
+^default.build$
+\.xpi$

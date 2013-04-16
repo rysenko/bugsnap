@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project name="BugShooter" default="default">
+
+  <target name="setup">
+    <call target="chrome.setup" />
+    <call target="firefox.setup" />
+  </target>
+
+  <target name="chrome.setup">
+    <property name="target.common.libs.dir" value="chrome\common" />
+    <call target="copy.common.libs" />
+  </target>
+
+  <target name="firefox.setup">
+    <property name="target.common.libs.dir" value="firefox\chrome\content\common" />
+    <call target="firefox.create.pointer.file" />
+    <call target="create.xpi.file" />
+    <call target="copy.common.libs" />
+  </target>
+
+  <target name="firefox.create.pointer.file">
+    <if test="${not file::exists('${firefox.extensions.path}\bugshooter@agetes.com')}">
+      <echo file="${firefox.extensions.path}\bugshooter@agetes.com">${project::get-base-directory()}\firefox</echo>
+    </if>    
+  </target>
+
+  <target name="create.xpi.file">
+    <zip zipfile="firefox\bugshooter.zip">
+      <fileset basedir="firefox">
+        <include name="**/*" />
+      </fileset>
+    </zip>
+    <move file="firefox\bugshooter.zip" tofile="firefox\bugshooter.xpi" />
+    <delete file="firefox\bugshooter.zip" />
+  </target>
+
+  <target name="copy.common.libs">
+    <copy todir="${target.common.libs.dir}">
+      <fileset basedir="common">
+        <include name="**/*" />
+      </fileset>
+    </copy>   
+  </target>
+
+</project>
