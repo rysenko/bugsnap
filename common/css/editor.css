@@ -24,6 +24,10 @@ html, body {
     display: none;
 }
 
+#toolbar {
+	margin: 5px;
+}
+
 #texted {
     border-style: none;
     background: none;
@@ -83,4 +87,11 @@ body.loading {
 
 body.loading .modal {
     display: block;
+}
+
+.button-state-active {
+	border: 1px solid #2694e8 !important;
+	background: #3baae3 url(../img/jquery-ui/ui-bg_glass_50_3baae3_1x400.png) 50% 50% repeat-x !important;
+	font-weight: bold !important;
+	color: #ffffff !important;
 }

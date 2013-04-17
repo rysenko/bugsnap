@@ -2,19 +2,75 @@
 <head>
 <title>Bug Shooter Options</title>
 <script src="js/require.js" data-main="options.js"></script>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+<style>
+#options {
+	margin:15px auto;
+	width:700px;
+	
+}
+#options .label {
+	width: 140px;
+	padding-top:5px;
+	float:left;
+}
+
+.autorize {
+	padding-top:0px  !important;
+}
+#options div{
+	padding: 5px;
+	
+}	
+em { 
+	font-weight: bold; 
+	padding-right: 1em; 
+	vertical-align: top; 
+}
+input[type=text] {
+	width: 300px;
+}
+input[type=password] {
+	width: 300px;
+}
+.save {
+	width : 460px;
+	text-align: right;
+}
+</style>
+
 </head>
 
 <body>
-<div id="options" title="Submit screenshot to an issue" data-bind="with: OptionsPage">
-<div class="label"><label for="">Gemini URL:</label></div><div> <input type="text" id="geminiUrl" data-bind="value: GeminiUrl"></div>
-<div class="label"><label for="">User Name:</label></div><div> <input type="text" id="userName" data-bind="value: UserName"></div>
-<div class="label"><label for="">Password:</label></div><div> <input type="text" id="password" data-bind="value: Password"></div>
-<div class="label"><label for="">API Key:</label></div><div> <input type="text" id="apiKey" data-bind="value: APIKey"></div>
-
-<br>
-<div id="status"></div>
-<input data-bind="click: save" type="button" value="Save"/>
+<form id="optionsForm">
+<div id="options" class='ui-widget' title="Submit screenshot to an issue" data-bind="with: OptionsPage">
+<div>
+	<label class="label" for="geminiUrl">Gemini URL:</label>
+	<em>*</em><input type="text" id="geminiUrl" class="required url" data-bind="value: GeminiUrl">
 </div>
+<div>
+	<label class="label" for="userName">User Name:</label>
+	<em>*</em><input type="text" id="userName" class="required" data-bind="value: UserName">
+</div>
+<div id="method">
+	<label class="label autorize" for="method">Authorize by:</label><em>&nbsp; </em>
+	
+	<input type="radio" id="method1" name="method" value="Password"> <label for="method1">Password</label>
+	<input type="radio" id="method2" name="method" value="API Key" checked> <label for="method2">API Key</label>
+</div>
+<div id="password">
+	<label class="label" for="passwordInput">Password:</label>
+	<em>&nbsp;</em><input type="password" id="passwordInput" data-bind="value: Password">
+</div>
+<div id="apiKey" >
+	<label class="label" for="apiKeyInput">API Key:</label>
+	<em>&nbsp;</em><input type="text" id="apiKeyInput" data-bind="value: APIKey">
+</div>
+<br>
+<div class="save"><input data-bind="click: save" type="button" value="Save"/></div>
+
+</div>
+</form>
 </body>
 
 

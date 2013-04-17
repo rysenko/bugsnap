@@ -1,4 +1,16 @@
-define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui'], function ($, ko, Raphael) {
+require.config({
+    paths: {
+        'jquery': 'js/jquery',
+        'knockout': 'js/knockout',
+        'raphael': 'js/raphael',
+        'md5': 'js/md5',
+    },
+	shim: {
+        'js/jquery.validate': ['jquery'],
+        'js/jquery.ui': ['jquery']
+    }
+});
+define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.validate', 'js/md5'], function ($, ko, Raphael) {
 
 	
 	var OptionsPageViewModel = (function () {
@@ -12,7 +24,23 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui'], function ($, 
         }
         OptionsPageViewModel.prototype.init = function () {
             var self = this;
-            
+			$("input[type=button], a, button").button();
+			$("#method").buttonset();
+			$("#password").hide();
+            $("#optionsForm").validate();
+			$('input[name=method]').change(
+				function() {
+					if($('input[name=method]:checked').val() == 'Password') {
+						$("#password").show();
+						$("#apiKey").hide();
+					}
+					else {
+						$("#password").hide();
+						$("#apiKey").show();
+					}
+					
+				}
+			);
         };
         OptionsPageViewModel.prototype.save = function () {
             if (this.GeminiUrl() != null) {
@@ -32,35 +60,4 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui'], function ($, 
         return PageViewModel;
     })();
     ko.applyBindings(new PageViewModel());
-
-function save_options() {
-  var select = document.getElementById("color");
-  var color = select.children[select.selectedIndex].value;
-  localStorage["favorite_color"] = color;
-
-  // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Options Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
-}
-
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-  var favorite = localStorage["favorite_color"];
-  if (!favorite) {
-    return;
-  }
-  var select = document.getElementById("color");
-  for (var i = 0; i < select.children.length; i++) {
-    var child = select.children[i];
-    if (child.value == favorite) {
-      child.selected = "true";
-      break;
-    }
-  }
-}
-//document.addEventListener('DOMContentLoaded', restore_options);
-//document.querySelector('#save').addEventListener('click', save_options);
 });

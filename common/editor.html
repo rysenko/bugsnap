@@ -25,14 +25,13 @@
         </div>
     </div>
     <div data-bind="with: Editor" class="screen">
-        <div id="toolbar">
-            <b data-bind="text: ActiveInstrument"></b>
-            <a data-bind="click: setPointer" class="toolbar-btn">pointer</a>
-            <a data-bind="click: setRectangle" class="toolbar-btn">rectangle</a>
-            <a data-bind="click: setArrow" class="toolbar-btn">arrow</a>
-            <a data-bind="click: setText" class="toolbar-btn">text</a>
-            <a data-bind="click: setCrop" class="toolbar-btn">crop</a>
-            <a data-bind="click: getImageData" class="toolbar-btn">submit</a>
+        <div id="toolbar" class="ui-widget-header ui-corner-all">
+            <a data-bind="click: setPointer" id="pointer">pointer</a>
+            <a data-bind="click: setRectangle" id="rectangle">rectangle</a>
+            <a data-bind="click: setArrow" id="arrow">arrow</a>
+            <a data-bind="click: setText" id="text">text</a>
+            <a data-bind="click: setCrop" id="crop">crop</a>
+            <a data-bind="click: getImageData" id="submit">submit</a>
         </div>
         <canvas id="canvas"></canvas>
         <canvas id="output"></canvas>
