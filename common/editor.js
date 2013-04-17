@@ -132,7 +132,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             this.Parent = options.Parent;
             this.ActiveInstrument = ko.observable('Pointer');
             this.ActiveObject = ko.observable();
-            this.ActiveColor = ko.observable('black');
+            this.ActiveColor = ko.observable('red');
             this.IsDrawing = ko.observable(false);
             this.StartPoint = ko.observable();
             this.IsTextMode = ko.computed(function () {
@@ -213,12 +213,15 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 activeObject = this.Paper.text(offset.x, offset.y, '');
                 $(activeObject[0]).css({'text-anchor': 'start', 'font-size': '16px', 'font-family': 'Arial'});
                 textEditor.val('').focus();
-                textEditor.css({'left': event.clientX - (isFF ? 1 : 0), 'top': event.clientY - 9 - (isFF ? 1 : 0), 'font-size': '16px', 'font-family': 'Arial'});
+                textEditor.css({'left': event.clientX - (isFF ? 1 : 0), 'top': event.clientY - 9 - (isFF ? 1 : 0),
+                    'font-size': '16px', 'font-family': 'Arial', 'color': this.ActiveColor()});
             } else if (activeInstrument == 'Crop') {
                 activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
                 activeObject.attr('stroke-dasharray', '1,3');
             }
-            if (activeInstrument != 'Text') {
+            if (activeInstrument == 'Text') {
+                activeObject.attr('fill', this.ActiveColor());
+            } else {
                 activeObject.attr('stroke', this.ActiveColor());
                 activeObject.attr('stroke-width', '3');
             }
