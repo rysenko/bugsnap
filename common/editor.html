@@ -26,12 +26,12 @@
     </div>
     <div data-bind="with: Editor" class="screen">
         <div id="toolbar-container">
-            <span id="toolbar" class="ui-widget-header ui-corner-all">
-                <a data-bind="click: setPointer" id="pointer">pointer</a>
-                <a data-bind="click: setRectangle" id="rectangle">rectangle</a>
-                <a data-bind="click: setArrow" id="arrow">arrow</a>
-                <a data-bind="click: setText" id="text">text</a>
-                <a data-bind="click: setCrop" id="crop">crop</a>
+            <span id="toolbar">
+                <a data-bind="click: setPointer, css: {'button-state-active': ActiveInstrument() == 'Pointer'}" id="pointer">pointer</a>
+                <a data-bind="click: setRectangle, css: {'button-state-active': ActiveInstrument() == 'Rectangle'}" id="rectangle">rectangle</a>
+                <a data-bind="click: setArrow, css: {'button-state-active': ActiveInstrument() == 'Arrow'}" id="arrow">arrow</a>
+                <a data-bind="click: setText, css: {'button-state-active': ActiveInstrument() == 'Text'}" id="text">text</a>
+                <a data-bind="click: setCrop, css: {'button-state-active': ActiveInstrument() == 'Crop'}" id="crop">crop</a>
                 <a data-bind="click: getImageData" id="submit">submit</a>
             </span>
         </div>
