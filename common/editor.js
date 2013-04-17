@@ -80,7 +80,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
         }
         DetailsViewModel.prototype.init = function () {
             var self = this;
-            $("input[type=submit], a, button").button();
+            $("#toolbar > a").button();
             $("#issue").autocomplete({
                 appendTo: "#issue_dialog",
                 minLength: 1,
@@ -177,18 +177,28 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
         };
         EditorViewModel.prototype.setPointer = function () {
+			$("#toolbar > a").removeClass("button-state-active");
+			$("#pointer").addClass("button-state-active");
             this.ActiveInstrument('Pointer');
         };
         EditorViewModel.prototype.setRectangle = function () {
+			$("#toolbar > a").removeClass("button-state-active");
+			$("#rectangle").addClass("button-state-active");
             this.ActiveInstrument('Rectangle');
         };
         EditorViewModel.prototype.setArrow = function () {
+			$("#toolbar > a").removeClass("button-state-active");
+			$("#arrow").addClass("button-state-active");
             this.ActiveInstrument('Arrow');
         };
         EditorViewModel.prototype.setText = function () {
+			$("#toolbar > a").removeClass("button-state-active");
+			$("#text").addClass("button-state-active");
             this.ActiveInstrument('Text');
         };
         EditorViewModel.prototype.setCrop = function () {
+			$("#toolbar > a").removeClass("button-state-active");
+			$("#crop").addClass("button-state-active");
             this.ActiveInstrument('Crop');
         };
         EditorViewModel.prototype.getOffset = function (event) {
