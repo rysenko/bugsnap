@@ -35,11 +35,10 @@
   </target>
 
   <target name="copy.common.libs">
-    <copy todir="${target.common.libs.dir}">
-      <fileset basedir="common">
-        <include name="**/*" />
-      </fileset>
-    </copy>   
+    <exec program="cmd" failonerror="false"
+        commandline="/c mklink /d ${project::get-base-directory()}\firefox\chrome\content\common ${project::get-base-directory()}\common" />
+    <exec program="cmd" failonerror="false"
+        commandline="/c mklink /d ${project::get-base-directory()}\chrome\common ${project::get-base-directory()}\common" />
   </target>
 
 </project>
