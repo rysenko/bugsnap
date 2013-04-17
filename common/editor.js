@@ -1,3 +1,9 @@
+requirejs.config({
+   shim: {
+        'js/jquery.ui.src': {deps: ['js/jquery.src']}
+   }
+});
+
 define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], function ($, ko, Raphael, canvg) {
 
     var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;

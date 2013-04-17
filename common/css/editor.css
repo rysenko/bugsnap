@@ -21,6 +21,10 @@ html, body {
     margin-top: 35px;
 }
 
+#editor svg {
+    -webkit-filter: drop-shadow( 2px 2px 2px #000 );
+}
+
 #output {
     display: none;
 }
