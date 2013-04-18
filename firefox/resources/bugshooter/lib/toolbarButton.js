@@ -18,7 +18,7 @@ function addToolbarButton(){
 	toolbarbutton.setAttribute('image', data.url('common/img/16.png'));
 	toolbarbutton.setAttribute('orient', 'horizontal');
 	toolbarbutton.setAttribute('label', 'Bug Shooter');
-	toolbarbutton.setAttribute('tooltiptext', 'Bug Shooter New');
+	toolbarbutton.setAttribute('tooltiptext', 'Bug Shooter');
 	toolbarbutton.addEventListener('mousedown', function(e) { makeScreenShot(); }, false);
 	addonBar.appendChild(toolbarbutton);
 };
