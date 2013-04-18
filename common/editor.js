@@ -149,6 +149,11 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 this.ActiveObject().attr('text', value);
             }, this);
             this.Offset = ko.observable({x: 0, y: 0});
+            this.Colors = ko.observableArray(['red', 'orange', 'green', 'blue']);
+            var self = this;
+            this.setColor = function (color) {
+                self.ActiveColor(color);
+            };
             this.init();
         }
         EditorViewModel.prototype.init = function () {

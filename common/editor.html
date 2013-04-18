@@ -28,21 +28,28 @@
     <div data-bind="with: Editor" class="screen">
         <div id="toolbar-container">
             <span id="toolbar">
-                <i title="Move" class="button" data-bind="click: setPointer, css: {'active': ActiveInstrument() == 'Pointer'}">
+                <i title="Move" class="button" data-bind="click: setPointer, css: {active: ActiveInstrument() == 'Pointer'}">
                     <i class="icon-large icon-move"></i>
                 </i>
-                <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {'active': ActiveInstrument() == 'Rectangle'}">
+                <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {active: ActiveInstrument() == 'Rectangle'}">
                     <i class="icon-large icon-rect"></i>
                 </i>
-                <i title="Arrow" class="button" data-bind="click: setArrow, css: {'active': ActiveInstrument() == 'Arrow'}">
+                <i title="Arrow" class="button" data-bind="click: setArrow, css: {active: ActiveInstrument() == 'Arrow'}">
                     <i class="icon-large icon-arrow"></i>
                 </i>
-                <i title="Text" class="button" data-bind="click: setText, css: {'active': ActiveInstrument() == 'Text'}">
+                <i title="Text" class="button" data-bind="click: setText, css: {active: ActiveInstrument() == 'Text'}">
                     <i class="icon-large icon-font"></i>
                 </i>
-                <i title="Crop" class="button" data-bind="click: setCrop, css: {'active': ActiveInstrument() == 'Crop'}">
+                <i title="Crop" class="button" data-bind="click: setCrop, css: {active: ActiveInstrument() == 'Crop'}">
                     <i class="icon-large icon-crop"></i>
                 </i>
+                <i class="separator"></i>
+                <!-- ko foreach: Colors -->
+                <i title="Color" class="button color" data-bind="click: $parent.setColor, css: {active: $parent.ActiveColor() == $data}">
+                    <i class="icon-large" data-bind="style: {'background-color' : $data}"></i>
+                </i>
+                <!-- /ko -->
+                <i class="separator"></i>
                 <i title="Submit" class="button" data-bind="click: getImageData">
                     <i class="icon-large icon-ok"></i>
                 </i>
