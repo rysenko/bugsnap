@@ -1,0 +1,60 @@
+{
+ "enable_e10s": false, 
+ "is-sdk-bundled": true, 
+ "jetpackID": "jid1-AEnEhteHXOHYuw@jetpack", 
+ "loader": "addon-sdk/lib/sdk/loader/cuddlefish.js", 
+ "main": "main", 
+ "mainPath": "bugshooter/main", 
+ "manifest": {
+  "bugshooter/main": {
+   "docsSHA256": null, 
+   "jsSHA256": "bd0cbace00f9eed84915b06cf50ecd2a12e8ea640119f4313519b47902e5b492", 
+   "moduleName": "main", 
+   "packageName": "bugshooter", 
+   "requirements": {
+    "page-mod": "sdk/page-mod", 
+    "self": "sdk/self", 
+    "toolbarButton": "bugshooter/toolbarButton"
+   }, 
+   "sectionName": "lib"
+  }, 
+  "bugshooter/toolbarButton": {
+   "docsSHA256": null, 
+   "jsSHA256": "d56da0c4ccad25d18a5aceb785080578ff7213f2f60ae9448fbf7f37040f7d37", 
+   "moduleName": "toolbarButton", 
+   "packageName": "bugshooter", 
+   "requirements": {
+    "chrome": "chrome", 
+    "self": "sdk/self"
+   }, 
+   "sectionName": "lib"
+  }
+ }, 
+ "metadata": {
+  "addon-sdk": {
+   "description": "Add-on development made easy.", 
+   "keywords": [
+    "javascript", 
+    "engine", 
+    "addon", 
+    "extension", 
+    "xulrunner", 
+    "firefox", 
+    "browser"
+   ], 
+   "license": "MPL 2.0", 
+   "name": "addon-sdk"
+  }, 
+  "bugshooter": {
+   "description": "Bug Shooter", 
+   "license": "MPL 2.0", 
+   "main": "main", 
+   "name": "bugshooter", 
+   "version": "0.1"
+  }
+ }, 
+ "name": "bugshooter", 
+ "sdkVersion": "1.14", 
+ "staticArgs": {}, 
+ "verbose": false
+}

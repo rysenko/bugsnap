@@ -12,15 +12,15 @@
   </target>
 
   <target name="firefox.setup">
-    <property name="target.common.libs.dir" value="firefox\chrome\content\common" />
+    <property name="target.common.libs.dir" value="firefox\resources\bugshooter\data\common" />
     <call target="firefox.create.pointer.file" />
     <call target="create.xpi.file" />
     <call target="copy.common.libs" />
   </target>
 
   <target name="firefox.create.pointer.file">
-    <if test="${not file::exists('${firefox.extensions.path}\bugshooter@agetes.com')}">
-      <echo file="${firefox.extensions.path}\bugshooter@agetes.com">${project::get-base-directory()}\firefox</echo>
+    <if test="${not file::exists('${firefox.extensions.path}\jid1-AEnEhteHXOHYuw@jetpack')}">
+      <echo file="${firefox.extensions.path}\jid1-AEnEhteHXOHYuw@jetpack">${project::get-base-directory()}\firefox</echo>
     </if>    
   </target>
 
@@ -36,9 +36,7 @@
 
   <target name="copy.common.libs">
     <exec program="cmd" failonerror="false"
-        commandline="/c mklink /d ${project::get-base-directory()}\firefox\chrome\content\common ${project::get-base-directory()}\common" />
-    <exec program="cmd" failonerror="false"
-        commandline="/c mklink /d ${project::get-base-directory()}\chrome\common ${project::get-base-directory()}\common" />
+        commandline="/c mklink /d ${project::get-base-directory()}\${target.common.libs.dir} ${project::get-base-directory()}\common" />
   </target>
 
 </project>

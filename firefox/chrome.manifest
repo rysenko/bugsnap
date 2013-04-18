@@ -1,6 +1,0 @@
-content     bugshooter    chrome/content/
-content     bugshooter    chrome/content/ contentaccessible=yes
-
-skin	bugshooter	classic/1.0	skin/
-style	chrome://global/content/customizeToolbar.xul	chrome://bugshooter/skin/skin.css
-overlay chrome://browser/content/browser.xul chrome://bugshooter/content/browser.xul

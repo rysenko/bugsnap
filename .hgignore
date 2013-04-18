@@ -1,7 +1,7 @@
 syntax: glob
 .idea
 chrome\common\
-firefox\chrome\content\common\
+firefox\resources\bugshooter\data\common\
 
 syntax: regexp
 ^default.build$

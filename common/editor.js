@@ -157,35 +157,26 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             this.init();
         }
         EditorViewModel.prototype.init = function () {
-            if(isFF){
-                var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-                var uri = ios.newURI(window.location.href, null, null);
-                var cookieService = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-                var screenshotParts = cookieService.getCookieString(uri, null).split(';');                
-                var base64Img = '';
-                for (var i = 0; i < screenshotParts.length; i++) {
-                    var part = screenshotParts[i];
-                    base64Img += part.substring(part.indexOf('=') + 1) + (i == 0 ? ';' : '')
-                }
+            var screenshotUrl = localStorage.getItem('screenshot')
+            if (screenshotUrl) {
+                var fillWindow = function (canvas) {
+                    canvas.width  = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                };
+                var canvas = document.getElementById('canvas');
+                var output = document.getElementById('output');
+                fillWindow(canvas);
+                fillWindow(output);
+                var imageObj = new Image();
+                imageObj.onload = function() {
+                    canvas.getContext('2d').drawImage(this, 0, 0);
+                    output.getContext('2d').drawImage(this, 0, 0);
+                };
+                imageObj.src = screenshotUrl;
+                this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
+            } else {
+                setTimeout(this.init.bind(this), 100);
             }
-
-            var fillWindow = function (canvas) {
-                canvas.width  = window.innerWidth;
-                canvas.height = window.innerHeight;
-            };
-            var canvas = document.getElementById('canvas');
-            var output = document.getElementById('output');
-            fillWindow(canvas);
-            fillWindow(output);
-            
-            var imageObj = new Image();
-            imageObj.onload = function() {
-                canvas.getContext('2d').drawImage(this, 0, 0);
-                output.getContext('2d').drawImage(this, 0, 0);
-            };
-            imageObj.src = isFF ? base64Img : localStorage.getItem('screenshot');
-
-            this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
         };
         EditorViewModel.prototype.setPointer = function () {
             this.ActiveInstrument('Pointer');
