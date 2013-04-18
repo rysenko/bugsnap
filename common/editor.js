@@ -157,7 +157,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             this.init();
         }
         EditorViewModel.prototype.init = function () {
-            var screenshotUrl = localStorage.getItem('screenshot')
+            var screenshotUrl = localStorage.getItem('screenshot');
             if (screenshotUrl) {
                 var fillWindow = function (canvas) {
                     canvas.width  = window.innerWidth;
@@ -173,6 +173,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                     output.getContext('2d').drawImage(this, 0, 0);
                 };
                 imageObj.src = screenshotUrl;
+                localStorage.removeItem("screenshot");
                 this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
             } else {
                 setTimeout(this.init.bind(this), 100);
