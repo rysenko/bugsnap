@@ -138,7 +138,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             this.Parent = options.Parent;
             this.ActiveInstrument = ko.observable('Pointer');
             this.ActiveObject = ko.observable();
-            this.ActiveColor = ko.observable('red');
+            this.ActiveColor = ko.observable('Red');
             this.IsDrawing = ko.observable(false);
             this.StartPoint = ko.observable();
             this.IsTextMode = ko.computed(function () {
@@ -149,7 +149,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 this.ActiveObject().attr('text', value);
             }, this);
             this.Offset = ko.observable({x: 0, y: 0});
-            this.Colors = ko.observableArray(['red', 'orange', 'green', 'blue']);
+            this.Colors = ko.observableArray(['Red', 'Orange', 'Green', 'Blue']);
             var self = this;
             this.setColor = function (color) {
                 self.ActiveColor(color);
