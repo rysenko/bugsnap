@@ -16,13 +16,25 @@ html, body {
 
 }
 
-#canvas, #editor, #texted, #output {
-    position: absolute;
-    margin-top: 35px;
+#toolbar .button {
+    margin-top: 2px;
+    margin-right: 3px;
+    border-radius: 2px;
+    padding: 1px;
+    display: inline-block;
 }
 
-#editor svg {
-    -webkit-filter: drop-shadow( 2px 2px 2px #000 );
+#toolbar .button:hover {
+    background-color: #a5a5a5;
+}
+
+#toolbar .button.active {
+    background-color: #f5f5f5;
+}
+
+#canvas, #editor, #texted, #output {
+    position: absolute;
+    margin-top: 36px;
 }
 
 #output {
@@ -48,7 +60,7 @@ html, body {
     position: fixed;
     text-align: center;
     width: 100%;
-    height: 35px;
+    height: 36px;
     z-index: 100;
     background-color: gray;
     opacity: 0.9;

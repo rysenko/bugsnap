@@ -1,0 +1,14 @@
+.icon-large {
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    vertical-align: text-bottom;
+    width: 28px;
+    background-repeat: no-repeat;
+}
+.icon-large.icon-font { background-image: url(../img/icons/font.png); }
+.icon-large.icon-crop { background-image: url(../img/icons/crop.png); }
+.icon-large.icon-arrow { background-image: url(../img/icons/arrow.png); }
+.icon-large.icon-rect { background-image: url(../img/icons/rect.png); }
+.icon-large.icon-move { background-image: url(../img/icons/move.png); }
+.icon-large.icon-ok { background-image: url(../img/icons/ok.png); }

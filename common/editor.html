@@ -4,6 +4,7 @@
     <title>Bug Shooter Editor</title>
     <script src="js/require.js" data-main="editor.js"></script>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/icons.css" />
     <link rel="stylesheet" type="text/css" href="css/editor.css" />
 </head>
 <body>
@@ -27,12 +28,24 @@
     <div data-bind="with: Editor" class="screen">
         <div id="toolbar-container">
             <span id="toolbar">
-                <a data-bind="click: setPointer, css: {'button-state-active': ActiveInstrument() == 'Pointer'}" id="pointer">pointer</a>
-                <a data-bind="click: setRectangle, css: {'button-state-active': ActiveInstrument() == 'Rectangle'}" id="rectangle">rectangle</a>
-                <a data-bind="click: setArrow, css: {'button-state-active': ActiveInstrument() == 'Arrow'}" id="arrow">arrow</a>
-                <a data-bind="click: setText, css: {'button-state-active': ActiveInstrument() == 'Text'}" id="text">text</a>
-                <a data-bind="click: setCrop, css: {'button-state-active': ActiveInstrument() == 'Crop'}" id="crop">crop</a>
-                <a data-bind="click: getImageData" id="submit">submit</a>
+                <i title="Move" class="button" data-bind="click: setPointer, css: {'active': ActiveInstrument() == 'Pointer'}">
+                    <i class="icon-large icon-move"></i>
+                </i>
+                <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {'active': ActiveInstrument() == 'Rectangle'}">
+                    <i class="icon-large icon-rect"></i>
+                </i>
+                <i title="Arrow" class="button" data-bind="click: setArrow, css: {'active': ActiveInstrument() == 'Arrow'}">
+                    <i class="icon-large icon-arrow"></i>
+                </i>
+                <i title="Text" class="button" data-bind="click: setText, css: {'active': ActiveInstrument() == 'Text'}">
+                    <i class="icon-large icon-font"></i>
+                </i>
+                <i title="Crop" class="button" data-bind="click: setCrop, css: {'active': ActiveInstrument() == 'Crop'}">
+                    <i class="icon-large icon-crop"></i>
+                </i>
+                <i title="Submit" class="button" data-bind="click: getImageData">
+                    <i class="icon-large icon-ok"></i>
+                </i>
             </span>
         </div>
         <canvas id="canvas"></canvas>
