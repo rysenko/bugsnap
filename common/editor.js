@@ -220,13 +220,20 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                     'font-size': '16px', 'font-family': 'Arial', 'color': this.ActiveColor()});
             } else if (activeInstrument == 'Crop') {
                 activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
-                activeObject.attr('stroke-dasharray', '1,3');
+                activeObject.attr(
+                                {
+                                    'stroke' : '#707070', 
+                                    'stroke-dasharray' : '--.',
+                                    'stroke-width': 2,
+                                    'fill': 'Gray',
+                                    'fill-opacity': 0.1
+                                });
             }
             if (activeInstrument == 'Text') {
                 activeObject.attr('fill', this.ActiveColor());
-            } else {
+            } else if (activeInstrument != 'Crop') {
                 activeObject.attr('stroke', this.ActiveColor());
-                activeObject.attr('stroke-width', '3');
+                activeObject.attr('stroke-width', 3);
             }
             this.ActiveObject(activeObject);
         };
