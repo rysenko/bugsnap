@@ -22,6 +22,10 @@
 	padding: 5px;
 	
 }	
+#method {
+	display: none;
+}
+
 em { 
 	font-weight: bold; 
 	padding-right: 1em; 
@@ -46,11 +50,11 @@ input[type=password] {
 <div id="options" class='ui-widget' title="Submit screenshot to an issue" data-bind="with: OptionsPage">
 <div>
 	<label class="label" for="geminiUrl">Gemini URL:</label>
-	<em>*</em><input type="text" id="geminiUrl" class="required url" data-bind="value: GeminiUrl">
+	<em>*</em><input type="text" name="geminiUrl" id="geminiUrl" class="required" data-bind="value: GeminiUrl">
 </div>
 <div>
 	<label class="label" for="userName">User Name:</label>
-	<em>*</em><input type="text" id="userName" class="required" data-bind="value: UserName">
+	<em>*</em><input type="text" name="userName" id="userName" class="required" data-bind="value: UserName">
 </div>
 <div id="method">
 	<label class="label autorize" for="method">Authorize by:</label><em>&nbsp; </em>
@@ -64,10 +68,11 @@ input[type=password] {
 </div>
 <div id="apiKey" >
 	<label class="label" for="apiKeyInput">API Key:</label>
-	<em>&nbsp;</em><input type="text" id="apiKeyInput" data-bind="value: APIKey">
+	<em>*</em><input type="text" name="apiKeyInput" id="apiKeyInput" class="required" data-bind="value: APIKey">
 </div>
 <br>
-<div class="save"><input data-bind="click: save" type="button" value="Save"/></div>
+<div class="save"><input data-bind="click: test" type="button" value="Test Connection"/>
+<input data-bind="click: save" type="button" value="Save"/></div>
 
 </div>
 </form>

@@ -9,7 +9,13 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 this.geminiUsername = window.btoa('manager:e44knrbhxb'); // user:apikey
             } else {
                 this.geminiUrl = localStorage["GeminiUrl"]+ "/api/";
-                this.geminiUsername = window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]); // user:apikey
+				if(localStorage["AuthMethod"] != "password") {
+					this.geminiUsername = window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]); // user:apikey
+				}
+				else {
+					this.geminiUsername = window.btoa(localStorage["UserName"] + ":" + localStorage["AuthString"]); // user:md5 password hash
+				}
+					
             }
         }
         GeminiCommunicator.prototype.search = function (query) {
