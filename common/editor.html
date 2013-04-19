@@ -28,9 +28,6 @@
     <div data-bind="with: Editor" class="screen">
         <div id="toolbar-container">
             <span id="toolbar">
-                <i title="Move" class="button" data-bind="click: setPointer, css: {active: ActiveInstrument() == 'Pointer'}">
-                    <i class="icon-large icon-move"></i>
-                </i>
                 <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {active: ActiveInstrument() == 'Rectangle'}">
                     <i class="icon-large icon-rect"></i>
                 </i>
@@ -50,8 +47,12 @@
                 </i>
                 <!-- /ko -->
                 <i class="separator"></i>
+                <i title="Undo" class="button" data-bind="click: undo">
+                    <i class="icon-large icon-undo"></i>
+                </i>
+                <i class="separator"></i>
                 <i title="Submit" class="button" data-bind="click: getImageData">
-                    <i class="icon-large icon-ok"></i>
+                    <i class="icon-large icon-export"></i>
                 </i>
             </span>
         </div>

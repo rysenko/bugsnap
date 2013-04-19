@@ -8,6 +8,30 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
 
     var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
 
+    var HistoryManager = (function () {
+        function HistoryManager(options) {
+            this.Editor = options.Editor;
+            this.Operations = [];
+        }
+        HistoryManager.prototype.add = function (operation, params) {
+            this.Operations.push({operation: operation, params: params});
+        };
+        HistoryManager.prototype.revert = function () {
+            if (this.Operations.length == 0) return;
+            var data = this.Operations.pop();
+            var operation = data.operation;
+            var params = data.params;
+            if (operation == 'Crop') {
+                this.Editor.setViewBox(params.x, params.y, params.width, params.height);
+            } else if (operation == 'Rectangle' || operation == 'Arrow' || operation == 'Text') {
+                if (params.obj) {
+                    params.obj.remove();
+                }
+            }
+        };
+        return HistoryManager;
+    })();
+
     var DetailsViewModel = (function () {
         function DetailsViewModel(options) {
             this.Parent = options.Parent;
@@ -88,7 +112,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
     var EditorViewModel = (function () {
         function EditorViewModel(options) {
             this.Parent = options.Parent;
-            this.ActiveInstrument = ko.observable('Pointer');
+            this.ActiveInstrument = ko.observable('Rectangle');
             this.ActiveObject = ko.observable();
             this.ActiveColor = ko.observable('Red');
             this.IsDrawing = ko.observable(false);
@@ -111,14 +135,17 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.setColor = function (color) {
                 self.ActiveColor(color);
             };
+            this.ViewBox = ko.observable({x: 0, y: 0});
+            this.History = new HistoryManager({Editor: this});
             this.init();
         }
         EditorViewModel.prototype.init = function () {
             var screenshotUrl = localStorage.getItem('screenshot');
             if (screenshotUrl) {
+                var width = window.innerWidth, height = window.innerHeight;
                 var fillWindow = function (canvas) {
-                    canvas.width  = window.innerWidth;
-                    canvas.height = window.innerHeight;
+                    canvas.width  = width;
+                    canvas.height = height;
                 };
                 var canvas = document.getElementById('canvas');
                 var output = document.getElementById('output');
@@ -133,13 +160,11 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 if (isFF) {
                     localStorage.removeItem("screenshot");
                 }
-                this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
+                this.ViewBox({x: 0, y: 0, width: width, height: height});
+                this.Paper = new Raphael(document.getElementById('editor'), width, height);
             } else {
                 setTimeout(this.init.bind(this), 100);
             }
-        };
-        EditorViewModel.prototype.setPointer = function () {
-            this.ActiveInstrument('Pointer');
         };
         EditorViewModel.prototype.setRectangle = function () {
             this.ActiveInstrument('Rectangle');
@@ -236,17 +261,23 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             }
         };
         EditorViewModel.prototype.editorUp = function (data, event) {
-            if (this.ActiveInstrument() == 'Crop') {
+            var activeInstrument = this.ActiveInstrument();
+            if (activeInstrument == 'Crop') {
                 var activeObject = this.ActiveObject();
                 var x = activeObject.attr('x'), y = activeObject.attr('y');
                 var width = activeObject.attr('width'), height = activeObject.attr('height');
                 var self = this;
                 this.setViewBox(x, y, width, height).done(function () {
                     activeObject.remove();
-                    self.ActiveInstrument('Pointer');
+                    self.History.add('Crop', self.ViewBox());
+                    self.ViewBox({x: x, y: y, width: width, height: height});
+                    self.ActiveInstrument('Rectangle');
                 });
             }
             if (!this.IsTextMode()) {
+                if (activeInstrument != 'Crop') {
+                    this.History.add(activeInstrument, {obj: this.ActiveObject()});
+                }
                 this.IsDrawing(false);
                 this.ActiveObject(null);
             }
@@ -278,6 +309,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             img = img.replace('data:image/png;base64,', '');
             $("#issue_dialog").dialog("open");
             return img;
+        };
+        EditorViewModel.prototype.undo = function () {
+            this.History.revert();
         };
         return EditorViewModel;
     })();
