@@ -4,63 +4,9 @@ requirejs.config({
    }
 });
 
-define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], function ($, ko, Raphael, canvg) {
+define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jquery.ui'], function ($, ko, Raphael, canvg, GeminiCommunicator) {
 
     var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
-
-    var GeminiCommunicator = (function () {
-        function GeminiCommunicator() {
-            if(isFF) { // add options page for FF later
-                this.geminiUrl = "http://rysenkocomp.dlinkddns.com/gemini/api/";
-                this.geminiUsername = window.btoa('manager:e44knrbhxb'); // user:apikey
-            } else {
-                this.geminiUrl = localStorage["GeminiUrl"]+ "/api/";
-                this.geminiUsername = window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]); // user:apikey
-            }
-        }
-        GeminiCommunicator.prototype.search = function (query) {
-            return $.ajax({
-                url: this.geminiUrl + "items/filtered",
-                type: "POST",
-                data: {
-                    SearchKeywords: query,
-                    IncludeClosed: "false",
-                    Projects: "ALL"
-                },
-                headers: { "Authorization": "Basic " + this.geminiUsername }
-            });
-        };
-        GeminiCommunicator.prototype.comment = function (projectId, issueId, comment) {
-            return $.ajax({
-                url: this.geminiUrl + "items/" + issueId + "/comments",
-                type: "POST",
-                data: {
-                    ProjectId: projectId,
-                    IssueId: issueId,
-                    UserId: "1",
-                    Comment: comment
-                },
-                headers: { "Authorization": "Basic " + this.geminiUsername }
-            });
-        };
-        GeminiCommunicator.prototype.attach = function (projectId, issueId, fileContent) {
-            return $.ajax({
-                url: this.geminiUrl + "items/" + issueId + "/attachments",
-                type: "POST",
-                data: JSON.stringify({
-                    ProjectId: projectId,
-                    IssueId: issueId,
-                    Name: "screenshot.png",
-                    ContentType: "image/png",
-                    Content: fileContent
-                }),
-                processData: false,
-                contentType: 'application/json',
-                headers: { "Authorization": "Basic " + this.geminiUsername }
-            });
-        };
-        return GeminiCommunicator;
-    })();
 
     var DetailsViewModel = (function () {
         function DetailsViewModel(options) {
@@ -288,33 +234,36 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 var activeObject = this.ActiveObject();
                 var x = activeObject.attr('x'), y = activeObject.attr('y');
                 var width = activeObject.attr('width'), height = activeObject.attr('height');
-                this.Paper.setViewBox(x, y, width, height);
-                var oldOffset = this.Offset();
-                this.Offset({x: x, y: y});
-                this.Paper.setSize(width, height);
-                var sourceCanvas = document.getElementById('canvas');
-                var outputCanvas = document.getElementById('output');
-                var croppedCanvas = document.createElement('canvas');
-                croppedCanvas.width = width;
-                croppedCanvas.height = height;
-                outputCanvas.width = width;
-                outputCanvas.height = height;
-                var croppedContext = croppedCanvas.getContext('2d');
-                var outputContext = outputCanvas.getContext('2d');
-                //TODO: Store and don't touch original screenshot and make a copy according to viewbox
-                croppedContext.drawImage(sourceCanvas, x - oldOffset.x, y - oldOffset.y, width, height, 0, 0, width, height);
-                outputContext.drawImage(sourceCanvas, x - oldOffset.x, y - oldOffset.y, width, height, 0, 0, width, height);
-                sourceCanvas.width = width;
-                sourceCanvas.height = height;
-                var sourceContext = sourceCanvas.getContext('2d');
-                sourceContext.drawImage(croppedCanvas, 0, 0);
-                activeObject.remove();
-                this.ActiveInstrument('Pointer');
+                var self = this;
+                this.setViewBox(x, y, width, height).done(function () {
+                    activeObject.remove();
+                    self.ActiveInstrument('Pointer');
+                });
             }
             if (!this.IsTextMode()) {
                 this.IsDrawing(false);
                 this.ActiveObject(null);
             }
+        };
+        EditorViewModel.prototype.setViewBox = function (x, y, width, height) {
+            var deferred = $.Deferred();
+            this.Paper.setViewBox(x, y, width, height);
+            this.Offset({x: x, y: y});
+            this.Paper.setSize(width, height);
+            var sourceCanvas = document.getElementById('canvas');
+            var outputCanvas = document.getElementById('output');
+            sourceCanvas.width = width;
+            sourceCanvas.height = height;
+            outputCanvas.width = width;
+            outputCanvas.height = height;
+            var imageObj = new Image();
+            imageObj.onload = function() {
+                sourceCanvas.getContext('2d').drawImage(this, x, y, width, height, 0, 0, width, height);
+                outputCanvas.getContext('2d').drawImage(this, x, y, width, height, 0, 0, width, height);
+                deferred.resolve();
+            };
+            imageObj.src = localStorage.getItem('screenshot');
+            return deferred.promise();
         };
         EditorViewModel.prototype.getImageData = function () {
             var output = document.getElementById('output');
