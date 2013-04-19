@@ -114,6 +114,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.Parent = options.Parent;
             this.ActiveInstrument = ko.observable('Rectangle');
             this.ActiveObject = ko.observable();
+            this.ActiveInstrument.subscribe(function (value) {
+                this.ActiveObject(null); // for TextMode
+            }, this);
             this.ActiveColor = ko.observable('Red');
             this.IsDrawing = ko.observable(false);
             this.StartPoint = ko.observable();
@@ -179,7 +182,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.ActiveInstrument('Crop');
         };
         EditorViewModel.prototype.getOffset = function (event) {
-            var initialOffset = this.Offset();
+            var initialOffset = this.ViewBox();
             return {
                      x: initialOffset.x + (isFF ? event.layerX : event.offsetX),
                      y: initialOffset.y + (isFF ? event.layerY :event.offsetY)
@@ -223,9 +226,11 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             }
             if (activeInstrument == 'Text') {
                 activeObject.attr('fill', this.ActiveColor());
+                this.History.add(activeInstrument, {obj: activeObject});
             } else if (activeInstrument != 'Crop') {
                 activeObject.attr('stroke', this.ActiveColor());
                 activeObject.attr('stroke-width', 3);
+                this.History.add(activeInstrument, {obj: activeObject});
             }
             this.ActiveObject(activeObject);
         };
@@ -274,18 +279,14 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     self.ActiveInstrument('Rectangle');
                 });
             }
+            this.IsDrawing(false);
             if (!this.IsTextMode()) {
-                if (activeInstrument != 'Crop') {
-                    this.History.add(activeInstrument, {obj: this.ActiveObject()});
-                }
-                this.IsDrawing(false);
                 this.ActiveObject(null);
             }
         };
         EditorViewModel.prototype.setViewBox = function (x, y, width, height) {
             var deferred = $.Deferred();
             this.Paper.setViewBox(x, y, width, height);
-            this.Offset({x: x, y: y});
             this.Paper.setSize(width, height);
             var sourceCanvas = document.getElementById('canvas');
             var outputCanvas = document.getElementById('output');
