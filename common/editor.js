@@ -146,7 +146,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             }, this);
             this.ActiveText = ko.observable();
             this.ActiveText.subscribe(function (value) {
-                this.ActiveObject().attr('text', value);
+                var activeText = this.ActiveObject();
+                activeText.attr('text', value);
+                for (var i = 0; i < activeText[0].childNodes.length; i++) {
+                    activeText[0].childNodes[i].setAttribute('dy', '19');
+                }
+                activeText[0].firstChild.setAttribute('dy', '0');
             }, this);
             this.Offset = ko.observable({x: 0, y: 0});
             this.Colors = ko.observableArray(['Red', 'Orange', 'Green', 'Blue']);
@@ -173,7 +178,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                     output.getContext('2d').drawImage(this, 0, 0);
                 };
                 imageObj.src = screenshotUrl;
-                localStorage.removeItem("screenshot");
+                if (isFF) {
+                    localStorage.removeItem("screenshot");
+                }
                 this.Paper = new Raphael(document.getElementById('editor'), window.innerWidth, window.innerHeight);
             } else {
                 setTimeout(this.init.bind(this), 100);
@@ -214,20 +221,28 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             } else if (activeInstrument == 'Text') {
                 var textEditor = $('#texted');
                 activeObject = this.Paper.text(offset.x, offset.y, '');
-                $(activeObject[0]).css({'text-anchor': 'start', 'font-size': '16px', 'font-family': 'Arial'});
+                activeObject.attr('text-anchor', 'start');
+                $(activeObject[0]).css({
+                    'font-size': '16px',
+                    'font-family': 'Arial'});
                 textEditor.val('').focus();
-                textEditor.css({'left': event.clientX - (isFF ? 1 : 0), 'top': event.clientY - 9 - (isFF ? 1 : 0),
-                    'font-size': '16px', 'font-family': 'Arial', 'color': this.ActiveColor()});
+                textEditor.css({
+                    left: event.clientX - (isFF ? 1 : 0),
+                    top: event.clientY - 15 - (isFF ? 1 : 0),
+                    'font-size': '16px',
+                    'font-family': 'Arial',
+                    color: this.ActiveColor(),
+                    width: this.Paper.width - event.clientX
+                });
             } else if (activeInstrument == 'Crop') {
                 activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
-                activeObject.attr(
-                                {
-                                    'stroke' : '#707070', 
-                                    'stroke-dasharray' : '--.',
-                                    'stroke-width': 2,
-                                    'fill': 'Gray',
-                                    'fill-opacity': 0.1
-                                });
+                activeObject.attr({
+                    'stroke' : '#777',
+                    'stroke-dasharray' : '--.',
+                    'stroke-width': 2,
+                    'fill': 'Gray',
+                    'fill-opacity': 0.1
+                });
             }
             if (activeInstrument == 'Text') {
                 activeObject.attr('fill', this.ActiveColor());
