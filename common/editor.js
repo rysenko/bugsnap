@@ -25,16 +25,27 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
             }
         }
         GeminiCommunicator.prototype.search = function (query) {
-            return $.ajax({
+			var options = {
                 url: this.geminiUrl + "items/filtered",
                 type: "POST",
                 data: {
                     SearchKeywords: query,
                     IncludeClosed: "false",
-                    Projects: "ALL"
+                    Projects: "ALL",
+					MaxItemsToReturn: 10
                 },
                 headers: { "Authorization": "Basic " + this.geminiUsername }
-            });
+            };
+			if(!isNaN(query)) {
+				options.url = this.geminiUrl + "items/" + query;
+				options.type = "GET";
+				options.data = null;
+			}
+			else if(query.length < 3) {
+				return null;
+			}
+			
+            return $.ajax(options);
         };
         GeminiCommunicator.prototype.comment = function (projectId, issueId, comment) {
             return $.ajax({
@@ -97,14 +108,20 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'js/jquery.ui'], f
                 appendTo: "#issue_dialog",
                 minLength: 1,
                 source: function(request, response) {
-                    self.Communicator.search(request.term).done(function (data) {
-                        var labeledData = $.map(data, function (item) {
-                            item.label = item.IssueKey + " " + item.Title;
-                            item.value = item.Id;
-                            return item;
-                        })
-                        response(labeledData);
-                    });
+                    var search = self.Communicator.search(request.term)
+					if (search != null) {
+						search.done(function (data) {
+							if(data.constructor != Array) {
+								data = new Array(data);
+							}
+							var labeledData = $.map(data, function (item) {
+								item.label = item.IssueKey + " " + item.Title;
+								item.value = item.Id;
+								return item;
+							})
+							response(labeledData);
+						});
+					}
                 },
                 focus: function( event, ui ) {
                     $("#issue").val(ui.item.label);
