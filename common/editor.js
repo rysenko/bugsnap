@@ -32,6 +32,51 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         return HistoryManager;
     })();
 
+    var Shadow = (function () {
+        function Shadow(editor) {
+            this.Editor = editor;
+            this.Rects = [];
+        }
+        Shadow.prototype.Show = function (x, y, width, height) {
+            if(this.Rects.length == 0){
+                this.Rects.push(this.Editor.Paper.rect(0, 0, 0, 0));
+                this.Rects.push(this.Editor.Paper.rect(0, 0, 0, 0));
+                this.Rects.push(this.Editor.Paper.rect(0, 0, 0, 0));
+                this.Rects.push(this.Editor.Paper.rect(0, 0, 0, 0));    
+                $.each(this.Rects, function(){ this.attr({'stroke-width': 0, 'fill': 'Gray', 'fill-opacity': 0.4}) });   
+            }
+            this.Rects[0].attr({
+                'x': 0,
+                'y': 0,
+                'width': x + width,
+                'height': y
+            });
+            this.Rects[1].attr({
+                'x': x + width,
+                'y': 0,
+                'width': window.innerWidth - x - width,
+                'height': y + height
+            });
+            this.Rects[2].attr({
+                'x': x,
+                'y': y + height,
+                'width': window.innerWidth - x,
+                'height': window.innerHeight - y - height
+            });
+            this.Rects[3].attr({
+                'x': 0,
+                'y': y,
+                'width': x,
+                'height': window.innerHeight - y
+            });
+        };
+        Shadow.prototype.Hide = function () {
+            $.each(this.Rects, function(){ this.remove() }); 
+            this.Rects = [];
+        };
+        return Shadow;
+    })();
+
     var DetailsViewModel = (function () {
         function DetailsViewModel(options) {
             this.Parent = options.Parent;
@@ -140,6 +185,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             };
             this.ViewBox = ko.observable({x: 0, y: 0});
             this.History = new HistoryManager({Editor: this});
+            this.Shadow = new Shadow(this);
             this.init();
         }
         EditorViewModel.prototype.init = function () {
@@ -219,9 +265,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 activeObject.attr({
                     'stroke' : '#777',
                     'stroke-dasharray' : '--.',
-                    'stroke-width': 2,
-                    'fill': 'Gray',
-                    'fill-opacity': 0.1
+                    'stroke-width': 1
                 });
             }
             if (activeInstrument == 'Text') {
@@ -248,6 +292,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     activeObject.attr('y', minY);
                     activeObject.attr('width', maxX - minX);
                     activeObject.attr('height', maxY - minY);
+                    if(this.ActiveInstrument() == 'Crop'){
+                        this.Shadow.Show(minX, minY, maxX - minX, maxY - minY);                        
+                    }
                 } else if (this.ActiveInstrument() == 'Arrow') {
                     var arrowPath = function(x1, y1, x2, y2, size) {
                         var angle = Raphael.angle(x1, y1, x2, y2);
@@ -278,6 +325,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     self.ViewBox({x: x, y: y, width: width, height: height});
                     self.ActiveInstrument('Rectangle');
                 });
+                this.Shadow.Hide();
             }
             this.IsDrawing(false);
             if (!this.IsTextMode()) {
