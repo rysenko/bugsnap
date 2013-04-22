@@ -197,21 +197,14 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 imageObj.onload = function() {
                     width = this.naturalWidth;
                     height = this.naturalHeight;
-                    var canvas = document.getElementById('canvas');
-                    var output = document.getElementById('output');
-                    canvas.width = width; canvas.height = height;
-                    output.width = width; output.height = height;
-                    canvas.getContext('2d').drawImage(this, 0, 0);
-                    output.getContext('2d').drawImage(this, 0, 0);
-                    self.ViewBox({x: 0, y: 0, width: width, height: height});
+                    self.Paper = new Raphael(document.getElementById('editor'), width, height);
+                    self.setViewBox(0, 0, width, height);
                 };
                 imageObj.src = screenshotUrl;
                 if (isFF) {
                     localStorage.setItem("screenshotStored", screenshotUrl);
                     localStorage.removeItem("screenshot");
                 }
-                
-                this.Paper = new Raphael(document.getElementById('editor'), width, height);
             } else {
                 setTimeout(this.init.bind(this), 100);
             }
@@ -352,7 +345,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 deferred.resolve();
             };
             imageObj.src = localStorage.getItem('screenshot' + (isFF ? 'Stored' : ''));
-            this.setCenter();
             return deferred.promise();
         };
         EditorViewModel.prototype.setCenter = function () {
