@@ -301,8 +301,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                         var x2b = x2 + Math.cos(a45m) * size;
                         var y2b = y2 + Math.sin(a45m) * size;
                         return "M"+x1+" "+y1+"L"+x2+" "+y2+
-                            "M"+x2+" "+y2+"L"+x2a+" "+y2a+
-                            "M"+x2+" "+y2+"L"+x2b+" "+y2b;
+                            "M"+x2a+" "+y2a+"L"+x2+" "+y2+
+                            "L"+x2b+" "+y2b;
                     };
                     activeObject.attr('path', arrowPath(startPoint.x, startPoint.y, offset.x, offset.y, 10));
                 }
@@ -353,7 +353,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var viewBox = this.ViewBox();
             var left = Math.round((window.innerWidth - viewBox.width) / 2);
             var top = Math.round((window.innerHeight - viewBox.height) / 2);
-            if (top > 50) top = 50;
+            if (top > 30) top = 30;
             var sourceCanvas = document.getElementById('canvas');
             var outputCanvas = document.getElementById('output');
             outputCanvas.style.left = left + 'px'; outputCanvas.style.top = top + 'px';
