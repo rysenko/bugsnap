@@ -4,25 +4,25 @@
  "jetpackID": "jid1-AEnEhteHXOHYuw@jetpack", 
  "loader": "addon-sdk/lib/sdk/loader/cuddlefish.js", 
  "main": "main", 
- "mainPath": "bugshooter/main", 
+ "mainPath": "bugsnap/main",
  "manifest": {
-  "bugshooter/main": {
+  "bugsnap/main": {
    "docsSHA256": null, 
    "jsSHA256": "bd0cbace00f9eed84915b06cf50ecd2a12e8ea640119f4313519b47902e5b492", 
    "moduleName": "main", 
-   "packageName": "bugshooter", 
+   "packageName": "bugsnap",
    "requirements": {
     "page-mod": "sdk/page-mod", 
     "self": "sdk/self", 
-    "toolbarButton": "bugshooter/toolbarButton"
+    "toolbarButton": "bugsnap/toolbarButton"
    }, 
    "sectionName": "lib"
   }, 
-  "bugshooter/toolbarButton": {
+  "bugsnap/toolbarButton": {
    "docsSHA256": null, 
    "jsSHA256": "d56da0c4ccad25d18a5aceb785080578ff7213f2f60ae9448fbf7f37040f7d37", 
    "moduleName": "toolbarButton", 
-   "packageName": "bugshooter", 
+   "packageName": "bugsnap",
    "requirements": {
     "chrome": "chrome", 
     "self": "sdk/self"
@@ -45,15 +45,15 @@
    "license": "MPL 2.0", 
    "name": "addon-sdk"
   }, 
-  "bugshooter": {
-   "description": "Bug Shooter", 
+  "bugsnap": {
+   "description": "Bug Snap",
    "license": "MPL 2.0", 
    "main": "main", 
-   "name": "bugshooter", 
-   "version": "0.1"
+   "name": "bugsnap",
+   "version": "0.1.1"
   }
  }, 
- "name": "bugshooter", 
+ "name": "bugsnap",
  "sdkVersion": "1.14", 
  "staticArgs": {}, 
  "verbose": false

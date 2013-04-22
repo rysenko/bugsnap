@@ -1,8 +1,7 @@
 syntax: glob
 .idea
 chrome\common\
-firefox\resources\bugshooter\data\common\
-
+firefox\resources\bugsnap\data\common\
 syntax: regexp
 ^default.build$
 \.xpi$

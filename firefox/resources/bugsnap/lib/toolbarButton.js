@@ -13,7 +13,7 @@ function addToolbarButton(){
 	var document = mediator.getMostRecentWindow("navigator:browser").document;
 	var addonBar = document.getElementById("nav-bar");
 	var toolbarbutton = document.createElement("toolbarbutton"); 	
-	toolbarbutton.id = 'bugshooter-screenshot-toolbarbutton';
+	toolbarbutton.id = 'bugsnap-screenshot-toolbarbutton';
 	toolbarbutton.setAttribute('class', 'toolbarbutton-1 chromeclass-toolbar-additional');
 	toolbarbutton.setAttribute('image', data.url('common/img/16.png'));
 	toolbarbutton.setAttribute('orient', 'horizontal');

@@ -1,13 +1,13 @@
 chrome.browserAction.onClicked.addListener(function() {
-    chrome.tabs.getSelected(null,function(tab) { openBugShooter(tab);});
+    chrome.tabs.getSelected(null,function(tab) { openBugSnap(tab);});
 });
 chrome.commands.onCommand.addListener(function(command) {
-  if(command == 'toggle-bugshooter-on') {
-	chrome.tabs.getSelected(null,function(tab) { openBugShooter(tab);});
+  if(command == 'toggle-bugsnap-on') {
+	chrome.tabs.getSelected(null,function(tab) { openBugSnap(tab);});
   }
 });
 
-function openBugShooter(tab) {
+function openBugSnap(tab) {
         chrome.tabs.captureVisibleTab(null, {
             format: "png"
         }, function (data) {
