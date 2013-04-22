@@ -314,12 +314,14 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 var activeObject = this.ActiveObject();
                 var x = activeObject.attr('x'), y = activeObject.attr('y');
                 var width = activeObject.attr('width'), height = activeObject.attr('height');
-                this.History.add('Crop', this.ViewBox());
-                var self = this;
-                this.setViewBox(x, y, width, height).done(function () {
-                    activeObject.remove();
-                    self.ActiveInstrument('Rectangle');
-                });
+                if (width * width + height * height > 50) {
+                    this.History.add('Crop', this.ViewBox());
+                    var self = this;
+                    this.setViewBox(x, y, width, height).done(function () {
+                        activeObject.remove();
+                        self.ActiveInstrument('Rectangle');
+                    });
+                }
                 this.Shadow.Hide();
             }
             this.IsDrawing(false);
