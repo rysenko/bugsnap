@@ -4,7 +4,7 @@
         "page": "background.html"
     },
     "options_page": "common/options.html",
-    "name": "Bug Shooter",
+    "name": "BugSnap",
     "description": "Shoot your bug and send photo.",
     "version": "0.1.1",
     "icons": {

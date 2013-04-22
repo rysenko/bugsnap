@@ -18,8 +18,8 @@
     </em:targetApplication>
 
     <!-- Front End MetaData -->
-    <em:name>BugShooter</em:name>
-    <em:description>Bug Shooter</em:description>
+    <em:name>BugSnap</em:name>
+    <em:description>Snap and annotate you bugs in your browser.</em:description>
     <em:creator></em:creator>
     
     

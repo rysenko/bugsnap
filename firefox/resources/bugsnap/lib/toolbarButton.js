@@ -17,8 +17,8 @@ function addToolbarButton(){
 	toolbarbutton.setAttribute('class', 'toolbarbutton-1 chromeclass-toolbar-additional');
 	toolbarbutton.setAttribute('image', data.url('common/img/16.png'));
 	toolbarbutton.setAttribute('orient', 'horizontal');
-	toolbarbutton.setAttribute('label', 'Bug Shooter');
-	toolbarbutton.setAttribute('tooltiptext', 'Bug Shooter');
+	toolbarbutton.setAttribute('label', 'BugSnap');
+	toolbarbutton.setAttribute('tooltiptext', 'BugSnap');
 	toolbarbutton.addEventListener('mousedown', function(e) { makeScreenShot(); }, false);
 	addonBar.appendChild(toolbarbutton);
 };
