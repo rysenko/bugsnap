@@ -216,6 +216,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             } else {
                 setTimeout(this.init.bind(this), 100);
             }
+            $(window).resize(this.setCenter.bind(this));
         };
         EditorViewModel.prototype.setRectangle = function () {
             this.ActiveInstrument('Rectangle');
@@ -321,11 +322,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 var activeObject = this.ActiveObject();
                 var x = activeObject.attr('x'), y = activeObject.attr('y');
                 var width = activeObject.attr('width'), height = activeObject.attr('height');
+                this.History.add('Crop', this.ViewBox());
                 var self = this;
                 this.setViewBox(x, y, width, height).done(function () {
                     activeObject.remove();
-                    self.History.add('Crop', self.ViewBox());
-                    self.ViewBox({x: x, y: y, width: width, height: height});
                     self.ActiveInstrument('Rectangle');
                 });
                 this.Shadow.Hide();
@@ -341,18 +341,31 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.Paper.setSize(width, height);
             var sourceCanvas = document.getElementById('canvas');
             var outputCanvas = document.getElementById('output');
-            sourceCanvas.width = width;
-            sourceCanvas.height = height;
-            outputCanvas.width = width;
-            outputCanvas.height = height;
+            sourceCanvas.width = width; sourceCanvas.height = height;
+            outputCanvas.width = width; outputCanvas.height = height;
             var imageObj = new Image();
+            var self = this;
             imageObj.onload = function() {
                 sourceCanvas.getContext('2d').drawImage(this, x, y, width, height, 0, 0, width, height);
                 outputCanvas.getContext('2d').drawImage(this, x, y, width, height, 0, 0, width, height);
+                self.ViewBox({x: x, y: y, width: width, height: height});
+                self.setCenter();
                 deferred.resolve();
             };
             imageObj.src = localStorage.getItem('screenshot' + (isFF ? 'Stored' : ''));
+            this.setCenter();
             return deferred.promise();
+        };
+        EditorViewModel.prototype.setCenter = function () {
+            var viewBox = this.ViewBox();
+            var left = Math.round((window.innerWidth - viewBox.width) / 2) + 'px';
+            var top = Math.round((window.innerHeight - viewBox.height) / 2) + 'px';
+            var sourceCanvas = document.getElementById('canvas');
+            var outputCanvas = document.getElementById('output');
+            outputCanvas.style.left = left; outputCanvas.style.top = top;
+            sourceCanvas.style.left = left; sourceCanvas.style.top = top;
+            var editor = document.getElementById("editor");
+            editor.style.left = left; editor.style.top = top;
         };
         EditorViewModel.prototype.getImageData = function () {
             var output = document.getElementById('output');
