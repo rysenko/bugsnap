@@ -207,6 +207,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 };
                 imageObj.src = screenshotUrl;
                 if (isFF) {
+                    localStorage.setItem("screenshotStored", localStorage.getItem("screenshot"));
                     localStorage.removeItem("screenshot");
                 }
                 this.ViewBox({x: 0, y: 0, width: width, height: height});
@@ -348,7 +349,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 outputCanvas.getContext('2d').drawImage(this, x, y, width, height, 0, 0, width, height);
                 deferred.resolve();
             };
-            imageObj.src = localStorage.getItem('screenshot');
+            imageObj.src = localStorage.getItem('screenshot' + (isFF ? 'Stored' : ''));
             return deferred.promise();
         };
         EditorViewModel.prototype.getImageData = function () {
