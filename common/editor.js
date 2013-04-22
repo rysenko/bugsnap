@@ -177,7 +177,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 }
                 activeText[0].firstChild.setAttribute('dy', '0');
             }, this);
-            this.Offset = ko.observable({x: 0, y: 0});
             this.Colors = ko.observableArray(['Red', 'Orange', 'Green', 'Blue']);
             var self = this;
             this.setColor = function (color) {
@@ -191,26 +190,26 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         EditorViewModel.prototype.init = function () {
             var screenshotUrl = localStorage.getItem('screenshot');
             if (screenshotUrl) {
+                var self = this;
                 var width = window.innerWidth, height = window.innerHeight;
-                var fillWindow = function (canvas) {
-                    canvas.width  = width;
-                    canvas.height = height;
-                };
-                var canvas = document.getElementById('canvas');
-                var output = document.getElementById('output');
-                fillWindow(canvas);
-                fillWindow(output);
                 var imageObj = new Image();
                 imageObj.onload = function() {
+                    width = this.naturalWidth;
+                    height = this.naturalHeight;
+                    var canvas = document.getElementById('canvas');
+                    var output = document.getElementById('output');
+                    canvas.width = width; canvas.height = height;
+                    output.width = width; output.height = height;
                     canvas.getContext('2d').drawImage(this, 0, 0);
                     output.getContext('2d').drawImage(this, 0, 0);
+                    self.ViewBox({x: 0, y: 0, width: width, height: height});
                 };
                 imageObj.src = screenshotUrl;
                 if (isFF) {
-                    localStorage.setItem("screenshotStored", localStorage.getItem("screenshot"));
+                    localStorage.setItem("screenshotStored", screenshotUrl);
                     localStorage.removeItem("screenshot");
                 }
-                this.ViewBox({x: 0, y: 0, width: width, height: height});
+                
                 this.Paper = new Raphael(document.getElementById('editor'), width, height);
             } else {
                 setTimeout(this.init.bind(this), 100);
