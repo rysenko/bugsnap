@@ -188,6 +188,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     node.setAttribute('dy', lineHeight * (emptyPrevsCount + 1));                   
                 }
                 activeText[0].firstChild.setAttribute('dy', '0');
+                $('#texted').css('width', activeText.getBBox().width + 10);
+                $('#texted').attr('rows', activeText[0].childNodes.length);
             }, this);
             this.Colors = ko.observableArray(['Red', 'Orange', 'Green', 'Blue']);
             var self = this;
@@ -264,8 +266,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     top: event.clientY - 15 - (isFF ? 1 : 0),
                     'font-size': '16px',
                     'font-family': 'Arial',
-                    color: this.ActiveColor(),
-                    width: this.Paper.width - event.offsetX
+                    color: this.ActiveColor()
                 });
             } else if (activeInstrument == 'Crop') {
                 activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
