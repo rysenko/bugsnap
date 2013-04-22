@@ -174,7 +174,18 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 var activeText = this.ActiveObject();
                 activeText.attr('text', value);
                 for (var i = 0; i < activeText[0].childNodes.length; i++) {
-                    activeText[0].childNodes[i].setAttribute('dy', '19');
+                    var node = activeText[0].childNodes[i];
+                    var lineHeight = 19 + (isFF ? 1 : 0);
+
+                    var emptyPrevsCount = 0;
+                    $(node).prevAll().each(function(index) {
+                        if($(this).text()) {
+                            return false;
+                        } else {
+                            emptyPrevsCount++;
+                        }
+                    });
+                    node.setAttribute('dy', lineHeight * (emptyPrevsCount + 1));                   
                 }
                 activeText[0].firstChild.setAttribute('dy', '0');
             }, this);
