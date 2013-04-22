@@ -50,13 +50,19 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
 					type: "GET",
 					headers: { "Authorization": "Basic " + window.btoa(this.UserName() + ':' + this.APIKey()) },
 					success: function(data) {
-							alert('Successfully connected to Gemini!');
+							$(".confirmationMessage").stop().hide().text("Successfully connected to Gemini!").fadeIn(400, function() {
+								$(this).delay(1700).fadeOut(400);
+							});
 						},
 					error: function(jqXHR, textStatus, errorThrown) {
 						if(textStatus == 'timeout' || errorThrown == "Not Found")
-							alert('Unable to connect to Gemini at specified URL.');
+							$(".confirmationMessage").stop().hide().text("Unable to connect to Gemini at specified URL.").fadeIn(400, function() {
+								$(this).delay(1700).fadeOut(400);
+							});
 						if(errorThrown == "Forbidden")
-							alert('Unable to login using supplied credentials.')
+							$(".confirmationMessage").stop().hide().text("Unable to login using supplied credentials.").fadeIn(400, function() {
+								$(this).delay(1700).fadeOut(400);
+							});
 					}
 					
 				});
@@ -64,23 +70,25 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
         };
         OptionsPageViewModel.prototype.save = function () {
             if($("#optionsForm").valid()) {
-			if($('input[name=method]:checked').val() != 'Password') {
-						localStorage["AuthMethod"] = "apikey";
-						localStorage["GeminiUrl"] = this.GeminiUrl();
-						localStorage["UserName"] = this.UserName();
-						localStorage["APIKey"] = this.APIKey();
-					}
-					else {
-						localStorage["AuthMethod"] = "password";
-						localStorage["GeminiUrl"] = this.GeminiUrl();
-						localStorage["UserName"] = this.UserName();
-						var authString = md5(this.Password());
-						localStorage["passwordLength"] = this.Password().length;
-						localStorage["APIKey"] = this.APIKey();
-						localStorage["AuthString"] = authString;
-					}
-				
-            }
+				if($('input[name=method]:checked').val() != 'Password') {
+					localStorage["AuthMethod"] = "apikey";
+					localStorage["GeminiUrl"] = this.GeminiUrl();
+					localStorage["UserName"] = this.UserName();
+					localStorage["APIKey"] = this.APIKey();
+				}
+				else {
+					localStorage["AuthMethod"] = "password";
+					localStorage["GeminiUrl"] = this.GeminiUrl();
+					localStorage["UserName"] = this.UserName();
+					var authString = md5(this.Password());
+					localStorage["passwordLength"] = this.Password().length;
+					localStorage["APIKey"] = this.APIKey();
+					localStorage["AuthString"] = authString;
+				}
+				$(".confirmationMessage").stop().hide().text("Options saved.").fadeIn(400, function() {
+						$(this).delay(1000).fadeOut(400);
+					});
+			}
         };
         return OptionsPageViewModel;
     })();
