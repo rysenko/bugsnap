@@ -110,26 +110,18 @@ html, body {
 	width: 80%;
 }
 
-.modal {
-    display:    none;
-    position:   fixed;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
-    background: rgba( 255, 255, 255, .8 ) 
-                url('../img/FhHRx.gif') 
-                50% 50% 
-                no-repeat;
+.loading-indicator {
+	height: 80px;
+	width: 80px;
+	background: url( '../img/FhHRx.gif' );
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
-body.loading {
-    overflow: hidden;   
-}
-
-body.loading .modal {
-    display: block;
+.loading-indicator-overlay {
+	background-color: #FFFFFF;
+	opacity: 0.6;
+	filter: alpha(opacity = 60);
 }
 
 .button-state-active {

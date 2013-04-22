@@ -38,8 +38,13 @@ input[type=password] {
 	width: 300px;
 }
 .save {
-	width : 460px;
-	text-align: right;
+	width : 650px;
+}
+.confirmationMessage {
+	display : none;
+	background-color: #fea;
+	padding: 3px;
+	margin-left : 10px;
 }
 </style>
 
@@ -71,9 +76,12 @@ input[type=password] {
 	<em>*</em><input type="text" name="apiKeyInput" id="apiKeyInput" class="required" data-bind="value: APIKey">
 </div>
 <br>
-<div class="save"><input data-bind="click: test" type="button" value="Test Connection"/>
-<input data-bind="click: save" type="button" value="Save"/></div>
+<div class="save">
 
+<input data-bind="click: test" type="button" value="Test Connection"/>
+<input data-bind="click: save" type="button" value="Save"/>
+<span class="confirmationMessage">aaaa<span/>
+</div>
 </div>
 </form>
 </body>
