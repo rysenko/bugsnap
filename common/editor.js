@@ -157,13 +157,14 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
     var EditorViewModel = (function () {
         function EditorViewModel(options) {
             this.Parent = options.Parent;
+            this.IsDrawing = ko.observable(false);
             this.ActiveInstrument = ko.observable('Rectangle');
             this.ActiveObject = ko.observable();
             this.ActiveInstrument.subscribe(function (value) {
                 this.ActiveObject(null); // for TextMode
+                this.IsDrawing(false);
             }, this);
             this.ActiveColor = ko.observable('Red');
-            this.IsDrawing = ko.observable(false);
             this.StartPoint = ko.observable();
             this.IsTextMode = ko.computed(function () {
                 return this.ActiveInstrument() == 'Text';
@@ -236,6 +237,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                    };
         };
         EditorViewModel.prototype.editorDown = function (data, event) {
+            if (this.IsDrawing()) return;
             this.IsDrawing(true);
             var offset = this.getOffset(event);
             this.StartPoint({x: offset.x, y: offset.y});

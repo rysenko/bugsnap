@@ -80,8 +80,8 @@ html, body {
     opacity: 0.9;
 }
 
-#toolbar {
-    /* rounded corners */
+#toolbar::selection, #toolbar .button::selection {
+    background-color: transparent;
 }
 
 /*Submit dialog*/
