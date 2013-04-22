@@ -4,7 +4,7 @@ requirejs.config({
    }
 });
 
-define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jquery.ui'], function ($, ko, Raphael, canvg, GeminiCommunicator) {
+define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jquery.ui', 'js/jquery.loading'], function ($, ko, Raphael, canvg, GeminiCommunicator) {
 
     var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
 
@@ -143,11 +143,11 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             if (this.Issue() != null) {
                 var imageData = this.Parent.Editor.getImageData();
                 var self = this;
-                $("#issue_dialog").addClass("loading");
+                $("#issue_dialog").showLoading();
                 this.Communicator.comment(this.ProjectId(), this.IssueId(), this.Comment()).then(function () {
                     return self.Communicator.attach(self.ProjectId(), self.IssueId(), imageData);
                 }).done(function () {
-                   $("#issue_dialog").removeClass("loading").dialog("close");
+                   $("#issue_dialog").hideLoading().dialog("close");
                 });
             }
         };
