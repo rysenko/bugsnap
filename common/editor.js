@@ -305,8 +305,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 } else if (this.ActiveInstrument() == 'Arrow') {
                     var arrowPath = function(x1, y1, x2, y2, size) {
                         var angle = Raphael.angle(x1, y1, x2, y2);
-                        var a45   = Raphael.rad(angle-45);
-                        var a45m  = Raphael.rad(angle+45);
+                        var a45   = Raphael.rad(angle-25);
+                        var a45m  = Raphael.rad(angle+25);
                         var x2a = x2 + Math.cos(a45) * size;
                         var y2a = y2 + Math.sin(a45) * size;
                         var x2b = x2 + Math.cos(a45m) * size;
@@ -315,7 +315,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                             "M"+x2a+" "+y2a+"L"+x2+" "+y2+
                             "L"+x2b+" "+y2b;
                     };
-                    activeObject.attr('path', arrowPath(startPoint.x, startPoint.y, offset.x, offset.y, 10));
+                    activeObject.attr('path', arrowPath(startPoint.x, startPoint.y, offset.x, offset.y, 15));
                 }
             }
         };
