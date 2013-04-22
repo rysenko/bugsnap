@@ -254,7 +254,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     'font-size': '16px',
                     'font-family': 'Arial',
                     color: this.ActiveColor(),
-                    width: this.Paper.width - event.clientX
+                    width: this.Paper.width - event.offsetX
                 });
             } else if (activeInstrument == 'Crop') {
                 activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
@@ -349,14 +349,15 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         };
         EditorViewModel.prototype.setCenter = function () {
             var viewBox = this.ViewBox();
-            var left = Math.round((window.innerWidth - viewBox.width) / 2) + 'px';
-            var top = Math.round((window.innerHeight - viewBox.height) / 2) + 'px';
+            var left = Math.round((window.innerWidth - viewBox.width) / 2);
+            var top = Math.round((window.innerHeight - viewBox.height) / 2);
+            if (top > 50) top = 50;
             var sourceCanvas = document.getElementById('canvas');
             var outputCanvas = document.getElementById('output');
-            outputCanvas.style.left = left; outputCanvas.style.top = top;
-            sourceCanvas.style.left = left; sourceCanvas.style.top = top;
+            outputCanvas.style.left = left + 'px'; outputCanvas.style.top = top + 'px';
+            sourceCanvas.style.left = left + 'px'; sourceCanvas.style.top = top + 'px';
             var editor = document.getElementById("editor");
-            editor.style.left = left; editor.style.top = top;
+            editor.style.left = left + 'px'; editor.style.top = top + 'px';
         };
         EditorViewModel.prototype.getImageData = function () {
             var output = document.getElementById('output');
