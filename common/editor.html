@@ -59,7 +59,7 @@
         <canvas id="canvas"></canvas>
         <canvas id="output"></canvas>
         <div data-bind="event: {mousedown: editorDown, mouseup: editorUp, mousemove: editorMove}" id="editor"></div>
-        <textarea id="texted" data-bind="visible: IsTextMode, value: ActiveText, valueUpdate: 'afterkeydown'"></textarea>
+        <textarea id="texted" style="display: none" data-bind="value: ActiveText, valueUpdate: 'afterkeydown'"></textarea>
     </div>
 </body>
 </html>

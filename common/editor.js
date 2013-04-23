@@ -165,12 +165,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     this.ActiveObject(null); // for TextMode
                     this.IsDrawing(false);
                 }
+                $('#texted').hide();
             }, this);
             this.ActiveColor = ko.observable('Red');
             this.StartPoint = ko.observable();
-            this.IsTextMode = ko.computed(function () {
-                return this.ActiveInstrument() == 'Text';
-            }, this);
             this.ActiveText = ko.observable();
             this.ActiveText.subscribe(function (value) {
                 var activeText = this.ActiveObject();
@@ -239,8 +237,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                    };
         };
         EditorViewModel.prototype.editorDown = function (data, event) {
-            if (this.IsDrawing()) return;
-            this.IsDrawing(true);
             var activeObject = null;
             var target = event.target;
             if (target != null) {
@@ -251,7 +247,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     this.OldInstrument(this.ActiveInstrument());
                     this.ActiveInstrument('Move');
                 }
+            } else {
+                if (this.IsDrawing()) return;
             }
+            this.IsDrawing(true);
             var offset = this.getOffset(event);
             this.StartPoint({x: offset.x, y: offset.y});
             var activeInstrument = this.ActiveInstrument();
@@ -260,7 +259,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             } else if (activeInstrument == 'Arrow') {
                 activeObject = this.Paper.path('M0,0');
             } else if (activeInstrument == 'Text') {
-                var textEditor = $('#texted');
+                var textEditor = $('#texted').show();
                 activeObject = this.Paper.text(offset.x, offset.y, '');
                 activeObject.attr('fill', this.ActiveColor());
                 activeObject.attr('text-anchor', 'start');
@@ -340,16 +339,16 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     var self = this;
                     this.setViewBox(x, y, width, height).done(function () {
                         activeObject.remove();
-                        self.ActiveInstrument('Rectangle');
                     });
                 }
                 this.Shadow.Hide();
-            } else if (activeInstrument == 'Move') {
-                this.ActiveInstrument(this.OldInstrument());
             }
             this.IsDrawing(false);
-            if (!this.IsTextMode()) {
+            if (activeInstrument != 'Text') {
                 this.ActiveObject(null);
+            }
+            if (activeInstrument == 'Move') {
+                this.ActiveInstrument(this.OldInstrument());
             }
         };
         EditorViewModel.prototype.setViewBox = function (x, y, width, height) {
