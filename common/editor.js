@@ -241,11 +241,15 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             if (this.IsDrawing()) return;
             this.IsDrawing(true);
             var activeObject = null;
-            if (event.target != null && event.target.raphael) {
-                activeObject = this.Paper.getById(event.target.raphaelid);
-                this.OldTransform(activeObject.transform());
-                this.OldInstrument(this.ActiveInstrument());
-                this.ActiveInstrument('Move');
+            var target = event.target;
+            if (target != null) {
+                if (target.nodeName == 'tspan') target = target.parentNode;
+                if (target.raphael) {
+                    activeObject = this.Paper.getById(target.raphaelid);
+                    this.OldTransform(activeObject.transform());
+                    this.OldInstrument(this.ActiveInstrument());
+                    this.ActiveInstrument('Move');
+                }
             }
             var offset = this.getOffset(event);
             this.StartPoint({x: offset.x, y: offset.y});
