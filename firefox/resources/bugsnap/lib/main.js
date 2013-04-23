@@ -5,7 +5,7 @@ var toolbarButton = require('toolbarButton');
 pageMod.PageMod({
     include: 'resource://jid1-aenehtehxohyuw-at-jetpack/bugsnap/data/common/editor.html',
     contentScriptFile: data.url("content.js"),
-    contentScriptWhen: "end",
+    contentScriptWhen: "start",
     onAttach: function(worker) {
         worker.port.emit("message", toolbarButton.getScreenCapture() );
     }

@@ -202,25 +202,16 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.init();
         }
         EditorViewModel.prototype.init = function () {
-            var screenshotUrl = localStorage.getItem('screenshot');
-            if (screenshotUrl) {
-                var self = this;
-                var width = window.innerWidth, height = window.innerHeight;
-                var imageObj = new Image();
-                imageObj.onload = function() {
-                    width = this.naturalWidth;
-                    height = this.naturalHeight;
-                    self.Paper = new Raphael(document.getElementById('editor'), width, height);
-                    self.setViewBox(0, 0, width, height);
-                };
-                imageObj.src = screenshotUrl;
-                if (isFF) {
-                    localStorage.setItem("screenshotStored", screenshotUrl);
-                    localStorage.removeItem("screenshot");
-                }
-            } else {
-                setTimeout(this.init.bind(this), 100);
-            }
+            var self = this;
+            var width = window.innerWidth, height = window.innerHeight;
+            var imageObj = new Image();
+            imageObj.onload = function() {
+                width = this.naturalWidth;
+                height = this.naturalHeight;
+                self.Paper = new Raphael(document.getElementById('editor'), width, height);
+                self.setViewBox(0, 0, width, height);
+            };
+            imageObj.src = localStorage.getItem('screenshot');
             $(window).resize(this.setCenter.bind(this));
         };
         EditorViewModel.prototype.setRectangle = function () {
@@ -358,7 +349,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 self.setCenter();
                 deferred.resolve();
             };
-            imageObj.src = localStorage.getItem('screenshot' + (isFF ? 'Stored' : ''));
+            imageObj.src = localStorage.getItem('screenshot');
             return deferred.promise();
         };
         EditorViewModel.prototype.setCenter = function () {
