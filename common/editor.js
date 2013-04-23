@@ -231,10 +231,11 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.ActiveInstrument('Crop');
         };
         EditorViewModel.prototype.getOffset = function (event) {
-            var initialOffset = this.ViewBox();
+            var viewBox = this.ViewBox();
+            var rect = document.getElementById('editor').getBoundingClientRect();
             return {
-                     x: initialOffset.x + (isFF ? event.layerX : event.offsetX),
-                     y: initialOffset.y + (isFF ? event.layerY :event.offsetY)
+                     x: viewBox.x + event.pageX - rect.left,
+                     y: viewBox.y + event.pageY - rect.top
                    };
         };
         EditorViewModel.prototype.editorDown = function (data, event) {
@@ -286,7 +287,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 activeObject.attr('stroke', this.ActiveColor());
                 activeObject.attr('stroke-width', 3);
             }
-            if (activeObject && activeInstrument != 'Move') {
+            if (activeObject && activeInstrument != 'Move' && activeInstrument != 'Crop') {
                 this.History.add(activeInstrument, {obj: activeObject});
             }
             this.ActiveObject(activeObject);
