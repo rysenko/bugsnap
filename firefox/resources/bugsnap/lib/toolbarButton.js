@@ -1,12 +1,19 @@
 var {Cc, Ci} = require("chrome");
 var data = require("self").data;
 var tabs = require("tabs");
+var { Hotkey } = require("hotkeys");
 
 var mediator;
 var screenCapture = {};
 
 function init() {
 	mediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(Ci.nsIWindowMediator);
+    Hotkey({
+        combo: "alt-shift-q",
+        onPress: function() {
+            makeScreenShot();
+        }
+    });
 	return addToolbarButton();
 };
 

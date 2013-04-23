@@ -4,16 +4,15 @@
  "jetpackID": "jid1-AEnEhteHXOHYuw@jetpack", 
  "loader": "addon-sdk/lib/sdk/loader/cuddlefish.js", 
  "main": "main", 
- "mainPath": "bugsnap/main",
+ "mainPath": "bugsnap/main", 
  "manifest": {
   "bugsnap/main": {
    "docsSHA256": null, 
-   "jsSHA256": "bd0cbace00f9eed84915b06cf50ecd2a12e8ea640119f4313519b47902e5b492", 
+   "jsSHA256": "4af3dcd6587a895d4a788f539ad282a12cf7ca2aa06106dbab709efe8453bade", 
    "moduleName": "main", 
-   "packageName": "bugsnap",
+   "packageName": "bugsnap", 
    "requirements": {
     "page-mod": "sdk/page-mod", 
-    "tabs": "sdk/tabs", 
     "self": "sdk/self", 
     "toolbarButton": "bugsnap/toolbarButton"
    }, 
@@ -21,13 +20,14 @@
   }, 
   "bugsnap/toolbarButton": {
    "docsSHA256": null, 
-   "jsSHA256": "d56da0c4ccad25d18a5aceb785080578ff7213f2f60ae9448fbf7f37040f7d37", 
+   "jsSHA256": "8be94b813b5c60c947bfd956c11c2600eb98b351d7ed7b518faabae2ad788804", 
    "moduleName": "toolbarButton", 
-   "packageName": "bugsnap",
+   "packageName": "bugsnap", 
    "requirements": {
     "chrome": "chrome", 
-    "tabs": "sdk/tabs", 
-    "self": "sdk/self"
+    "hotkeys": "sdk/hotkeys", 
+    "self": "sdk/self", 
+    "tabs": "sdk/tabs"
    }, 
    "sectionName": "lib"
   }
@@ -48,14 +48,14 @@
    "name": "addon-sdk"
   }, 
   "bugsnap": {
-   "description": "Bug Snap",
+   "description": "BugSnap", 
    "license": "MPL 2.0", 
    "main": "main", 
-   "name": "bugsnap",
+   "name": "bugsnap", 
    "version": "0.1.1"
   }
  }, 
- "name": "bugsnap",
+ "name": "bugsnap", 
  "sdkVersion": "1.14", 
  "staticArgs": {}, 
  "verbose": false
