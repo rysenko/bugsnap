@@ -1,5 +1,6 @@
 var {Cc, Ci} = require("chrome");
 var data = require("self").data;
+var tabs = require("tabs");
 
 var mediator;
 var screenCapture = {};
@@ -46,9 +47,7 @@ function makeScreenShot() {
     var base64Img = canvas.toDataURL();
     screenCapture = { capture: base64Img };
 
-    var url = data.url('common/editor.html');
-    browser.addTab(url);
-    browser.tabContainer.advanceSelectedTab(1, true);
+    tabs.open({url: data.url('common/editor.html')});
 };
 
 function getScreenCapture() {

@@ -13,6 +13,7 @@
    "packageName": "bugsnap",
    "requirements": {
     "page-mod": "sdk/page-mod", 
+    "tabs": "sdk/tabs", 
     "self": "sdk/self", 
     "toolbarButton": "bugsnap/toolbarButton"
    }, 
@@ -25,6 +26,7 @@
    "packageName": "bugsnap",
    "requirements": {
     "chrome": "chrome", 
+    "tabs": "sdk/tabs", 
     "self": "sdk/self"
    }, 
    "sectionName": "lib"
