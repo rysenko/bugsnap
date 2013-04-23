@@ -391,6 +391,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             $("#issue_dialog").dialog("open");
             return img;
         };
+        EditorViewModel.prototype.showOptionsPage = function () {
+            window.open('options.html');
+        };
+
         EditorViewModel.prototype.undo = function () {
             this.History.revert();
         };

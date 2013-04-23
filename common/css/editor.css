@@ -134,3 +134,8 @@ rect:hover, path:hover, text:hover {
 	font-weight: bold !important;
 	color: #ffffff !important;
 }
+
+.right {
+    float: right;
+    margin-right: 10px !important;
+}

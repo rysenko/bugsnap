@@ -3,7 +3,7 @@ define(['js/jquery'], function ($) {
         function GeminiCommunicator() {
             if(window.navigator.userAgent.indexOf('Firefox') != -1) { // add options page for FF later
                 this.geminiUrl = "http://rysenkocomp.dlinkddns.com/gemini/api/";
-                this.geminiUsername = window.btoa('manager:e44knrbhxb'); // user:apikey
+                this.geminiUsername = window.btoa('manager:qjbpnsqg6i'); // user:apikey
             } else {
                 this.geminiUrl = localStorage["GeminiUrl"]+ "/api/";
                 this.geminiUsername = window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]); // user:apikey
