@@ -90,6 +90,10 @@ html, body {
     background-color: transparent;
 }
 
+rect:hover, path:hover, text:hover {
+    cursor: move;
+}
+
 /*Submit dialog*/
 #issue_dialog {
 	display: none;

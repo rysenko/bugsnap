@@ -161,8 +161,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.ActiveInstrument = ko.observable('Rectangle');
             this.ActiveObject = ko.observable();
             this.ActiveInstrument.subscribe(function (value) {
-                this.ActiveObject(null); // for TextMode
-                this.IsDrawing(false);
+                if (value != 'Move') {
+                    this.ActiveObject(null); // for TextMode
+                    this.IsDrawing(false);
+                }
             }, this);
             this.ActiveColor = ko.observable('Red');
             this.StartPoint = ko.observable();
@@ -199,6 +201,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.ViewBox = ko.observable({x: 0, y: 0});
             this.History = new HistoryManager({Editor: this});
             this.Shadow = new Shadow(this);
+            this.OldTransform = ko.observable('');
+            this.OldInstrument = ko.observable('');
             this.init();
         }
         EditorViewModel.prototype.init = function () {
@@ -236,10 +240,16 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         EditorViewModel.prototype.editorDown = function (data, event) {
             if (this.IsDrawing()) return;
             this.IsDrawing(true);
+            var activeObject = null;
+            if (event.target != null && event.target.raphael) {
+                activeObject = this.Paper.getById(event.target.raphaelid);
+                this.OldTransform(activeObject.transform());
+                this.OldInstrument(this.ActiveInstrument());
+                this.ActiveInstrument('Move');
+            }
             var offset = this.getOffset(event);
             this.StartPoint({x: offset.x, y: offset.y});
             var activeInstrument = this.ActiveInstrument();
-            var activeObject = null;
             if (activeInstrument == 'Rectangle') {
                 activeObject = this.Paper.rect(offset.x, offset.y, 0, 0);
             } else if (activeInstrument == 'Arrow') {
@@ -247,6 +257,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             } else if (activeInstrument == 'Text') {
                 var textEditor = $('#texted');
                 activeObject = this.Paper.text(offset.x, offset.y, '');
+                activeObject.attr('fill', this.ActiveColor());
                 activeObject.attr('text-anchor', 'start');
                 $(activeObject[0]).css({
                     'font-size': '16px',
@@ -267,12 +278,11 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     'stroke-width': 1
                 });
             }
-            if (activeInstrument == 'Text') {
-                activeObject.attr('fill', this.ActiveColor());
-                this.History.add(activeInstrument, {obj: activeObject});
-            } else if (activeInstrument != 'Crop') {
+            if (activeInstrument == 'Rectangle' || activeInstrument == 'Arrow') {
                 activeObject.attr('stroke', this.ActiveColor());
                 activeObject.attr('stroke-width', 3);
+            }
+            if (activeObject && activeInstrument != 'Move') {
                 this.History.add(activeInstrument, {obj: activeObject});
             }
             this.ActiveObject(activeObject);
@@ -282,7 +292,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var offset = this.getOffset(event);
             if (this.IsDrawing() && activeObject) {
                 var startPoint = this.StartPoint();
-                if (this.ActiveInstrument() == 'Rectangle' || this.ActiveInstrument() == 'Crop') {
+                var activeInstrument = this.ActiveInstrument();
+                if (activeInstrument == 'Rectangle' || activeInstrument == 'Crop') {
                     var minX = Math.min(startPoint.x, offset.x);
                     var maxX = Math.max(startPoint.x, offset.x);
                     var minY = Math.min(startPoint.y, offset.y);
@@ -294,7 +305,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     if(this.ActiveInstrument() == 'Crop'){
                         this.Shadow.Show(minX, minY, maxX - minX, maxY - minY);                        
                     }
-                } else if (this.ActiveInstrument() == 'Arrow') {
+                } else if (activeInstrument == 'Arrow') {
                     var arrowPath = function(x1, y1, x2, y2, size) {
                         var angle = Raphael.angle(x1, y1, x2, y2);
                         var a45   = Raphael.rad(angle-25);
@@ -303,11 +314,13 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                         var y2a = y2 + Math.sin(a45) * size;
                         var x2b = x2 + Math.cos(a45m) * size;
                         var y2b = y2 + Math.sin(a45m) * size;
-                        return "M"+x1+" "+y1+"L"+x2+" "+y2+
-                            "M"+x2a+" "+y2a+"L"+x2+" "+y2+
-                            "L"+x2b+" "+y2b;
+                        return "M"+x1+","+y1+"L"+x2+","+y2+
+                            "M"+x2a+","+y2a+"L"+x2+","+y2+
+                            "L"+x2b+","+y2b;
                     };
                     activeObject.attr('path', arrowPath(startPoint.x, startPoint.y, offset.x, offset.y, 15));
+                } else if (activeInstrument == 'Move') {
+                    activeObject.transform(this.OldTransform() + 't' + (offset.x - startPoint.x) + ',' + (offset.y - startPoint.y));
                 }
             }
         };
@@ -326,6 +339,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     });
                 }
                 this.Shadow.Hide();
+            } else if (activeInstrument == 'Move') {
+                this.ActiveInstrument(this.OldInstrument());
             }
             this.IsDrawing(false);
             if (!this.IsTextMode()) {
