@@ -316,8 +316,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         };
         EditorViewModel.prototype.editorMove = function (data, event) {
             var activeObject = this.ActiveObject();
+            var activeInstrument = this.ActiveInstrument();
             var offset = this.getOffset(event);
-            if (this.IsDrawing() && activeObject) {
+            if (this.IsDrawing() && activeObject && activeInstrument != 'Text' && !event.which) {
+                this.editorUp(data, event);
+            }
+            if (this.IsDrawing() && activeObject && event.which) {
                 var startPoint = this.StartPoint();
                 var activeInstrument = this.ActiveInstrument();
                 if (activeInstrument == 'Rectangle' || activeInstrument == 'Crop') {

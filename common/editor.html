@@ -26,7 +26,7 @@
         </div>
     </div>
     <div data-bind="with: Editor" class="screen">
-        <div id="toolbar-container">
+        <div id="toolbar-container" data-bind="event: {mouseup: editorUp}">
             <span id="toolbar">
                 <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {active: ActiveInstrument() == 'Rectangle'}">
                     <i class="icon-large icon-rect"></i>
