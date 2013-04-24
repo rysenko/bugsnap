@@ -207,8 +207,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 var activeTextBox = activeText.getBBox();
                 var textEditor = $('#texted');
                 var textEditorOffset = textEditor.offset();
-                var textEditorWidth = activeTextBox.width + 5;
-                var textEditorHeight = activeTextBox.height + 5;
+                var textEditorWidth = activeTextBox.width + 12;
+                var textEditorHeight = activeTextBox.height + 12;
                 var editor = $('#editor');
                 var editorOffset = editor.offset();
                 var widthIsExcessive = textEditorOffset.left + textEditorWidth > editorOffset.left + editor.width();
