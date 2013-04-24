@@ -183,7 +183,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 for (var i = 0; i < activeText[0].childNodes.length; i++) {
                     var node = activeText[0].childNodes[i];
                     var lineHeight = 19 + (isFF ? 1 : 0);
-
                     var emptyPrevsCount = 0;
                     $(node).prevAll().each(function(index) {
                         if($(this).text()) {
@@ -192,7 +191,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                             emptyPrevsCount++;
                         }
                     });
-                    node.setAttribute('dy', lineHeight * (emptyPrevsCount + 1));                   
+                    node.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space","preserve");
+                    node.setAttribute('dy', lineHeight * (emptyPrevsCount + 1));
                 }
                 activeText[0].firstChild.setAttribute('dy', '0');
                 $('#texted').css('width', activeText.getBBox().width + 10);
