@@ -202,8 +202,19 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     node.setAttribute('dy', lineHeight * (emptyPrevsCount + 1));
                 }
                 activeText[0].firstChild.setAttribute('dy', '0');
-                $('#texted').css('width', activeText.getBBox().width + 10);
-                $('#texted').attr('rows', activeText[0].childNodes.length);
+                var activeTextBox = activeText.getBBox();
+                var textEditor = $('#texted');
+                var textEditorOffset = textEditor.offset();
+                var textEditorWidth = activeTextBox.width + 5;
+                var textEditorHeight = activeTextBox.height + 5;
+                var editor = $('#editor');
+                var editorOffset = editor.offset();
+                var widthIsExcessive = textEditorOffset.left + textEditorWidth > editorOffset.left + editor.width();
+                var heightIsExcessive = textEditorOffset.top + textEditorHeight > editorOffset.top + editor.height();
+                if (widthIsExcessive || heightIsExcessive) {
+                    this.ActiveText(value.substring(0, value.length - 1));
+                }
+                textEditor.css('width', textEditorWidth).attr('rows', activeText[0].childNodes.length);
             }, this);
             this.Colors = ko.observableArray(['Red', 'Orange', 'Green', 'Blue']);
             var self = this;
