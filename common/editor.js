@@ -35,6 +35,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
     var Shadow = (function () {
         function Shadow(editor) {
             this.Editor = editor;
+            this.Visible = ko.observable(false);
             this.Rects = [];
         }
         Shadow.prototype.Show = function (x, y, width, height) {
@@ -69,10 +70,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 'width': x,
                 'height': window.innerHeight - y
             });
+            this.Visible(true);
         };
         Shadow.prototype.Hide = function () {
             $.each(this.Rects, function(){ this.remove() }); 
             this.Rects = [];
+            this.Visible(false);
         };
         return Shadow;
     })();
@@ -161,6 +164,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.ActiveInstrument = ko.observable('Rectangle');
             this.ActiveObject = ko.observable();
             this.ActiveInstrument.subscribe(function (value) {
+                if (this.Shadow.Visible()) { // abort Crop
+                    this.ActiveObject().remove();
+                    this.Shadow.Hide();
+                }
                 if (value != 'Move') {
                     this.ActiveObject(null); // for TextMode
                     this.IsDrawing(false);
