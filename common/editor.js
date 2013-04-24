@@ -252,11 +252,13 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         };
         EditorViewModel.prototype.getOffset = function (event) {
             var viewBox = this.ViewBox();
-            var rect = document.getElementById('editor').getBoundingClientRect();
+            var offset = $('#editor').offset();
             return {
-                     x: viewBox.x + event.pageX - rect.left,
-                     y: viewBox.y + event.pageY - rect.top
-                   };
+                x: viewBox.x + event.pageX - offset.left,
+                y: viewBox.y + event.pageY - offset.top,
+                absX: viewBox.x + event.pageX,
+                absY: viewBox.y + event.pageY
+            };
         };
         EditorViewModel.prototype.editorDown = function (data, event) {
             var activeObject = null;
@@ -291,8 +293,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     'font-family': 'Arial'});
                 textEditor.val('').focus();
                 textEditor.css({
-                    left: event.clientX - (isFF ? 1 : 0),
-                    top: event.clientY - 15 - (isFF ? 1 : 0),
+                    left: offset.absX - (isFF ? 1 : 0),
+                    top: offset.absY - 15 - (isFF ? 1 : 0),
                     'font-size': '16px',
                     'font-family': 'Arial',
                     color: this.ActiveColor()
