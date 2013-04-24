@@ -29,6 +29,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 }
             }
         };
+        HistoryManager.prototype.drop = function () {
+            this.Operations.pop();
+        };
         return HistoryManager;
     })();
 
@@ -174,6 +177,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 }
                 $('#texted').hide();
             }, this);
+
+            this.ActiveInstrument.subscribe(function (oldValue) {
+                this.clearEmptyText();
+            }, this, "beforeChange");
             this.ActiveColor = ko.observable('Red');
             this.StartPoint = ko.observable();
             this.ActiveText = ko.observable();
@@ -235,6 +242,14 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         EditorViewModel.prototype.setCrop = function () {
             this.ActiveInstrument('Crop');
         };
+        EditorViewModel.prototype.clearEmptyText = function () {
+            var activeObject = this.ActiveObject();
+            var activeInstrument = this.ActiveInstrument();
+            if (activeInstrument == 'Text' && activeObject && !activeObject.attr('text')) {
+                activeObject.remove();
+                this.History.drop();
+            }
+        };
         EditorViewModel.prototype.getOffset = function (event) {
             var viewBox = this.ViewBox();
             var rect = document.getElementById('editor').getBoundingClientRect();
@@ -246,6 +261,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         EditorViewModel.prototype.editorDown = function (data, event) {
             var activeObject = null;
             var target = event.target;
+            this.clearEmptyText();
             if (target != null) {
                 if (target.nodeName == 'tspan') target = target.parentNode;
                 if (target.raphael) {
