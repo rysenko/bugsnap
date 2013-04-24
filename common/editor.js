@@ -49,6 +49,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 this.Rects.push(this.Editor.Paper.rect(0, 0, 0, 0));    
                 $.each(this.Rects, function(){ this.attr({'stroke-width': 0, 'fill': 'Gray', 'fill-opacity': 0.4}) });   
             }
+            var fullWidth = this.Editor.Paper.width;
+            var fullHeight = this.Editor.Paper.height;
             this.Rects[0].attr({
                 'x': 0,
                 'y': 0,
@@ -58,20 +60,20 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.Rects[1].attr({
                 'x': x + width,
                 'y': 0,
-                'width': window.innerWidth - x - width,
+                'width': fullWidth - x - width,
                 'height': y + height
             });
             this.Rects[2].attr({
                 'x': x,
                 'y': y + height,
-                'width': window.innerWidth - x,
-                'height': window.innerHeight - y - height
+                'width': fullWidth - x,
+                'height': fullHeight - y - height
             });
             this.Rects[3].attr({
                 'x': 0,
                 'y': y,
                 'width': x,
-                'height': window.innerHeight - y
+                'height': fullHeight - y
             });
             this.Visible(true);
         };
@@ -113,19 +115,19 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 minLength: 1,
                 source: function(request, response) {
                    var search = self.Communicator.search(request.term)
-					if (search != null) {
-						search.done(function (data) {
-							if(data.constructor != Array) {
-								data = new Array(data);
-							}
-							var labeledData = $.map(data, function (item) {
-								item.label = item.IssueKey + " " + item.Title;
-								item.value = item.Id;
-								return item;
-							})
-							response(labeledData);
-						});
-					}
+                    if (search != null) {
+                        search.done(function (data) {
+                            if(data.constructor != Array) {
+                                data = new Array(data);
+                            }
+                            var labeledData = $.map(data, function (item) {
+                                item.label = item.IssueKey + " " + item.Title;
+                                item.value = item.Id;
+                                return item;
+                            })
+                            response(labeledData);
+                        });
+                    }
                 },
                 focus: function( event, ui ) {
                     $("#issue").val(ui.item.label);
