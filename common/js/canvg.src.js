@@ -108,7 +108,7 @@
         svg.trim = function(s) { return s.replace(/^\s+|\s+$/g, ''); }
 
         // compress spaces
-        svg.compressSpaces = function(s) { return s.replace(/[\s\r\t\n]+/gm,' '); }
+        svg.compressSpaces = function(s) { return s ? s.replace(/[\s\r\t\n]+/gm,' ') : ''; }
 
         // ajax
         svg.ajax = function(url) {
