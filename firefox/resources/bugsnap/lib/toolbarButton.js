@@ -42,14 +42,8 @@ function removeToolbarButton(){
 function addToolbarButton(){
 	var document = mediator.getMostRecentWindow("navigator:browser").document;
 	var addonBar = document.getElementById("nav-bar");
-    var buttonId = 'bugsnap-screenshot-toolbarbutton';
-    var toolbarbutton = document.getElementById(buttonId);
-    while (toolbarbutton) {
-        toolbarbutton.remove();
-        toolbarbutton = document.getElementById(buttonId);
-    }
-    toolbarbutton = document.createElement('toolbarbutton');
-	toolbarbutton.id = buttonId;
+    var toolbarbutton = document.createElement("toolbarbutton");    
+    toolbarbutton.id = 'bugsnap-screenshot-toolbarbutton';
 	toolbarbutton.setAttribute('class', 'toolbarbutton-1 chromeclass-toolbar-additional');
 	toolbarbutton.setAttribute('image', data.url('common/img/16.png'));
 	toolbarbutton.setAttribute('orient', 'horizontal');
