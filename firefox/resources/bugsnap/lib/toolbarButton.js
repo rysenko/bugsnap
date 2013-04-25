@@ -1,21 +1,42 @@
-var {Cc, Ci} = require("chrome");
+var {Cc, Ci, Cu} = require("chrome");
 var data = require("self").data;
 var tabs = require("tabs");
 var { Hotkey } = require("hotkeys");
 var window = require("sdk/window/utils").getMostRecentBrowserWindow();
 
 var mediator;
+var addonManager;
 var screenCapture = {};
 
 function init() {
 	mediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(Ci.nsIWindowMediator);
+
+    addonManager = Cu.import("resource://gre/modules/AddonManager.jsm").AddonManager;
+    addonManager.addAddonListener({
+        onDisabled: function(addon) {
+            if (addon.id === 'jid1-AEnEhteHXOHYuw@jetpack') {
+                removeToolbarButton();
+            }   
+        }
+    });
+
     Hotkey({
         combo: "alt-shift-q",
         onPress: function() {
             makeScreenShot();
         }
     });
+
 	return addToolbarButton();
+};
+
+function removeToolbarButton(){
+    var document = mediator.getMostRecentWindow("navigator:browser").document;
+    var addonBar = document.getElementById("nav-bar");
+    var toolbarbutton = document.getElementById("bugsnap-screenshot-toolbarbutton");
+    if (toolbarbutton) {
+        addonBar.removeChild(toolbarbutton);
+    }
 };
 
 function addToolbarButton(){
