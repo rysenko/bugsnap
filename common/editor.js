@@ -415,6 +415,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var viewBox = this.ViewBox();
             var left = Math.round((window.innerWidth - viewBox.width) / 2);
             var top = Math.round((window.innerHeight - viewBox.height) / 2);
+            if (top < 0) top = 0;
+            if (left < 0) left = 0;
             if (top > 30) top = 30;
             var sourceCanvas = document.getElementById('canvas');
             var outputCanvas = document.getElementById('output');
