@@ -48,6 +48,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
 				return $.ajax({
 					url: this.GeminiUrl() + "/api/users/username/" + this.UserName(),
 					type: "GET",
+					dataType: (window.navigator.userAgent.indexOf('Firefox') != -1 ? "jsonp" : "json"),
 					headers: { "Authorization": "Basic " + window.btoa(this.UserName() + ':' + this.APIKey()) },
 					success: function(data) {
 							$(".confirmationMessage").stop().hide().text("Successfully connected to Gemini!").fadeIn(400, function() {

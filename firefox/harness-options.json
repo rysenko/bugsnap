@@ -26,6 +26,7 @@
    "requirements": {
     "chrome": "chrome", 
     "hotkeys": "sdk/hotkeys", 
+    "sdk/window/utils": "sdk/window/utils", 
     "self": "sdk/self", 
     "tabs": "sdk/tabs"
    }, 

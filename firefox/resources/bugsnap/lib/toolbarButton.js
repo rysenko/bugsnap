@@ -2,6 +2,7 @@ var {Cc, Ci} = require("chrome");
 var data = require("self").data;
 var tabs = require("tabs");
 var { Hotkey } = require("hotkeys");
+var window = require("sdk/window/utils").getMostRecentBrowserWindow();
 
 var mediator;
 var screenCapture = {};
@@ -60,6 +61,52 @@ function makeScreenShot() {
 function getScreenCapture() {
 	return screenCapture;
 };
+
+tabs.on('activate', function(tab) {
+    tab.on('ready', function(tab){   
+        if(tab.title.indexOf('BugSnap') != -1) {
+            forcecors.enable();
+        }
+    });
+    tab.on('activate', function(tab){   
+        if(tab.title.indexOf('BugSnap') != -1) {
+            forcecors.enable();
+        }
+    });
+    tab.on('deactivate', function(tab){   
+        if(tab.title.indexOf('BugSnap') != -1) {
+            forcecors.disable();
+        }
+    });
+    tab.on('close', function(tab){   
+        if(tab.title.indexOf('BugSnap') != -1) {
+            forcecors.disable();
+        }
+    });
+});
+
+function Forcecors() {
+    this.observer = {
+        observe: function(subject, topic, data) {
+            var httpChannel = subject.QueryInterface(Ci.nsIHttpChannel);
+            if (topic == "http-on-modify-request") {
+                httpChannel.setRequestHeader('Authorization', "Basic " + window.btoa('manager:qjbpnsqg6i'), false);
+            }
+        }
+    };
+};
+
+Forcecors.prototype.enable = function() {
+    var os = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+    os.addObserver(this.observer, "http-on-modify-request", false);
+};
+
+Forcecors.prototype.disable = function() {
+    var os = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+    os.removeObserver(this.observer, "http-on-modify-request");
+};
+
+var forcecors = new Forcecors();
 
 exports.init = init;
 exports.getScreenCapture = getScreenCapture;
