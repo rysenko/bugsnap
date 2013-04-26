@@ -109,6 +109,14 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         }
         DetailsViewModel.prototype.init = function () {
             var self = this;
+
+            $('.tabContainer .tab').bind("click", function (e) {
+                $(".tab").removeClass("active");
+                $('.form').removeClass("active");
+                $(this).addClass("active");
+                $('#' + $(this).data('target')).addClass("active");
+            });
+
             $("#toolbar > a").button();
             $("#issue").autocomplete({
                 appendTo: "#issue_dialog",
@@ -143,7 +151,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 { 
                     autoOpen: false,
                     width: 500, 
-                    height: 350
+                    height: 380
                 }
             );
         };
@@ -159,6 +167,17 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                    window.close();
                 });
             }
+        };
+        DetailsViewModel.prototype.createIssue = function () {
+            var imageData = this.Parent.Editor.getImageData();            
+            var self = this;
+            $("#issue_dialog").showLoading();
+            this.Communicator.create($("#project").val(), $("#title").val(), $("#description").val()).then(function (data) {
+                return self.Communicator.attach(data.Project.Id, data.Id, imageData);
+            }).done(function () {
+               $("#issue_dialog").hideLoading().dialog("close");
+               window.close();
+            });
         };
         return DetailsViewModel;
     })();

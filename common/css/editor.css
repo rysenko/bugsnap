@@ -98,12 +98,6 @@ rect:hover, path:hover, text:hover {
 #issue_dialog {
     display: none;
 }
-#issue {
-    width: 100%;
-}
-#comment {
-    width: 100%;
-}
 #issue_dialog .divLabel
 {
     padding-top: 3px;
@@ -114,7 +108,7 @@ rect:hover, path:hover, text:hover {
 #issue_dialog .divControl
 {
     float: left;
-    width: 80%;
+    width: 78%;
 }
 
 .loading-indicator {
@@ -133,4 +127,37 @@ rect:hover, path:hover, text:hover {
 
 .right {
     float: right;
+}
+.tabContainer {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tab {
+    width: 47%;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 8px;
+    background-color: white;
+    border: 2px solid gray;
+    cursor: pointer;
+    float: left;
+}
+
+.form {
+    display: none;
+}
+
+.active {
+    display: block;   
+}
+
+.tab.active {
+    background-color: #CAFCFC;   
+}
+
+.control {
+    width: 100%;
 }

@@ -9,20 +9,55 @@
 </head>
 <body>
     <div id="issue_dialog" title="Submit screenshot to an issue" data-bind="with: Details">
-        <div class="divLabel">
-            <label for="issue">Issue:</label>
-        </div>
-        <div class="divControl">
-            <input id="issue" />
-        </div>
-        <div class="divLabel">
-            <label for="comment">Comment:</label>
-        </div>
-        <div class="divControl">
-            <textarea id="comment" rows="10" data-bind="value: Comment"></textarea>
-        </div>
-        <div>
-            <input class="ui-button right" data-bind="click: send" type="button" value="Submit"/>
+        <ul class="tabContainer">
+            <li class="tab active" data-target="createForm">
+                Create issue
+            </li>
+            <li class="tab" data-target="attachForm">
+                Attach screenshot
+            </li>
+        </ul>
+        <div id="forms">
+            <div id="createForm" class="form active">
+                <div class="divLabel">
+                    <label for="title">Title:</label>
+                </div>
+                <div class="divControl">
+                    <input id="title" class="control" />
+                </div>
+                <div class="divLabel">
+                    <label for="project">Project:</label>
+                </div>
+                <div class="divControl">
+                    <input id="project" class="control" />
+                </div>
+                <div class="divLabel">
+                    <label for="description">Description:</label>
+                </div>
+                <div class="divControl">
+                    <textarea id="description" rows="8" class="control"></textarea>
+                </div>
+                <div>
+                    <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"/>
+                </div>
+            </div>
+            <div id="attachForm" class="form">                
+                <div class="divLabel">
+                    <label for="issue">Issue:</label>
+                </div>
+                <div class="divControl">
+                    <input id="issue" class="control" />
+                </div>
+                <div class="divLabel">
+                    <label for="comment">Comment:</label>
+                </div>
+                <div class="divControl">
+                    <textarea id="comment" class="control" rows="10" data-bind="value: Comment"></textarea>
+                </div>
+                <div>
+                    <input class="ui-button right" data-bind="click: send" type="button" value="Submit"/>
+                </div>
+            </div>
         </div>
     </div>
     <div data-bind="with: Editor" class="screen">
