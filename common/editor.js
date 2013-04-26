@@ -296,15 +296,15 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             } else if (activeInstrument == 'Arrow') {
                 activeObject = this.Paper.path('M0,0');
             } else if (activeInstrument == 'Text') {
-                var textEditor = $('#texted').show();
                 activeObject = this.Paper.text(offset.x, offset.y, '');
                 activeObject.attr('fill', this.ActiveColor());
                 activeObject.attr('text-anchor', 'start');
                 $(activeObject[0]).css({
                     'font-size': '16px',
                     'font-family': 'Arial'});
-                textEditor.val('').focus();
-                textEditor.css({
+                this.ActiveObject(activeObject);
+                this.ActiveText('');
+                $('#texted').show().focus().css({
                     left: event.pageX - (isFF ? 1 : 0),
                     top: event.pageY - 15 - (isFF ? 1 : 0),
                     'font-size': '16px',
