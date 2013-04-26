@@ -179,6 +179,15 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                window.close();
             });
         };
+        DetailsViewModel.prototype.showDialog = function () {
+            $("#issue_dialog").dialog("open");
+            this.Communicator.loadProjects().then(function(data) {
+                var dropdown = $('#project');
+                $.each(data, function(){
+                    dropdown.append('<option value="' + this.BaseEntity.Id + '">' + this.BaseEntity.Name + '</option>');
+                });
+            });
+        };
         return DetailsViewModel;
     })();
 
@@ -450,8 +459,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             canvg(output, document.getElementById('editor').innerHTML, {ignoreDimensions: true, ignoreClear: true});
             var img = output.toDataURL('image/png');
             img = img.replace('data:image/png;base64,', '');
-            $("#issue_dialog").dialog("open");
             return img;
+        };
+        EditorViewModel.prototype.showSubmitDialog = function () {
+            this.Parent.Details.showDialog();
         };
         EditorViewModel.prototype.showOptionsPage = function () {
             window.open('options.html');
