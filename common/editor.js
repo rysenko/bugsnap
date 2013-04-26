@@ -116,8 +116,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 $(this).addClass("active");
                 $('#' + $(this).data('target')).addClass("active");
             });
-
-            $("#toolbar > a").button();
             $("#issue").autocomplete({
                 appendTo: "#issue_dialog",
                 minLength: 1,
@@ -461,8 +459,11 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             img = img.replace('data:image/png;base64,', '');
             return img;
         };
-        EditorViewModel.prototype.showSubmitDialog = function () {
+        EditorViewModel.prototype.send = function () {
             this.Parent.Details.showDialog();
+        };
+        EditorViewModel.prototype.download = function () {
+            $('#download').attr('href', 'data:image/png;base64,' + this.getImageData())[0].click();
         };
         EditorViewModel.prototype.showOptionsPage = function () {
             window.open('options.html');

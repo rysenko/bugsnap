@@ -86,9 +86,13 @@
                     <i class="icon-large icon-undo"></i>
                 </i>
                 <i class="separator"></i>
-                <i title="Submit" class="button" data-bind="click: showSubmitDialog">
+                <i title="Submit" class="button" data-bind="click: send">
                     <i class="icon-large icon-ok"></i>
                 </i>
+                <i title="Save" class="button" data-bind="click: download">
+                    <i class="icon-large icon-save"></i>
+                </i>
+                <a id="download" download="screenshot.png" style="display: none">Link ready</a>
                 <i title="Options" class="button right" data-bind="click: showOptionsPage">
                     <i class="icon-large icon-options"></i>
                 </i>
