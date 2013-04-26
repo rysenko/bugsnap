@@ -45,28 +45,35 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
         };
 		OptionsPageViewModel.prototype.test = function () {
             if($("#optionsForm").valid()) {
-				return $.ajax({
-					url: this.GeminiUrl() + "/api/users/username/" + this.UserName(),
-					type: "GET",
-					dataType: (window.navigator.userAgent.indexOf('Firefox') != -1 ? "jsonp" : "json"),
-					headers: { "Authorization": "Basic " + window.btoa(this.UserName() + ':' + this.APIKey()) },
-					success: function(data) {
-							$(".confirmationMessage").stop().hide().text("Successfully connected to Gemini!").fadeIn(400, function() {
-								$(this).delay(1700).fadeOut(400);
-							});
-						},
-					error: function(jqXHR, textStatus, errorThrown) {
-						if(textStatus == 'timeout' || errorThrown == "Not Found")
+            	var deferred = $.Deferred();
+	            var xhr = new XMLHttpRequest();
+	            xhr.open('GET', this.GeminiUrl() + "/api/users/username/" + this.UserName(), true);
+	            xhr.setRequestHeader('Accept', "*/*", false);
+	            if(window.navigator.userAgent.indexOf('Firefox') == -1){
+	                xhr.setRequestHeader('Authorization', 'Basic ' + window.btoa(this.UserName() + ':' + this.APIKey()));
+	                xhr.setRequestHeader('Content-Type', 'application/json');
+	            }
+	            xhr.onreadystatechange = function() {
+	            	console.log(xhr.statusText);
+	                if (xhr.readyState == 4 && xhr.status == 200) {
+	                    $(".confirmationMessage").stop().hide().text("Successfully connected to Gemini!").fadeIn(400, function() {
+							$(this).delay(1700).fadeOut(400);
+						});
+	                } else if (xhr.readyState == 4 && xhr.status != 200) {
+						if(xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
 							$(".confirmationMessage").stop().hide().text("Unable to connect to Gemini at specified URL.").fadeIn(400, function() {
 								$(this).delay(1700).fadeOut(400);
 							});
-						if(errorThrown == "Forbidden")
+						}
+						if(xhr.statusText == "Forbidden") {
 							$(".confirmationMessage").stop().hide().text("Unable to login using supplied credentials.").fadeIn(400, function() {
 								$(this).delay(1700).fadeOut(400);
 							});
-					}
-					
-				});
+						}
+	                }
+	            };
+	            xhr.send();
+	            return deferred.promise();
 			}
         };
         OptionsPageViewModel.prototype.save = function () {

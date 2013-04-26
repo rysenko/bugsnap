@@ -111,7 +111,15 @@ function Forcecors() {
         observe: function(subject, topic, data) {
             var httpChannel = subject.QueryInterface(Ci.nsIHttpChannel);
             if (topic == "http-on-modify-request") {
-                httpChannel.setRequestHeader('Authorization', "Basic " + window.btoa('manager:qjbpnsqg6i'), false);
+                var ios = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+                var uri = ios.newURI('resource://jid1-aenehtehxohyuw-at-jetpack/bugsnap/data/common/editor.html', null, null);
+                var cookieService = Cc["@mozilla.org/cookieService;1"].getService(Ci.nsICookieService);
+                var auth = cookieService.getCookieString(uri, null).split('=');                
+
+                httpChannel.setRequestHeader('Content-Type', 'application/json', false);
+                httpChannel.setRequestHeader('Authorization', "Basic " + auth[1], false);
+            } else if (topic == "http-on-examine-response") {
+                httpChannel.setResponseHeader('Access-Control-Allow-Origin', "*", false);
             }
         }
     };
@@ -120,11 +128,13 @@ function Forcecors() {
 Forcecors.prototype.enable = function() {
     var os = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     os.addObserver(this.observer, "http-on-modify-request", false);
+    os.addObserver(this.observer, "http-on-examine-response", false);
 };
 
 Forcecors.prototype.disable = function() {
     var os = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
     os.removeObserver(this.observer, "http-on-modify-request");
+    os.removeObserver(this.observer, "http-on-examine-response");
 };
 
 var forcecors = new Forcecors();

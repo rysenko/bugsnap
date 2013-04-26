@@ -1,5 +1,6 @@
 define(['js/jquery'], function ($) {
     var GeminiCommunicator = (function () {
+        var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
         function GeminiCommunicator() {
             this.geminiUrl = function () {
                 return localStorage["GeminiUrl"]+ "/api/";
@@ -9,55 +10,51 @@ define(['js/jquery'], function ($) {
             };
         }
         GeminiCommunicator.prototype.search = function (query) {
-           var options = {
-                url: this.geminiUrl() + "items/filtered",
-                type: "POST",
-                data: {
-                    SearchKeywords: query,
-                    IncludeClosed: "false",
-                    Projects: "ALL",
-					MaxItemsToReturn: 10
-                },
-                headers: { "Authorization": "Basic " + this.geminiUsername() }
+            var data = {
+                 SearchKeywords: query,
+                 IncludeClosed: "false",
+                 Projects: "ALL",
+                 MaxItemsToReturn: 10
             };
-			if(!isNaN(query)) {
-				options.url = this.geminiUrl() + "items/" + query;
-				options.type = "GET";
-				options.data = null;
-			}
-			else if(query.length < 3) {
-				return null;
-			}
-            return $.ajax(options);
+            return this.ajax(this.geminiUrl() + "items/filtered", data);
         };
         GeminiCommunicator.prototype.comment = function (projectId, issueId, comment) {
-            return $.ajax({
-                url: this.geminiUrl() + "items/" + issueId + "/comments",
-                type: "POST",
-                data: {
-                    ProjectId: projectId,
-                    IssueId: issueId,
-                    UserId: "1",
-                    Comment: comment
-                },
-                headers: { "Authorization": "Basic " + this.geminiUsername() }
-            });
+            var data = {
+                ProjectId: projectId,
+                IssueId: issueId,
+                UserId: "1",
+                Comment: comment
+            };
+            return this.ajax(this.geminiUrl() + "items/" + issueId + "/comments", data);
         };
         GeminiCommunicator.prototype.attach = function (projectId, issueId, fileContent) {
-            return $.ajax({
-                url: this.geminiUrl() + "items/" + issueId + "/attachments",
-                type: "POST",
-                data: JSON.stringify({
+            var data = {
                     ProjectId: projectId,
                     IssueId: issueId,
                     Name: "screenshot.png",
                     ContentType: "image/png",
                     Content: fileContent
-                }),
-                processData: false,
-                contentType: 'application/json',
-                headers: { "Authorization": "Basic " + this.geminiUsername() }
-            });
+                };
+            return this.ajax(this.geminiUrl() + "items/" + issueId + "/attachments", data);
+        };
+        GeminiCommunicator.prototype.ajax = function(url, data) {            
+            var deferred = $.Deferred();
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Accept', "*/*", false);
+            if(!isFF){
+                xhr.setRequestHeader('Authorization', 'Basic ' + this.geminiUsername());
+                xhr.setRequestHeader('Content-Type', 'application/json');
+            } else {
+                document.cookie = "authorizationCookie=" + this.geminiUsername() + "; path=/";
+            }
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    deferred.resolve(JSON.parse(xhr.responseText));
+                }
+            };
+            xhr.send(JSON.stringify(data));
+            return deferred.promise();
         };
         return GeminiCommunicator;
     })();

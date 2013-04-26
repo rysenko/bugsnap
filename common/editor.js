@@ -124,7 +124,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                                 item.label = item.IssueKey + " " + item.Title;
                                 item.value = item.Id;
                                 return item;
-                            })
+                            });
                             response(labeledData);
                         });
                     }
