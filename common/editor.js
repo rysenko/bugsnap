@@ -114,7 +114,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 appendTo: "#issue_dialog",
                 minLength: 1,
                 source: function(request, response) {
-                   var search = self.Communicator.search(request.term)
+                    var search = self.Communicator.search(request.term)
                     if (search != null) {
                         search.done(function (data) {
                             if(data.constructor != Array) {
@@ -156,6 +156,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     return self.Communicator.attach(self.ProjectId(), self.IssueId(), imageData);
                 }).done(function () {
                    $("#issue_dialog").hideLoading().dialog("close");
+                   window.close();
                 });
             }
         };
