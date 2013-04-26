@@ -97,12 +97,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 }
                 return null;
             }, this);
-            this.ProjectId = ko.computed(function () {
-                var issue = this.Issue();
-                if (issue != null) {
-                    return issue.Project.Id;
-                }
-                return null;
+            this.ProjectId = ko.observable();
+            this.ProjectId.subscribe(function (value) {
+                this.loadComponents(value);
             }, this);
             this.Communicator = new GeminiCommunicator();
             this.init();
@@ -142,6 +139,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 select: function(event, ui) {
                     $("#issue").val(ui.item.label);
                     self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
+                    self.ProjectId(ui.item.Project.Id);
                     return false;
                 }
             });
@@ -149,7 +147,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 { 
                     autoOpen: false,
                     width: 500, 
-                    height: 380
+                    height: 420
                 }
             );
         };
@@ -179,12 +177,23 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         };
         DetailsViewModel.prototype.showDialog = function () {
             $("#issue_dialog").dialog("open");
+            var self = this;
             this.Communicator.loadProjects().then(function(data) {
                 var dropdown = $('#project');
                 $.each(data, function(){
                     dropdown.append('<option value="' + this.BaseEntity.Id + '">' + this.BaseEntity.Name + '</option>');
                 });
+                self.loadComponents(dropdown.val());
             });
+        };
+        DetailsViewModel.prototype.loadComponents = function (projectId) {
+            this.Communicator.loadComponents(projectId).then(function(data) {
+                var dropdown = $('#component');
+                dropdown.empty();
+                $.each(data, function(){
+                    dropdown.append('<option value="' + this.BaseEntity.Id + '">' + this.BaseEntity.Name + '</option>');
+                });
+            });            
         };
         return DetailsViewModel;
     })();

@@ -46,8 +46,11 @@ define(['js/jquery'], function ($) {
                 };
             return this.ajax(this.geminiUrl() + "items/", data);
         };
-        GeminiCommunicator.prototype.loadProjects = function (projectId, title, description) {
+        GeminiCommunicator.prototype.loadProjects = function () {
             return this.ajax(this.geminiUrl() + "projects/", null, 'GET');
+        };
+        GeminiCommunicator.prototype.loadComponents = function (projectId) {
+            return this.ajax(this.geminiUrl() + "projects/" + projectId+ "/components", null, 'GET');
         };        
         GeminiCommunicator.prototype.ajax = function(url, data, method) {            
             var deferred = $.Deferred();
