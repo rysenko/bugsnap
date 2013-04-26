@@ -143,7 +143,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 { 
                     autoOpen: false,
                     width: 500, 
-                    height: 500
+                    height: 350
                 }
             );
         };

@@ -19,10 +19,10 @@
 			<label for="comment">Comment:</label>
 		</div>
 		<div class="divControl">
-			<textarea id="comment" data-bind="value: Comment"></textarea>
+			<textarea id="comment" rows="10" data-bind="value: Comment"></textarea>
         </div>
         <div>
-            <input data-bind="click: send" type="button" value="Submit"/>
+            <input class="ui-button right" data-bind="click: send" type="button" value="Submit"/>
         </div>
     </div>
     <div data-bind="with: Editor" class="screen">
