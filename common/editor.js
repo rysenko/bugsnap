@@ -99,7 +99,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             }, this);
             this.ProjectId = ko.observable();
             this.ProjectId.subscribe(function (value) {
+                var templateId = $('#project').find(":selected").data('template');
                 this.loadComponents(value);
+                this.loadMetaData('type', templateId);
+                this.loadMetaData('priority', templateId);
+                this.loadMetaData('severity', templateId);
+                this.loadMetaData('status', templateId);
             }, this);
             this.Communicator = new GeminiCommunicator();
             this.init();
@@ -147,7 +152,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 { 
                     autoOpen: false,
                     width: 500, 
-                    height: 420
+                    height: 500
                 }
             );
         };
@@ -168,7 +173,15 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var imageData = this.Parent.Editor.getImageData();            
             var self = this;
             $("#issue_dialog").showLoading();
-            this.Communicator.create($("#project").val(), $("#title").val(), $("#description").val()).then(function (data) {
+            this.Communicator.create(
+                $("#title").val(),
+                $("#description").val(),
+                $("#project").val(),
+                $("#component").val(),
+                $("#type").val(),
+                $("#priority").val(),
+                $("#severity").val(),
+                $("#status").val()).then(function (data) {
                 return self.Communicator.attach(data.Project.Id, data.Id, imageData);
             }).done(function () {
                $("#issue_dialog").hideLoading().dialog("close");
@@ -180,10 +193,16 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var self = this;
             this.Communicator.loadProjects().then(function(data) {
                 var dropdown = $('#project');
+                dropdown.empty();
                 $.each(data, function(){
-                    dropdown.append('<option value="' + this.BaseEntity.Id + '">' + this.BaseEntity.Name + '</option>');
+                    dropdown.append('<option value="' + this.BaseEntity.Id + '" data-template="' + this.Template.Id + '">' + this.BaseEntity.Name + '</option>');
                 });
+                var templateId = dropdown.find(":selected").data('template');
                 self.loadComponents(dropdown.val());
+                self.loadMetaData('type', templateId);
+                self.loadMetaData('priority', templateId);
+                self.loadMetaData('severity', templateId);
+                self.loadMetaData('status', templateId);
             });
         };
         DetailsViewModel.prototype.loadComponents = function (projectId) {
@@ -195,6 +214,13 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 });
             });            
         };
+        DetailsViewModel.prototype.loadMetaData = function (controlId, templateId) {
+            this.Communicator.loadMetaData(controlId, templateId).then(function(data) {
+                var dropdown = $('#' + controlId);
+                dropdown.empty();
+                $.each(data, function(){ dropdown.append('<option value="' + this.Entity.Id + '">' + this.Entity.Label + '</option>'); });
+            });
+        }; 
         return DetailsViewModel;
     })();
 

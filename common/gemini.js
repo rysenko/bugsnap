@@ -37,11 +37,16 @@ define(['js/jquery'], function ($) {
                 };
             return this.ajax(this.geminiUrl() + "items/" + issueId + "/attachments", data);
         };
-        GeminiCommunicator.prototype.create = function (projectId, title, description) {
+        GeminiCommunicator.prototype.create = function (title, description, project, component, type, priority, severity, status) {
             var data = {
-                    ProjectId: projectId,
                     Title: title,
-                    Description: description,      
+                    Description: description,
+                    ProjectId: project,
+                    Components: component,
+                    TypeId: type,
+                    PriorityId: priority,
+                    SeverityId: severity,
+                    StatusId: status,
                     ReportedBy: "1"
                 };
             return this.ajax(this.geminiUrl() + "items/", data);
@@ -51,7 +56,10 @@ define(['js/jquery'], function ($) {
         };
         GeminiCommunicator.prototype.loadComponents = function (projectId) {
             return this.ajax(this.geminiUrl() + "projects/" + projectId+ "/components", null, 'GET');
-        };        
+        };
+        GeminiCommunicator.prototype.loadMetaData = function (control, templateId) {
+            return this.ajax(this.geminiUrl() + control + "/template/" + templateId, null, 'GET');
+        };
         GeminiCommunicator.prototype.ajax = function(url, data, method) {            
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();

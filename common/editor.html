@@ -24,16 +24,32 @@
                     <input id="title" class="editor" />
                 </div>
                 <div class="control">
+                    <label for="description" class="caption">Description:</label>
+                    <textarea id="description" class="editor" rows="8"></textarea>
+                </div>
+                <div class="control">
                     <label for="project" class="caption">Project:</label>
                     <select id="project" class="editor" data-bind="value: ProjectId"></select>
                 </div>
                 <div class="control">
                     <label for="component" class="caption">Component:</label>
-                    <select id="component" class="editor" data-bind="value: ProjectId"></select>
+                    <select id="component" class="editor"></select>
                 </div>
                 <div class="control">
-                    <label for="description" class="caption">Description:</label>
-                    <textarea id="description" class="editor" rows="8"></textarea>
+                    <label for="type" class="caption">Type:</label>
+                    <select id="type" class="editor"></select>
+                </div>
+                <div class="control">
+                    <label for="priority" class="caption">Priority:</label>
+                    <select id="priority" class="editor"></select>
+                </div>
+                <div class="control">
+                    <label for="severity" class="caption">Severity:</label>
+                    <select id="severity" class="editor"></select>
+                </div>
+                <div class="control">
+                    <label for="status" class="caption">Status:</label>
+                    <select id="status" class="editor"></select>
                 </div>
                 <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"/>
             </div>
