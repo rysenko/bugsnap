@@ -89,6 +89,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         function DetailsViewModel(options) {
             this.Parent = options.Parent;
             this.Comment = ko.observable();
+            this.Title = ko.observable();
+            this.Description = ko.observable();
             this.Issue = ko.observable();
             this.IssueId = ko.computed(function () {
                 var issue = this.Issue();
@@ -97,27 +99,51 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 }
                 return null;
             }, this);
-            this.ProjectId = ko.observable();
-            this.ProjectId.subscribe(function (value) {
-                var templateId = $('#project').find(":selected").data('template');
-                this.loadComponents(value);
-                this.loadMetaData('type', templateId);
-                this.loadMetaData('priority', templateId);
-                this.loadMetaData('severity', templateId);
-                this.loadMetaData('status', templateId);
+            this.Project = ko.observable();
+            this.Projects = ko.observableArray();
+            this.ProjectId = ko.computed(function () {
+                var project = this.Project();
+                return project ? project.Id : null;
             }, this);
+            this.TemplateId = ko.computed(function () {
+                var project = this.Project();
+                return project? project.TemplateId : null;
+            }, this);
+            this.ProjectId.subscribe(function (projectId) {
+                this.loadComponents(projectId);
+            }, this);
+            this.TemplateId.subscribe(function (templateId) {
+                var self = this;
+                this.loadMetaData('type', templateId).done(function (data) {
+                    self.Types(data);
+                });
+                this.loadMetaData('priority', templateId).done(function (data) {
+                    self.Priorities(data);
+                });
+                this.loadMetaData('severity', templateId).done(function (data) {
+                    self.Severities(data);
+                });
+                this.loadMetaData('status', templateId).done(function (data) {
+                    self.Statuses(data);
+                });
+            }, this);
+
+            this.Component = ko.observable();
+            this.Components = ko.observableArray();
+            this.Priority = ko.observable();
+            this.Priorities = ko.observableArray();
+            this.Severity = ko.observable();
+            this.Severities = ko.observableArray();
+            this.Type = ko.observable();
+            this.Types = ko.observableArray();
+            this.Status = ko.observable();
+            this.Statuses = ko.observableArray();
             this.Communicator = new GeminiCommunicator();
+            this.ActiveTab = ko.observable('Create');
             this.init();
         }
         DetailsViewModel.prototype.init = function () {
             var self = this;
-
-            $('.tabContainer .tab').bind("click", function (e) {
-                $(".tab").removeClass("active");
-                $('.form').removeClass("active");
-                $(this).addClass("active");
-                $('#' + $(this).data('target')).addClass("active");
-            });
             $("#issue").autocomplete({
                 appendTo: "#issue_dialog",
                 minLength: 1,
@@ -144,7 +170,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 select: function(event, ui) {
                     $("#issue").val(ui.item.label);
                     self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
-                    self.ProjectId(ui.item.Project.Id);
+                    self.Project(ui.item.Project);
                     return false;
                 }
             });
@@ -152,9 +178,15 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 { 
                     autoOpen: false,
                     width: 500, 
-                    height: 510
+                    height: 520
                 }
             );
+        };
+        DetailsViewModel.prototype.selectCreate = function () {
+            this.ActiveTab('Create');
+        };
+        DetailsViewModel.prototype.selectAttach = function () {
+            this.ActiveTab('Attach');
         };
         DetailsViewModel.prototype.send = function () {
             if (this.Issue() != null) {
@@ -173,52 +205,47 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var imageData = this.Parent.Editor.getImageData();            
             var self = this;
             $("#issue_dialog").showLoading();
+            var component = this.Component();
             this.Communicator.create(
-                $("#title").val(),
-                $("#description").val(),
-                $("#project").val(),
-                $("#component").val(),
-                $("#type").val(),
-                $("#priority").val(),
-                $("#severity").val(),
-                $("#status").val()).then(function (data) {
+                this.Title(),
+                this.Description(),
+                this.ProjectId(),
+                component ? component.Id : null,
+                this.Type().Id,
+                this.Priority().Id,
+                this.Severity().Id,
+                this.Status().Id
+            ).then(function (data) {
                 return self.Communicator.attach(data.Project.Id, data.Id, imageData);
             }).done(function () {
-               $("#issue_dialog").hideLoading().dialog("close");
-               window.close();
+                $("#issue_dialog").hideLoading().dialog("close");
+                window.close();
             });
         };
         DetailsViewModel.prototype.showDialog = function () {
             $("#issue_dialog").dialog("open");
             var self = this;
             this.Communicator.loadProjects().then(function(data) {
-                var dropdown = $('#project');
-                dropdown.empty();
-                $.each(data, function(){
-                    dropdown.append('<option value="' + this.BaseEntity.Id + '" data-template="' + this.Template.Id + '">' + this.BaseEntity.Name + '</option>');
+                var projects = ko.utils.arrayMap(data, function (item) {
+                    return item.BaseEntity;
                 });
-                var templateId = dropdown.find(":selected").data('template');
-                self.loadComponents(dropdown.val());
-                self.loadMetaData('type', templateId);
-                self.loadMetaData('priority', templateId);
-                self.loadMetaData('severity', templateId);
-                self.loadMetaData('status', templateId);
+                self.Projects(projects);
             });
         };
         DetailsViewModel.prototype.loadComponents = function (projectId) {
+            var self = this;
             this.Communicator.loadComponents(projectId).then(function(data) {
-                var dropdown = $('#component');
-                dropdown.empty();
-                $.each(data, function(){
-                    dropdown.append('<option value="' + this.BaseEntity.Id + '">' + this.BaseEntity.Name + '</option>');
+                var result = ko.utils.arrayMap(data, function (item) {
+                    return item.BaseEntity;
                 });
-            });            
+                self.Components(result);
+            });
         };
         DetailsViewModel.prototype.loadMetaData = function (controlId, templateId) {
-            this.Communicator.loadMetaData(controlId, templateId).then(function(data) {
-                var dropdown = $('#' + controlId);
-                dropdown.empty();
-                $.each(data, function(){ dropdown.append('<option value="' + this.Entity.Id + '">' + this.Entity.Label + '</option>'); });
+            return this.Communicator.loadMetaData(controlId, templateId).then(function (data) {
+                return ko.utils.arrayMap(data, function (item) {
+                    return item.Entity;
+                })
             });
         }; 
         return DetailsViewModel;

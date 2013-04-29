@@ -10,50 +10,50 @@
 <body>
     <div id="issue_dialog" title="Submit screenshot to an issue" data-bind="with: Details">
         <ul class="tabContainer">
-            <li class="tab active" data-target="createForm">
+            <li class="tab" data-bind="css: {active: ActiveTab() == 'Create'}, click: selectCreate">
                 Create issue
             </li>
-            <li class="tab" data-target="attachForm">
+            <li class="tab" data-bind="css: {active: ActiveTab() == 'Attach'}, click: selectAttach">
                 Attach screenshot
             </li>
         </ul>
         <div id="forms">
-            <div id="createForm" class="form active">
+            <div id="createForm" data-bind="visible: ActiveTab() == 'Create'">
                 <div class="control">
                     <label for="title" class="caption">Title:</label>
-                    <input id="title" class="editor" />
+                    <input id="title" class="editor" data-bind="value: Title" />
                 </div>
                 <div class="control">
                     <label for="description" class="caption">Description:</label>
-                    <textarea id="description" class="editor" rows="8"></textarea>
+                    <textarea id="description" class="editor" rows="8" data-bind="value: Description"></textarea>
                 </div>
                 <div class="control">
                     <label for="project" class="caption">Project:</label>
-                    <select id="project" class="editor" data-bind="value: ProjectId"></select>
+                    <select id="project" class="editor" data-bind="options: Projects, optionsText: 'Name', value: Project"></select>
                 </div>
                 <div class="control">
                     <label for="component" class="caption">Component:</label>
-                    <select id="component" class="editor"></select>
+                    <select id="component" class="editor" data-bind="options: Components, optionsText: 'Name', value: Component"></select>
                 </div>
                 <div class="control">
                     <label for="type" class="caption">Type:</label>
-                    <select id="type" class="editor"></select>
+                    <select id="type" class="editor" data-bind="options: Types, optionsText: 'Label', value: Type"></select>
                 </div>
                 <div class="control">
                     <label for="priority" class="caption">Priority:</label>
-                    <select id="priority" class="editor"></select>
+                    <select id="priority" class="editor" data-bind="options: Priorities, optionsText: 'Label', value: Priority"></select>
                 </div>
                 <div class="control">
                     <label for="severity" class="caption">Severity:</label>
-                    <select id="severity" class="editor"></select>
+                    <select id="severity" class="editor" data-bind="options: Severities, optionsText: 'Label', value: Severity"></select>
                 </div>
                 <div class="control">
                     <label for="status" class="caption">Status:</label>
-                    <select id="status" class="editor"></select>
+                    <select id="status" class="editor" data-bind="options: Statuses, optionsText: 'Label', value: Status"></select>
                 </div>
                 <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"/>
             </div>
-            <div id="attachForm" class="form">
+            <div id="attachForm" data-bind="visible: ActiveTab() == 'Attach'">
                 <div class="control">
                     <label for="issue" class="caption">Issue:</label>
                     <input id="issue" class="editor" />

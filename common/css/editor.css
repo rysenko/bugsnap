@@ -136,14 +136,6 @@ rect:hover, path:hover, text:hover {
     border: 1px solid gray;   
 }
 
-.form {
-    display: none;
-}
-
-.active {
-    display: block;   
-}
-
 .tab.active {
     background-color: #CAFCFC;
     border: 2px solid gray;   
