@@ -19,52 +19,34 @@
         </ul>
         <div id="forms">
             <div id="createForm" class="form active">
-                <div class="divLabel">
-                    <label for="title">Title:</label>
+                <div class="control">
+                    <label for="title" class="caption">Title:</label>
+                    <input id="title" class="editor" />
                 </div>
-                <div class="divControl">
-                    <input id="title" class="control" />
+                <div class="control">
+                    <label for="project" class="caption">Project:</label>
+                    <select id="project" class="editor" data-bind="value: ProjectId"></select>
                 </div>
-                <div class="divLabel">
-                    <label for="project">Project:</label>
+                <div class="control">
+                    <label for="component" class="caption">Component:</label>
+                    <select id="component" class="editor" data-bind="value: ProjectId"></select>
                 </div>
-                <div class="divControl">
-                    <select id="project" class="control" data-bind="value: ProjectId"></select>
+                <div class="control">
+                    <label for="description" class="caption">Description:</label>
+                    <textarea id="description" class="editor" rows="8"></textarea>
                 </div>
-
-                <div class="divLabel">
-                    <label for="component">Component:</label>
-                </div>
-                <div class="divControl">
-                    <select id="component" class="control"></select>
-                </div>
-
-                <div class="divLabel">
-                    <label for="description">Description:</label>
-                </div>
-                <div class="divControl">
-                    <textarea id="description" rows="8" class="control"></textarea>
-                </div>
-                <div>
-                    <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"/>
-                </div>
+                <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"/>
             </div>
-            <div id="attachForm" class="form">                
-                <div class="divLabel">
-                    <label for="issue">Issue:</label>
+            <div id="attachForm" class="form">
+                <div class="control">
+                    <label for="issue" class="caption">Issue:</label>
+                    <input id="issue" class="editor" />
                 </div>
-                <div class="divControl">
-                    <input id="issue" class="control" />
+                <div class="control">
+                    <label for="comment" class="caption">Comment:</label>
+                    <textarea id="comment" class="editor" rows="10" data-bind="value: Comment"></textarea>
                 </div>
-                <div class="divLabel">
-                    <label for="comment">Comment:</label>
-                </div>
-                <div class="divControl">
-                    <textarea id="comment" class="control" rows="10" data-bind="value: Comment"></textarea>
-                </div>
-                <div>
-                    <input class="ui-button right" data-bind="click: send" type="button" value="Submit"/>
-                </div>
+                <input class="ui-button right" data-bind="click: send" type="button" value="Submit"/>
             </div>
         </div>
     </div>
