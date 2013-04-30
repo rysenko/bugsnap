@@ -85,17 +85,15 @@
                 <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {active: ActiveInstrument() == 'Rectangle'}">
                     <i class="icon-large icon-rect"></i>
                 </i>
-                <i title="Text" class="button" data-bind="click: setText, css: {active: ActiveInstrument() == 'Text'}">
+                <i title="Text" class="button" data-bind="click: setText, css: {active: ActiveInstrument() == 'Text'}, event: { mouseover: hidePalette }">
                     <i class="icon-large icon-font"></i>
                 </i>
                 <i class="separator"></i>
-                <!-- ko foreach: Colors -->
-                <i class="button color" data-bind="attr: {title: $data}, click: $parent.setColor, css: {active: $parent.ActiveColor() == $data}">
-                    <i class="icon-large" data-bind="style: {backgroundColor : $data}"></i>
+                <i class="button colors" data-bind="event: { mouseover: showPalette }">
+                    <i class="icon-large icon-colors"></i>
                 </i>
-                <!-- /ko -->
                 <i class="separator"></i>
-                <i title="Undo" class="button" data-bind="click: undo">
+                <i title="Undo" class="button" data-bind="click: undo, event: { mouseover: hidePalette }">
                     <i class="icon-large icon-undo"></i>
                 </i>
                 <i class="separator"></i>
@@ -110,6 +108,16 @@
                     <i class="icon-large icon-options"></i>
                 </i>
             </span>
+            <div id="palette-cont" data-bind="visible: Palette() == 'show', event: { mouseover: showPalette, mouseout: hidePalette }">
+                <div class="palette-arrow"></div>
+                <div class="palette">
+                    <!-- ko foreach: Colors -->
+                    <i class="button color" data-bind="attr: {title: $data}, click: $parent.setColor, css: {active: $parent.ActiveColor() == $data}">
+                        <i class="icon-large" data-bind="style: {backgroundColor : $data}"></i>
+                    </i>
+                    <!-- /ko -->
+                </div>
+            </div>
         </div>
         <canvas id="canvas"></canvas>
         <canvas id="output"></canvas>

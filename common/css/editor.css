@@ -18,11 +18,7 @@ html, body {
     float: left;
 }
 
-#toolbar {
-
-}
-
-#toolbar .button {
+#toolbar-container .button {
     margin: 2px;
     border-radius: 2px;
     padding: 1px;
@@ -36,7 +32,7 @@ html, body {
     border: 1px solid #eee;
 }
 
-#toolbar .button:hover {
+#toolbar-container .button:hover {
     background-color: #a5a5a5;
 }
 
@@ -192,6 +188,27 @@ rect:hover, path:hover, text:hover {
 .close:hover {
     background-color: red;
     color: white;
+}
+
+#palette-cont {
+    margin: 0px auto;
+    display: table;
+}
+.palette {
+    margin: 0px auto;
+    padding: 5px;
+    border: 1px solid gray;
+    border-radius: 4px;
+    background-color: #777;
+    /*box-shadow: 2px 2px 5px #000;*/
+}
+.palette-arrow {
+    border-color: transparent transparent #777;
+    border-style: solid;
+    border-width: 0 10px 10px;
+    margin: 0 auto;
+    height: 0;
+    width: 0;
 }
 
 /* Ui Dialog customize */
