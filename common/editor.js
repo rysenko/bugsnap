@@ -147,7 +147,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var self = this;
             $("#issue").autocomplete({
                 appendTo: "#issue_dialog",
-                minLength: 1,
+                minLength: 3,
                 source: function(request, response) {
                     var search = self.Communicator.search(request.term)
                     if (search != null) {
