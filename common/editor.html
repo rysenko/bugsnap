@@ -89,8 +89,8 @@
                     <i class="icon-large icon-font"></i>
                 </i>
                 <i class="separator"></i>
-                <i class="button colors" data-bind="event: { mouseover: showPalette }">
-                    <i class="icon-large icon-colors"></i>
+                <i class="button color" data-bind="event: { mouseover: showPalette }">
+                    <i class="icon-large" data-bind="style: {backgroundColor : ActiveColor()}"></i>
                 </i>
                 <i class="separator"></i>
                 <i title="Undo" class="button" data-bind="click: undo, event: { mouseover: hidePalette }">
