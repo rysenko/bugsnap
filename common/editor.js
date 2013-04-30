@@ -262,7 +262,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         function EditorViewModel(options) {
             this.Parent = options.Parent;
             this.IsDrawing = ko.observable(false);
-            this.ActiveInstrument = ko.observable('Rectangle');
+            this.ActiveInstrument = ko.observable('Crop');
             this.ActiveObject = ko.observable();
             this.ActiveInstrument.subscribe(function (value) {
                 if (this.Shadow.Visible()) { // abort Crop
