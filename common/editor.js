@@ -176,12 +176,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 }
             });
             $("#issue_dialog").dialog(
-                { 
+                {
+                    draggable: false,
                     autoOpen: false,
-                    width: 500, 
-                    height: 520
+                    width: 500
                 }
-            );
+            ).parent().draggable();
         };
         DetailsViewModel.prototype.selectCreate = function () {
             this.ActiveTab('Create');
@@ -251,7 +251,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     return item.Entity;
                 })
             });
-        }; 
+        };
+        DetailsViewModel.prototype.closeDialog = function () {
+            $("#issue_dialog").dialog("close");
+        };
         return DetailsViewModel;
     })();
 

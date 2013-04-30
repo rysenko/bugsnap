@@ -117,41 +117,93 @@ rect:hover, path:hover, text:hover {
     float: right;
 }
 .tabContainer {
-    width: 100%;
+    width: 94%;
     height: 32px;
     list-style: none;
     margin: 0;
     padding: 0;
-    border-bottom: 2px solid gray;
+    float: left;
 }
 
 .tab {
     width: 47.6%;
-    height: 30px;
-    line-height: 30px;
+    height: 31px;
+    line-height: 31px;
     padding-left: 8px;
-    background-color: white;
+    background-color: #F2F5F7;
     cursor: pointer;
     float: left;
-    border: 1px solid gray;   
+    border-color: gray;
+    border-style: solid;
+    border-width: 1px 1px 0px 1px;   
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .tab.active {
-    background-color: #CAFCFC;
-    border: 2px solid gray;   
+    height: 32px;
+    background-color: white;
+    border-bottom: 0;    
 }
 
 .control {
     width: 100%;
-    margin-top: 3px;
+    margin-top: 10px;
     clear: both;
+}
+.submit-div {
+    height: 35px;
+    margin-top: 7px;
 }
 .caption {
     width: 25%;
+    margin-top: 3px;
     display: block;
     float: left;
 }
 .editor {
     width: 74%;
+    margin: 0px;
     padding: 0px;
+    resize: none;
+}
+#forms {
+    border: 1px solid gray;
+    padding: 10px 6px;
+    font-family: sans-serif;
+    font-size: 15px;
+}
+.close-cont {
+    width: 6%;
+    height: 32px;   
+    display: table;
+}
+.close {
+    border: 1px solid red;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    margin: 4px 2px;
+}
+.close:hover {
+    background-color: red;
+    color: white;
+}
+
+/* Ui Dialog customize */
+.ui-dialog .ui-dialog-titlebar {
+    display: none;
+}
+.ui-dialog {
+    cursor: move;
+}
+.ui-dialog .ui-dialog-content {
+    padding: 0px;
+}
+.ui-widget-content {
+    background: white;
+}
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+    border: 1px solid gray;
+    font-family: sans-serif;
 }

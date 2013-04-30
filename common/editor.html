@@ -17,6 +17,9 @@
                 Attach screenshot
             </li>
         </ul>
+        <div class="close-cont">
+            <span class="close" data-bind="click: closeDialog">&nbsp;X&nbsp;</span>
+        </div>
         <div id="forms">
             <div id="createForm" data-bind="visible: ActiveTab() == 'Create'">
                 <div class="control">
@@ -51,7 +54,9 @@
                     <label for="status" class="caption">Status:</label>
                     <select id="status" class="editor" data-bind="options: Statuses, optionsText: 'Label', value: Status"></select>
                 </div>
-                <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"/>
+                <div class="submit-div">
+                    <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"></input>
+                </div>
             </div>
             <div id="attachForm" data-bind="visible: ActiveTab() == 'Attach'">
                 <div class="control">
@@ -62,7 +67,9 @@
                     <label for="comment" class="caption">Comment:</label>
                     <textarea id="comment" class="editor" rows="10" data-bind="value: Comment"></textarea>
                 </div>
-                <input class="ui-button right" data-bind="click: send" type="button" value="Submit"/>
+                <div class="submit-div">
+                    <input class="ui-button right" data-bind="click: send" type="button" value="Submit"></input>
+                </div>
             </div>
         </div>
     </div>
