@@ -239,6 +239,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 var result = ko.utils.arrayMap(data, function (item) {
                     return item.BaseEntity;
                 });
+                if(result.length == 0) {
+                    result.push({});
+                }
                 self.Components(result);
             });
         };
