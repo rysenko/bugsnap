@@ -322,6 +322,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             };
             this.ViewBox = ko.observable({x: 0, y: 0});
             this.FullBox = ko.observable({width: 0, height: 0});
+            this.ActiveColorOffset = ko.observable(0);
             this.History = new HistoryManager({Editor: this});
             this.Shadow = new Shadow(this);
             this.OldTransform = ko.observable('');
@@ -355,7 +356,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         EditorViewModel.prototype.setCrop = function () {
             this.ActiveInstrument('Crop');
         };
-        EditorViewModel.prototype.showPalette = function () {  
+        EditorViewModel.prototype.showPalette = function () {
+            this.ActiveColorOffset($('#activeColor').offset().left + $('#activeColor').outerWidth()/2 - $('#palette-cont').outerWidth()/2);
             this.Palette('show');
         };
         EditorViewModel.prototype.hidePalette = function () {            

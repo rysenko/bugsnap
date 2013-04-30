@@ -89,7 +89,7 @@
                     <i class="icon-large icon-font"></i>
                 </i>
                 <i class="separator"></i>
-                <i class="button color" data-bind="event: { mouseover: showPalette }">
+                <i id="activeColor" class="button color" data-bind="event: { mouseover: showPalette }">
                     <i class="icon-large" data-bind="style: {backgroundColor : ActiveColor()}"></i>
                 </i>
                 <i class="separator"></i>
@@ -108,7 +108,7 @@
                     <i class="icon-large icon-options"></i>
                 </i>
             </span>
-            <div id="palette-cont" data-bind="visible: Palette() == 'show', event: { mouseover: showPalette, mouseout: hidePalette }">
+            <div id="palette-cont" data-bind="visible: Palette() == 'show', event: { mouseover: showPalette, mouseout: hidePalette }, style: {left : ActiveColorOffset() + 'px'}">
                 <div class="palette-arrow"></div>
                 <div class="palette">
                     <!-- ko foreach: Colors -->

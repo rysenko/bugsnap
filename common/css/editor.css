@@ -127,7 +127,6 @@ rect:hover, path:hover, text:hover {
     height: 36px;
     line-height: 36px;
     padding-left: 8px;
-    background-color: #DADADA;
     cursor: pointer;
     float: left;
     border-color: gray;
@@ -136,11 +135,13 @@ rect:hover, path:hover, text:hover {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     font-weight: bold;
+    background: -webkit-linear-gradient(top, #FFF,  #ABA69E);
+    background: -moz-linear-gradient(top,  #FFF,  #ABA69E);
 }
 
 .tab.active {
     height: 37px;
-    background-color: white;
+    background: white;
     border-bottom: 0;    
 }
 
@@ -191,7 +192,7 @@ rect:hover, path:hover, text:hover {
 }
 
 #palette-cont {
-    margin: 0px auto;
+    position: absolute;
     display: table;
 }
 .palette {
