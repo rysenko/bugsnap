@@ -210,7 +210,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 this.Title(),
                 this.Description(),
                 this.ProjectId(),
-                component ? component.Id : null,
+                component ? component.Id : '',
                 this.Type().Id,
                 this.Priority().Id,
                 this.Severity().Id,
