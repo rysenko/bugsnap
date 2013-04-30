@@ -49,8 +49,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 this.Rects.push(this.Editor.Paper.rect(0, 0, 0, 0));    
                 $.each(this.Rects, function(){ this.attr({'stroke-width': 0, 'fill': 'Gray', 'fill-opacity': 0.4}) });   
             }
-            var fullWidth = this.Editor.Paper.width;
-            var fullHeight = this.Editor.Paper.height;
+            var fullBox = this.Editor.FullBox();
+            var fullWidth = fullBox.width;
+            var fullHeight = fullBox.height;
             this.Rects[0].attr({
                 'x': 0,
                 'y': 0,
@@ -313,6 +314,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 self.ActiveColor(color);
             };
             this.ViewBox = ko.observable({x: 0, y: 0});
+            this.FullBox = ko.observable({width: 0, height: 0});
             this.History = new HistoryManager({Editor: this});
             this.Shadow = new Shadow(this);
             this.OldTransform = ko.observable('');
@@ -328,6 +330,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 height = this.naturalHeight;
                 self.Paper = new Raphael(document.getElementById('editor'), width, height);
                 self.setViewBox(0, 0, width, height);
+                self.FullBox({width: width, height: height});
             };
             imageObj.src = localStorage.getItem('screenshot');
             $(window).resize(this.setCenter.bind(this));
@@ -435,7 +438,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     activeObject.attr('y', minY);
                     activeObject.attr('width', maxX - minX);
                     activeObject.attr('height', maxY - minY);
-                    if(this.ActiveInstrument() == 'Crop'){
+                    if(activeInstrument == 'Crop'){
                         this.Shadow.Show(minX, minY, maxX - minX, maxY - minY);                        
                     }
                 } else if (activeInstrument == 'Arrow') {
