@@ -69,17 +69,17 @@
     <div data-bind="with: Editor" class="screen">
         <div id="toolbar-container" data-bind="event: {mouseup: editorUp}">
             <span id="toolbar">
-                <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {active: ActiveInstrument() == 'Rectangle'}">
-                    <i class="icon-large icon-rect"></i>
+                <i title="Crop" class="button" data-bind="click: setCrop, css: {active: ActiveInstrument() == 'Crop'}">
+                    <i class="icon-large icon-crop"></i>
                 </i>
                 <i title="Arrow" class="button" data-bind="click: setArrow, css: {active: ActiveInstrument() == 'Arrow'}">
                     <i class="icon-large icon-arrow"></i>
                 </i>
+                <i title="Rectangle" class="button" data-bind="click: setRectangle, css: {active: ActiveInstrument() == 'Rectangle'}">
+                    <i class="icon-large icon-rect"></i>
+                </i>
                 <i title="Text" class="button" data-bind="click: setText, css: {active: ActiveInstrument() == 'Text'}">
                     <i class="icon-large icon-font"></i>
-                </i>
-                <i title="Crop" class="button" data-bind="click: setCrop, css: {active: ActiveInstrument() == 'Crop'}">
-                    <i class="icon-large icon-crop"></i>
                 </i>
                 <i class="separator"></i>
                 <!-- ko foreach: Colors -->
