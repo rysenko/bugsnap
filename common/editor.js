@@ -27,6 +27,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 if (params.obj) {
                     params.obj.remove();
                 }
+            } else if (operation == 'Move') {
+                if (params.obj) {
+                    params.obj.transform(params.transform);
+                }
             }
         };
         HistoryManager.prototype.drop = function () {
@@ -492,6 +496,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     activeObject.remove();
                 }
                 this.Shadow.Hide();
+            } else if (activeInstrument == 'Move') {
+                this.History.add('Move', {obj: this.ActiveObject(), transform: this.OldTransform()});
             }
             this.IsDrawing(false);
             if (activeInstrument != 'Text') {
