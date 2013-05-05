@@ -488,6 +488,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     this.setViewBox(x, y, width, height).done(function () {
                         activeObject.remove();
                     });
+                } else {
+                    activeObject.remove();
                 }
                 this.Shadow.Hide();
             }
