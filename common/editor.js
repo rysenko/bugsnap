@@ -1,6 +1,7 @@
 requirejs.config({
    shim: {
-        'js/jquery.ui.src': {deps: ['js/jquery.src']}
+       'js/jquery.ui.src': {deps: ['js/jquery.src']},
+       'js/jquery.loading.src': {deps: ['js/jquery.src']}
    }
 });
 
