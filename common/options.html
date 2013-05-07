@@ -5,47 +5,47 @@
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
 <style>
 #options {
-	margin:15px auto;
-	width:700px;
-	font-family: sans-serif;
-	font-size: 15px;
+    margin:15px auto;
+    width:700px;
+    font-family: sans-serif;
+    font-size: 15px;
 }
 #options .label {
-	width: 140px;
-	padding-top:5px;
-	float:left;
+    width: 140px;
+    padding-top:5px;
+    float:left;
 }
 
 .autorize {
-	padding-top:0px  !important;
+    padding-top:0px  !important;
 }
 #options div{
-	padding: 5px;
-	
-}	
+    padding: 5px;
+
+}
 #method {
-	display: none;
+    display: none;
 }
 
-em { 
-	font-weight: bold; 
-	padding-right: 1em; 
-	vertical-align: top; 
+em {
+    font-weight: bold;
+    padding-right: 1em;
+    vertical-align: top;
 }
 input[type=text] {
-	width: 300px;
+    width: 300px;
 }
 input[type=password] {
-	width: 300px;
+    width: 300px;
 }
 .save {
-	width : 650px;
+    width : 650px;
 }
 .confirmationMessage {
-	display : none;
-	background-color: #fea;
-	padding: 3px;
-	margin-left : 10px;
+    display : none;
+    background-color: #fea;
+    padding: 3px;
+    margin-left : 10px;
 }
 
 .ui-widget input {
@@ -53,42 +53,36 @@ input[type=password] {
     font-size: 1.1em;
 }
 </style>
-
 </head>
-
 <body>
 <form id="optionsForm">
-<div id="options" class='ui-widget' title="Submit screenshot to an issue" data-bind="with: OptionsPage">
-<div>
-	<label class="label" for="geminiUrl">Gemini URL:</label>
-	<em>*</em><input type="text" name="geminiUrl" id="geminiUrl" class="required" data-bind="value: GeminiUrl">
-</div>
-<div>
-	<label class="label" for="userName">User Name:</label>
-	<em>*</em><input type="text" name="userName" id="userName" class="required" data-bind="value: UserName">
-</div>
-<div id="method">
-	<label class="label autorize" for="method">Authorize by:</label><em>&nbsp; </em>
-	
-	<input type="radio" id="method1" name="method" value="Password"> <label for="method1">Password</label>
-	<input type="radio" id="method2" name="method" value="API Key" checked> <label for="method2">API Key</label>
-</div>
-<div id="password">
-	<label class="label" for="passwordInput">Password:</label>
-	<em>&nbsp;</em><input type="password" id="passwordInput" data-bind="value: Password">
-</div>
-<div id="apiKey" >
-	<label class="label" for="apiKeyInput">API Key:</label>
-	<em>*</em><input type="text" name="apiKeyInput" id="apiKeyInput" class="required" data-bind="value: APIKey">
-</div>
-<br>
-<div class="save">
-
-<input class="ui-button" data-bind="click: test" type="button" value="Test Connection"/>
-<input class="ui-button" data-bind="click: save" type="button" value="Save"/>
-<span class="confirmationMessage"><span/>
-</div>
-</div>
+    <div id="options" class='ui-widget' title="Submit screenshot to an issue">
+        <div>
+            <label class="label" for="geminiUrl">Gemini Version:</label>
+            <em>*</em><select name="geminiVersion" id="geminiVersion" class="required" data-bind="value: Version">
+                <option value="5">5.X</option>
+                <option value="4">4.X</option>
+            </select>
+        </div>
+        <div>
+            <label class="label" for="geminiUrl">Gemini URL:</label>
+            <em>*</em><input type="text" name="geminiUrl" id="geminiUrl" class="required" data-bind="value: GeminiUrl">
+        </div>
+        <div>
+            <label class="label" for="userName">User Name:</label>
+            <em>*</em><input type="text" name="userName" id="userName" class="required" data-bind="value: UserName">
+        </div>
+        <div id="apiKey" >
+            <label class="label" for="apiKeyInput">API Key:</label>
+            <em>*</em><input type="text" name="apiKeyInput" id="apiKeyInput" class="required" data-bind="value: APIKey">
+        </div>
+        <br>
+        <div class="save">
+            <input class="ui-button" data-bind="click: test" type="button" value="Test Connection"/>
+            <input class="ui-button" data-bind="click: save" type="button" value="Save"/>
+            <span class="confirmationMessage"></span>
+        </div>
+    </div>
 </form>
 </body>
 

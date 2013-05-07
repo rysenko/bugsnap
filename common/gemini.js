@@ -1,4 +1,36 @@
 define(['js/jquery'], function ($) {
+    var Gemini4Communicator = (function () {
+        function Gemini4Communicator() {
+            this.geminiUrl = function () {
+                return localStorage['GeminiUrl'] + '/api/';
+            }
+            this.geminiUsername = function () {
+                return window.btoa(localStorage["UserName"]);
+            };
+            this.geminiApiKey = function () {
+                return window.btoa(localStorage["APIKey"]);
+            };
+        }
+        Gemini4Communicator.prototype.ajax = function(url, data, method) {
+            var deferred = $.Deferred();
+            var xhr = new XMLHttpRequest();
+            url = url + '?format=json&gemini-username-token=' + this.geminiUsername() + '&gemini-api-token=' + this.geminiApiKey();
+            xhr.open((method || 'POST'), url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    deferred.resolve(JSON.parse(xhr.responseText));
+                }
+            };
+            xhr.send(JSON.stringify(data));
+            return deferred.promise();
+        };
+        Gemini4Communicator.prototype.search = function (query) {
+            return this.ajax(this.geminiUrl() + 'issues.ashx/issues/mywork', {}, 'GET');
+            //return this.ajax(this.geminiUrl() + 'issues.ashx/issues/filters', {SearchKeywords: query});
+        };
+        return Gemini4Communicator;
+    })();
+
     var GeminiCommunicator = (function () {
         var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
         function GeminiCommunicator() {
@@ -81,5 +113,5 @@ define(['js/jquery'], function ($) {
         };
         return GeminiCommunicator;
     })();
-    return GeminiCommunicator;
+    return localStorage['GeminiVersion'] == '4' ? Gemini4Communicator : GeminiCommunicator;
 });
