@@ -22,8 +22,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
             this.Password = ko.observable(pwd);
             this.APIKey = ko.observable(localStorage["APIKey"]);
             this.Version = ko.observable(localStorage['GeminiVersion'] || '5');
+
+            $('#optionsForm :input[type="text"]').keydown(function() {
+                $('#saveBtn').prop('value', '*Save');
+            });
         }
-        OptionsPageViewModel.prototype.test = function () {
+        OptionsPageViewModel.prototype.save = function () {
             if($("#optionsForm").valid()) {
                 var deferred = $.Deferred();
                 var self = this;
@@ -37,9 +41,21 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
                     }
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState == 4 && xhr.status == 200) {
-                            $(".confirmationMessage").stop().hide().text("Successfully connected to Gemini!").fadeIn(400, function() {
-                                $(this).delay(1700).fadeOut(400);
-                            });
+                            if(xhr.responseText === "null") {
+                                $(".confirmationMessage").stop().hide().text("Unable to login using supplied credentials.").fadeIn(400, function() {
+                                    $(this).delay(1700).fadeOut(400);
+                                });
+                            } else {
+                                localStorage["AuthMethod"] = "apikey";
+                                localStorage["GeminiUrl"] = self.GeminiUrl();
+                                localStorage["UserName"] = self.UserName();
+                                localStorage["APIKey"] = self.APIKey();
+                                localStorage['GeminiVersion'] = self.Version();
+                                $(".confirmationMessage").stop().hide().text("Credentials are successfully saved.").fadeIn(400, function() {
+                                    $(this).delay(1700).fadeOut(400);
+                                });                            
+                                $('#saveBtn').prop('value', 'Save');
+                            } 
                         } else if (xhr.readyState == 4 && xhr.status != 200) {
                             if(xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
                                 $(".confirmationMessage").stop().hide().text("Unable to connect to Gemini at specified URL.").fadeIn(400, function() {
@@ -59,9 +75,21 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
                         + window.btoa(self.UserName()) + '&gemini-api-token=' + window.btoa(self.APIKey()));
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState == 4 && xhr.status == 200) {
-                            $(".confirmationMessage").stop().hide().text("Successfully connected to Gemini!").fadeIn(400, function() {
-                                $(this).delay(1700).fadeOut(400);
-                            });
+                            if(xhr.responseText === "null") {
+                                $(".confirmationMessage").stop().hide().text("Unable to login using supplied credentials.").fadeIn(400, function() {
+                                    $(this).delay(1700).fadeOut(400);
+                                });
+                            } else {
+                                localStorage["AuthMethod"] = "apikey";
+                                localStorage["GeminiUrl"] = self.GeminiUrl();
+                                localStorage["UserName"] = self.UserName();
+                                localStorage["APIKey"] = self.APIKey();
+                                localStorage['GeminiVersion'] = self.Version();
+                                $(".confirmationMessage").stop().hide().text("Credentials are successfully saved.").fadeIn(400, function() {
+                                    $(this).delay(1700).fadeOut(400);
+                                });                            
+                                $('#saveBtn').prop('value', 'Save');
+                            }
                         } else if (xhr.readyState == 4 && xhr.status != 200) {
                             $(".confirmationMessage").stop().hide().text("Unable to connect to Gemini at specified URL.").fadeIn(400, function() {
                                 $(this).delay(1700).fadeOut(400);
@@ -72,18 +100,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
                 }
                 xhr.send();
                 return deferred.promise();
-            }
-        };
-        OptionsPageViewModel.prototype.save = function () {
-            if($("#optionsForm").valid()) {
-                localStorage["AuthMethod"] = "apikey";
-                localStorage["GeminiUrl"] = this.GeminiUrl();
-                localStorage["UserName"] = this.UserName();
-                localStorage["APIKey"] = this.APIKey();
-                localStorage['GeminiVersion'] = this.Version();
-                $(".confirmationMessage").stop().hide().text("Options saved.").fadeIn(400, function() {
-                    $(this).delay(1000).fadeOut(400);
-                });
             }
         };
         return OptionsPageViewModel;
