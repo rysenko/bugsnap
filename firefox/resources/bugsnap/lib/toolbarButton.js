@@ -86,25 +86,32 @@ function getScreenCapture() {
 tabs.on('activate', function(tab) {
     tab.on('ready', function(tab){   
         if(tab.title.indexOf('BugSnap') != -1) {
+            allowScriptsToCloseWindows(true);
             forcecors.enable();
         }
     });
     tab.on('activate', function(tab){   
         if(tab.title.indexOf('BugSnap') != -1) {
+            allowScriptsToCloseWindows(true);
             forcecors.enable();
         }
     });
     tab.on('deactivate', function(tab){   
         if(tab.title.indexOf('BugSnap') != -1) {
+            allowScriptsToCloseWindows(false);
             forcecors.disable();
         }
     });
     tab.on('close', function(tab){   
-        if(tab.title.indexOf('BugSnap') != -1) {
-            forcecors.disable();
-        }
+        allowScriptsToCloseWindows(false);
+        forcecors.disable();
     });
 });
+
+function allowScriptsToCloseWindows(allow) {
+    var prefService = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
+    prefService.setBoolPref("dom.allow_scripts_to_close_windows", allow);
+};
 
 function Forcecors() {
     this.observer = {
