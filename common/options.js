@@ -26,7 +26,6 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
         }
         OptionsPageViewModel.prototype.init = function () {
             var self = this;
-            $("input[type=button], a, button").button();
             $("#method").buttonset();
             $("#password").hide();
             $('input[name=method]').change(

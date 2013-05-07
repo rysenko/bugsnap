@@ -7,7 +7,8 @@
 #options {
 	margin:15px auto;
 	width:700px;
-	
+	font-family: sans-serif;
+	font-size: 15px;
 }
 #options .label {
 	width: 140px;
@@ -46,6 +47,11 @@ input[type=password] {
 	padding: 3px;
 	margin-left : 10px;
 }
+
+.ui-widget input {
+    border: 1px solid gray;
+    font-size: 1.1em;
+}
 </style>
 
 </head>
@@ -78,9 +84,9 @@ input[type=password] {
 <br>
 <div class="save">
 
-<input data-bind="click: test" type="button" value="Test Connection"/>
-<input data-bind="click: save" type="button" value="Save"/>
-<span class="confirmationMessage">aaaa<span/>
+<input class="ui-button" data-bind="click: test" type="button" value="Test Connection"/>
+<input class="ui-button" data-bind="click: save" type="button" value="Save"/>
+<span class="confirmationMessage"><span/>
 </div>
 </div>
 </form>
