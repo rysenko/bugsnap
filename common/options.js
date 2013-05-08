@@ -57,7 +57,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
                                 $('#saveBtn').prop('value', 'Save');
                             } 
                         } else if (xhr.readyState == 4 && xhr.status != 200) {
-                            if(xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
+                            if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
                                 $(".confirmationMessage").stop().hide().text("Unable to connect to Gemini at specified URL.").fadeIn(400, function() {
                                     $(this).delay(1700).fadeOut(400);
                                 });
