@@ -74,7 +74,7 @@
         </div>
     </div>
     <div data-bind="with: Editor" class="screen">
-        <div id="toolbar-container" data-bind="event: {mouseup: editorUp}">
+        <div id="toolbar-container">
             <span id="toolbar">
                 <i title="Crop" class="button" data-bind="click: setCrop, css: {active: ActiveInstrument() == 'Crop'}">
                     <i class="icon-large icon-crop"></i>
@@ -121,7 +121,7 @@
         </div>
         <canvas id="canvas"></canvas>
         <canvas id="output"></canvas>
-        <div data-bind="event: {mousedown: editorDown, mouseup: editorUp, mousemove: editorMove}" id="editor"></div>
+        <div data-bind="event: {mousedown: editorDown}" id="editor"></div>
         <textarea id="texted" style="display: none" data-bind="value: ActiveText, valueUpdate: 'afterkeydown'"></textarea>
     </div>
 </body>

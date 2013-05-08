@@ -348,6 +348,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             };
             imageObj.src = localStorage.getItem('screenshot');
             $(window).resize(this.setCenter.bind(this));
+            $(document).mousemove(function (e) {
+                self.editorMove.call(self, self, e);
+            });
+            $(document).mouseup(function (e) {
+                self.editorUp.call(self, self, e);
+            });
         };
         EditorViewModel.prototype.setRectangle = function () {
             this.ActiveInstrument('Rectangle');
@@ -378,10 +384,18 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         };
         EditorViewModel.prototype.getOffset = function (event) {
             var viewBox = this.ViewBox();
-            var offset = $('#editor').offset();
+            var editorOffset = $('#editor').offset();
+            var offset = {
+                x: event.pageX - editorOffset.left,
+                y: event.pageY - editorOffset.top
+            };
+            offset.x = Math.min(offset.x, viewBox.width);
+            offset.y = Math.min(offset.y, viewBox.height);
+            offset.x = Math.max(offset.x, 0);
+            offset.y = Math.max(offset.y, 0);
             return {
-                x: viewBox.x + event.pageX - offset.left,
-                y: viewBox.y + event.pageY - offset.top
+                x: viewBox.x + offset.x,
+                y: viewBox.y + offset.y
             };
         };
         EditorViewModel.prototype.editorDown = function (data, event) {
