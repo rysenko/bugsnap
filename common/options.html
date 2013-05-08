@@ -67,6 +67,7 @@ input[type=password] {
         <div>
             <label class="label" for="geminiUrl">Gemini URL:</label>
             <em>*</em><input type="text" name="geminiUrl" id="geminiUrl" class="required" data-bind="value: GeminiUrl">
+            <label data-bind="visible: GeminiUrlInvalid()">Gemini URL must be a valid URL.</label>
         </div>
         <div>
             <label class="label" for="userName">User Name:</label>
