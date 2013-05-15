@@ -43,6 +43,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
                     if(window.navigator.userAgent.indexOf('Firefox') == -1){
                         xhr.setRequestHeader('Authorization', 'Basic ' + window.btoa(this.UserName() + ':' + this.APIKey()));
                         xhr.setRequestHeader('Content-Type', 'application/json');
+                    } else {
+                        document.cookie = "authorizationCookie=" + window.btoa(this.UserName() + ':' + this.APIKey()) + "; path=/";
                     }
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState == 4 && xhr.status == 200) {
@@ -66,7 +68,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
                                     $('#saveBtn').prop('disabled', '');
                                 });
                             }
-                            if(xhr.statusText == "Forbidden" || xhr.statusText == "Unauthorized") {
+                            else {
                                 $(".confirmationMessage").stop().hide().text("Unable to login using supplied credentials.").show().delay(1700).fadeOut(400, function() {
                                     $('#saveBtn').prop('disabled', '');
                                 });
@@ -93,10 +95,17 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/jquery.ui', 'js/jquery.val
                                     $('#saveBtn').prop('disabled', '').prop('value', 'Save');
                                 });                            
                             }
-                        } else if (!xhr.statusText || xhr.readyState == 4 && xhr.status != 200) {
-                            $(".confirmationMessage").stop().hide().text("Unable to connect to Gemini at specified URL.").show().delay(1700).fadeOut(400, function() {
-                                $('#saveBtn').prop('disabled', '');
-                            });
+                        } else if (xhr.readyState == 4 && xhr.status != 200) {
+                            if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
+                                $(".confirmationMessage").stop().hide().text("Unable to connect to Gemini at specified URL.").show().delay(1700).fadeOut(400, function() {
+                                    $('#saveBtn').prop('disabled', '');
+                                });
+                            }
+                            else {
+                                $(".confirmationMessage").stop().hide().text("Unable to login using supplied credentials.").show().delay(1700).fadeOut(400, function() {
+                                    $('#saveBtn').prop('disabled', '');
+                                });
+                            }
                         }
                     }
                     xhr.send();

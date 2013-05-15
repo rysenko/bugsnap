@@ -115,11 +115,11 @@ function allowScriptsToCloseWindows(allow) {
 
 function Forcecors() {
     this.observer = {
-        observe: function(subject, topic, data) {
+        observe: function(subject, topic, d) {
             var httpChannel = subject.QueryInterface(Ci.nsIHttpChannel);
             if (topic == "http-on-modify-request") {
                 var ios = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
-                var uri = ios.newURI('resource://jid1-aenehtehxohyuw-at-jetpack/bugsnap/data/common/editor.html', null, null);
+                var uri = ios.newURI(data.url('common/editor.html'), null, null);
                 var cookieService = Cc["@mozilla.org/cookieService;1"].getService(Ci.nsICookieService);
                 var auth = cookieService.getCookieString(uri, null).split('=');                
 
