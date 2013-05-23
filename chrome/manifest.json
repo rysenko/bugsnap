@@ -1,12 +1,12 @@
 {
-    "manifest_version": 10,
+    "manifest_version": 11,
     "background": {
         "page": "background.html"
     },
     "options_page": "common/options.html",
     "name": "BugSnap",
-    "description": "Shoot your bug and send photo to your Gemini.",
-    "version": "0.1.8",
+    "description": "Shoot your bug and send photo to your tracker.",
+    "version": "0.1.9",
     "icons": {
         "16": "common/img/16.png",
         "48": "common/img/48.png",

@@ -1,1 +1,1 @@
-Shoot your bug and send photo to your Gemini.
+Shoot your bug and send photo to your tracker.
