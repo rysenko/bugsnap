@@ -186,7 +186,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                     autoOpen: false,
                     width: 500
                 }
-            ).parent().draggable();
+            );
         };
         DetailsViewModel.prototype.selectCreate = function () {
             this.ActiveTab('Create');

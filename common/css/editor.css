@@ -98,9 +98,7 @@ rect:hover, path:hover, text:hover {
 .loading-indicator {
     height: 80px;
     width: 80px;
-    background: url( '../img/FhHRx.gif' );
-    background-repeat: no-repeat;
-    background-position: center center;
+    background: url('../img/FhHRx.gif') no-repeat center center;
 }
 
 .loading-indicator-overlay {
@@ -129,9 +127,8 @@ rect:hover, path:hover, text:hover {
     padding-left: 8px;
     cursor: pointer;
     float: left;
-    border-color: gray;
-    border-style: solid;
-    border-width: 1px 1px 0px 1px;   
+    border: 1px solid gray;
+    border-bottom-width: 0px;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     font-weight: bold;
@@ -215,9 +212,6 @@ rect:hover, path:hover, text:hover {
 /* Ui Dialog customize */
 .ui-dialog .ui-dialog-titlebar {
     display: none;
-}
-.ui-dialog {
-    cursor: move;
 }
 .ui-dialog .ui-dialog-content {
     padding: 0px;
