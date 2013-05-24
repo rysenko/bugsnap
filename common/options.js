@@ -8,7 +8,7 @@ require.config({
         'js/jquery.ui': ['jquery']
     }
 });
-define(['js/jquery', 'js/knockout', , 'gemini', 'js/jquery.ui', 'js/jquery.validate'], function ($, ko, Communicator) {
+define(['js/jquery', 'js/knockout', 'gemini', 'js/jquery.ui', 'js/jquery.validate'], function ($, ko, CommunicatorLoader) {
     var OptionsPageViewModel = (function () {
         function OptionsPageViewModel(options) {
             var settings = localStorage['CommunicatorSettings'] || {};
@@ -43,7 +43,8 @@ define(['js/jquery', 'js/knockout', , 'gemini', 'js/jquery.ui', 'js/jquery.valid
                 $('#saveBtn').prop('disabled', 'disabled');
                 var settings = this.getSettings();
                 var type = this.Type();
-                var communicator = (Communicator(type))(settings);
+                var CommunicatorClass = CommunicatorLoader(type);
+                var communicator = new CommunicatorClass(settings);
                 communicator.test().fail(function(text) {
                     $(".confirmationMessage").stop().hide().text(text).show().delay(1700).fadeOut(400, function() {
                         $('#saveBtn').prop('disabled', '');

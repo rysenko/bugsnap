@@ -129,7 +129,7 @@ define(['js/jquery'], function ($) {
         return YouTrackCommunicator;
     })(Communicator);
 
-    function CommunicatorLoader(communicatorType) {
+    var CommunicatorLoader = function (communicatorType) {
         var type = communicatorType || localStorage['CommunicatorType'];
         var result = GeminiCommunicator; // Default one
         switch (type) {
