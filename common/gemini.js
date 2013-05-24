@@ -1,44 +1,36 @@
 define(['js/jquery'], function ($) {
-    var Gemini4Communicator = (function () {
-        function Gemini4Communicator() {
-            this.geminiUrl = function () {
-                return localStorage['GeminiUrl'] + '/api/';
-            }
-            this.geminiUsername = function () {
-                return window.btoa(localStorage["UserName"]);
+    var Communicator = (function () {
+        function Communicator(settings) {
+            this.Settings = function () {
+                var stored = localStorage['CommunicatorSettings'] ? JSON.parse(localStorage['CommunicatorSettings']) : {};
+                return settings || stored;
             };
-            this.geminiApiKey = function () {
-                return window.btoa(localStorage["APIKey"]);
+            this.Url = function () {
+                return this.Settings().Url;
+            };
+            this.Login = function () {
+                return this.Settings().Login;
+            };
+            this.Password = function () {
+                return this.Settings().Password;
+            };
+            this.Key = function () {
+                return this.Settings().Key;
             };
         }
-        Gemini4Communicator.prototype.ajax = function(url, data, method) {
-            var deferred = $.Deferred();
-            var xhr = new XMLHttpRequest();
-            url = url + '?format=json&gemini-username-token=' + this.geminiUsername() + '&gemini-api-token=' + this.geminiApiKey();
-            xhr.open((method || 'POST'), url, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    deferred.resolve(JSON.parse(xhr.responseText));
-                }
-            };
-            xhr.send(JSON.stringify(data));
-            return deferred.promise();
-        };
-        Gemini4Communicator.prototype.search = function (query) {
-            return this.ajax(this.geminiUrl() + 'issues.ashx/issues/mywork', {}, 'GET');
-            //return this.ajax(this.geminiUrl() + 'issues.ashx/issues/filters', {SearchKeywords: query});
-        };
-        return Gemini4Communicator;
+        return Communicator;
     })();
 
-    var GeminiCommunicator = (function () {
+    var GeminiCommunicator = (function (_super) {
         var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
-        function GeminiCommunicator() {
+        GeminiCommunicator.prototype = Object.create(_super.prototype);
+        function GeminiCommunicator(settings) {
+            _super.call(this, settings);
             this.geminiUrl = function () {
-                return localStorage["GeminiUrl"]+ "/api/";
+                return this.Url() + '/api/';
             };
             this.geminiUsername = function () {
-                return window.btoa(localStorage["UserName"] + ':' + localStorage["APIKey"]);
+                return window.btoa(this.Login() + ':' + this.Key());
             };
         }
         GeminiCommunicator.prototype.search = function (query) {
@@ -92,6 +84,9 @@ define(['js/jquery'], function ($) {
         GeminiCommunicator.prototype.loadMetaData = function (control, templateId) {
             return this.ajax(this.geminiUrl() + control + "/template/" + templateId, null, 'GET');
         };
+        GeminiCommunicator.prototype.test = function () {
+            return this.loadProjects();
+        };
         GeminiCommunicator.prototype.ajax = function(url, data, method) {            
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
@@ -104,14 +99,45 @@ define(['js/jquery'], function ($) {
                 document.cookie = "authorizationCookie=" + this.geminiUsername() + "; path=/";
             }
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    deferred.resolve(JSON.parse(xhr.responseText));
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        if(xhr.responseText === "null") {
+                            deferred.reject('Unable to login using supplied credentials.');
+                        } else {
+                            deferred.resolve(JSON.parse(xhr.responseText));
+                        }
+                    } else {
+                        if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
+                            deferred.reject('Unable to connect to Gemini at specified URL.');
+                        } else {
+                            deferred.reject('Unable to login using supplied credentials.');
+                        }
+                    }
                 }
             };
             xhr.send(JSON.stringify(data));
             return deferred.promise();
         };
         return GeminiCommunicator;
-    })();
-    return localStorage['GeminiVersion'] == '4' ? Gemini4Communicator : GeminiCommunicator;
+    })(Communicator);
+
+    var YouTrackCommunicator = (function (_super) {
+        YouTrackCommunicator.prototype = Object.create(_super.prototype);
+        function YouTrackCommunicator(settings) {
+            _super.call(this, settings);
+        }
+        return YouTrackCommunicator;
+    })(Communicator);
+
+    function CommunicatorLoader(communicatorType) {
+        var type = communicatorType || localStorage['CommunicatorType'];
+        var result = GeminiCommunicator; // Default one
+        switch (type) {
+            case 'YouTrack':
+                result = YouTrackCommunicator;
+                break;
+        }
+        return result;
+    }
+    return CommunicatorLoader;
 });

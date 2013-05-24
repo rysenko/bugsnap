@@ -5,7 +5,7 @@ requirejs.config({
    }
 });
 
-define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jquery.ui', 'js/jquery.loading'], function ($, ko, Raphael, canvg, GeminiCommunicator) {
+define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jquery.ui', 'js/jquery.loading'], function ($, ko, Raphael, canvg, Communicator) {
 
     var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
 
@@ -144,7 +144,9 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             this.Types = ko.observableArray();
             this.Status = ko.observable();
             this.Statuses = ko.observableArray();
-            this.Communicator = new GeminiCommunicator();
+            this.Communicator = function () {
+                return new (Communicator())();
+            }
             this.ActiveTab = ko.observable('Create');
             this.init();
         }
@@ -154,7 +156,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 appendTo: "#issue_dialog",
                 minLength: 3,
                 source: function(request, response) {
-                    var search = self.Communicator.search(request.term)
+                    var search = self.Communicator().search(request.term)
                     if (search != null) {
                         search.done(function (data) {
                             if(data.constructor != Array) {
@@ -199,8 +201,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 var imageData = this.Parent.Editor.getImageData();
                 var self = this;
                 $("#issue_dialog").showLoading();
-                this.Communicator.comment(this.ProjectId(), this.IssueId(), this.Comment()).then(function () {
-                    return self.Communicator.attach(self.ProjectId(), self.IssueId(), imageData);
+                this.Communicator().comment(this.ProjectId(), this.IssueId(), this.Comment()).then(function () {
+                    return self.Communicator().attach(self.ProjectId(), self.IssueId(), imageData);
                 }).done(function () {
                    $("#issue_dialog").hideLoading().dialog("close");
                    window.close();
@@ -212,7 +214,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var self = this;
             $("#issue_dialog").showLoading();
             var component = this.Component();
-            this.Communicator.create(
+            this.Communicator().create(
                 this.Title(),
                 this.Description(),
                 this.ProjectId(),
@@ -222,7 +224,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 this.Severity().Id,
                 this.Status().Id
             ).then(function (data) {
-                return self.Communicator.attach(data.Project.Id, data.Id, imageData);
+                return self.Communicator().attach(data.Project.Id, data.Id, imageData);
             }).done(function () {
                 $("#issue_dialog").hideLoading().dialog("close");
                 window.close();
@@ -231,7 +233,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         DetailsViewModel.prototype.showDialog = function () {
             $("#issue_dialog").dialog("open");
             var self = this;
-            this.Communicator.loadProjects().then(function(data) {
+            this.Communicator().loadProjects().then(function(data) {
                 var projects = ko.utils.arrayMap(data, function (item) {
                     return item.BaseEntity;
                 });
@@ -240,7 +242,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         };
         DetailsViewModel.prototype.loadComponents = function (projectId) {
             var self = this;
-            this.Communicator.loadComponents(projectId).then(function(data) {
+            this.Communicator().loadComponents(projectId).then(function(data) {
                 var result = ko.utils.arrayMap(data, function (item) {
                     return item.BaseEntity;
                 });
@@ -251,7 +253,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             });
         };
         DetailsViewModel.prototype.loadMetaData = function (controlId, templateId) {
-            return this.Communicator.loadMetaData(controlId, templateId).then(function (data) {
+            return this.Communicator().loadMetaData(controlId, templateId).then(function (data) {
                 return ko.utils.arrayMap(data, function (item) {
                     return item.Entity;
                 })
