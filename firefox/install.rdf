@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. --><RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
     <em:id>jid1-AEnEhteHXOHYuw@jetpack</em:id>
-    <em:version>0.1.8</em:version>
+    <em:version>0.1.9</em:version>
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
     <em:unpack>false</em:unpack>
@@ -19,7 +19,7 @@
 
     <!-- Front End MetaData -->
     <em:name>BugSnap</em:name>
-    <em:description>Shoot your bug and send photo to your Gemini.</em:description>
+    <em:description>Shoot your bug and send photo to your tracker.</em:description>
     <em:creator></em:creator>
     
     
