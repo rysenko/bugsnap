@@ -499,8 +499,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
         };
         EditorViewModel.prototype.editorUp = function (data, event) {
             var activeInstrument = this.ActiveInstrument();
-            if (activeInstrument == 'Crop') {
-                var activeObject = this.ActiveObject();
+            var activeObject = this.ActiveObject();
+            if (activeInstrument == 'Crop' && activeObject) {
                 var x = activeObject.attr('x'), y = activeObject.attr('y');
                 var width = activeObject.attr('width'), height = activeObject.attr('height');
                 if (width * width + height * height > 50) {

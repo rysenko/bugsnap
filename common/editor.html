@@ -108,7 +108,7 @@
                     <i class="icon-large icon-options"></i>
                 </i>
             </span>
-            <div id="palette-cont" data-bind="visible: PaletteVisible(), event: { mouseover: showPalette, mouseout: hidePalette }, style: {left : ActiveColorOffset() + 'px'}">
+            <div style="display: none" id="palette-cont" data-bind="visible: PaletteVisible(), event: { mouseover: showPalette, mouseout: hidePalette }, style: {left : ActiveColorOffset() + 'px'}">
                 <div class="palette-arrow"></div>
                 <div class="palette">
                     <!-- ko foreach: Colors -->

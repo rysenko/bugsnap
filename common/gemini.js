@@ -126,6 +126,38 @@ define(['js/jquery'], function ($) {
         function YouTrackCommunicator(settings) {
             _super.call(this, settings);
         }
+        YouTrackCommunicator.prototype.authenticate = function () {
+            return this.ajax(this.Url() + 'rest/user/login', {login: this.Login(), password: this.Password()});
+        };
+        YouTrackCommunicator.prototype.test = function () {
+            return this.authenticate();
+        };
+        YouTrackCommunicator.prototype.ajax = function(url, data) {
+            var deferred = $.Deferred();
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        if(xhr.responseText === "null") {
+                            deferred.reject('Unable to login using supplied credentials.');
+                        } else {
+                            deferred.resolve(xhr.responseText);
+                        }
+                    } else {
+                        if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
+                            deferred.reject('Unable to connect to Gemini at specified URL.');
+                        } else {
+                            deferred.reject('Unable to login using supplied credentials.');
+                        }
+                    }
+                }
+            };
+            xhr.send($.param(data));
+            return deferred.promise();
+        };
         return YouTrackCommunicator;
     })(Communicator);
 

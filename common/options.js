@@ -11,7 +11,7 @@ require.config({
 define(['js/jquery', 'js/knockout', 'gemini', 'js/jquery.ui', 'js/jquery.validate'], function ($, ko, CommunicatorLoader) {
     var OptionsPageViewModel = (function () {
         function OptionsPageViewModel(options) {
-            var settings = localStorage['CommunicatorSettings'] || {};
+            var settings = JSON.parse(localStorage['CommunicatorSettings'] || "{}");
             this.Url = ko.observable(settings.Url);
             this.Login = ko.observable(settings.Login);
             this.Password = ko.observable(settings.Password);
@@ -34,6 +34,7 @@ define(['js/jquery', 'js/knockout', 'gemini', 'js/jquery.ui', 'js/jquery.validat
             return {
                 Url: this.Url(),
                 Login: this.Login(),
+                Password: this.Password(),
                 Key: this.Key()
             };
         };
