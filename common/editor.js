@@ -234,10 +234,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             $("#issue_dialog").dialog("open");
             var self = this;
             this.Communicator().loadProjects().then(function(data) {
-                var projects = ko.utils.arrayMap(data, function (item) {
-                    return item.BaseEntity;
-                });
-                self.Projects(projects);
+                self.Projects(data);
             });
         };
         DetailsViewModel.prototype.loadComponents = function (projectId) {

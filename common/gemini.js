@@ -76,7 +76,11 @@ define(['js/jquery'], function ($) {
             return this.ajax(this.geminiUrl() + "items/", data);
         };
         GeminiCommunicator.prototype.loadProjects = function () {
-            return this.ajax(this.geminiUrl() + "projects/", null, 'GET');
+            return this.ajax(this.geminiUrl() + "projects/", null, 'GET').then(function (data) {
+                return $.map(data, function (item) {
+                    return item.BaseEntity;
+                });
+            });
         };
         GeminiCommunicator.prototype.loadComponents = function (projectId) {
             return this.ajax(this.geminiUrl() + "projects/" + projectId+ "/components", null, 'GET');
@@ -132,10 +136,17 @@ define(['js/jquery'], function ($) {
         YouTrackCommunicator.prototype.test = function () {
             return this.authenticate();
         };
-        YouTrackCommunicator.prototype.ajax = function(url, data) {
+        YouTrackCommunicator.prototype.loadProjects = function () {
+            return this.ajax(this.Url() + 'rest/project/all', {}, 'GET').then(function (data) {
+                return $.map(data, function (item) {
+                    return {Id: item.shortName, Name: item.name};
+                });
+            });
+        };
+        YouTrackCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', url, true);
+            xhr.open((method || 'POST'), url, true);
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function() {
@@ -144,11 +155,15 @@ define(['js/jquery'], function ($) {
                         if(xhr.responseText === "null") {
                             deferred.reject('Unable to login using supplied credentials.');
                         } else {
-                            deferred.resolve(xhr.responseText);
+                            try {
+                                deferred.resolve(JSON.parse(xhr.responseText));
+                            } catch (e) {
+                                deferred.resolve(xhr.responseText);
+                            }
                         }
                     } else {
                         if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
-                            deferred.reject('Unable to connect to Gemini at specified URL.');
+                            deferred.reject('Unable to connect to YouTrack at specified URL.');
                         } else {
                             deferred.reject('Unable to login using supplied credentials.');
                         }
