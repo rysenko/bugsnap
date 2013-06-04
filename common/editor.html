@@ -30,30 +30,12 @@
                     <label for="description" class="caption">Description:</label>
                     <textarea id="description" class="editor" rows="8" data-bind="value: Description"></textarea>
                 </div>
+                <!-- ko foreach: Fields -->
                 <div class="control">
-                    <label for="project" class="caption">Project:</label>
-                    <select id="project" class="editor" data-bind="options: Projects, optionsText: 'Name', value: Project"></select>
+                    <label data-bind="text: Caption, attr: {for: Id}" class="caption">Type:</label>
+                    <select class="editor" data-bind="attr: {id: Id}, options: Options, optionsText: 'Name', value: Value"></select>
                 </div>
-                <div class="control">
-                    <label for="component" class="caption">Component:</label>
-                    <select id="component" class="editor" data-bind="options: Components, optionsText: 'Name', value: Component"></select>
-                </div>
-                <div class="control">
-                    <label for="type" class="caption">Type:</label>
-                    <select id="type" class="editor" data-bind="options: Types, optionsText: 'Label', value: Type"></select>
-                </div>
-                <div class="control">
-                    <label for="priority" class="caption">Priority:</label>
-                    <select id="priority" class="editor" data-bind="options: Priorities, optionsText: 'Label', value: Priority"></select>
-                </div>
-                <div class="control">
-                    <label for="severity" class="caption">Severity:</label>
-                    <select id="severity" class="editor" data-bind="options: Severities, optionsText: 'Label', value: Severity"></select>
-                </div>
-                <div class="control">
-                    <label for="status" class="caption">Status:</label>
-                    <select id="status" class="editor" data-bind="options: Statuses, optionsText: 'Label', value: Status"></select>
-                </div>
+                <!-- /ko -->
                 <div class="submit-div">
                     <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"></input>
                 </div>

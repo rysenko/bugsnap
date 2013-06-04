@@ -105,48 +105,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 }
                 return null;
             }, this);
-            this.Project = ko.observable();
-            this.Projects = ko.observableArray();
-            this.ProjectId = ko.computed(function () {
-                var project = this.Project();
-                return project ? project.Id : null;
-            }, this);
-            this.TemplateId = ko.computed(function () {
-                var project = this.Project();
-                return project? project.TemplateId : null;
-            }, this);
-            this.ProjectId.subscribe(function (projectId) {
-                this.loadComponents(projectId);
-            }, this);
-            this.TemplateId.subscribe(function (templateId) {
-                var self = this;
-                this.loadMetaData('type', templateId).done(function (data) {
-                    self.Types(data);
-                });
-                this.loadMetaData('priority', templateId).done(function (data) {
-                    self.Priorities(data);
-                });
-                this.loadMetaData('severity', templateId).done(function (data) {
-                    self.Severities(data);
-                });
-                this.loadMetaData('status', templateId).done(function (data) {
-                    self.Statuses(data);
-                });
-            }, this);
-
-            this.Component = ko.observable();
-            this.Components = ko.observableArray();
-            this.Priority = ko.observable();
-            this.Priorities = ko.observableArray();
-            this.Severity = ko.observable();
-            this.Severities = ko.observableArray();
-            this.Type = ko.observable();
-            this.Types = ko.observableArray();
-            this.Status = ko.observable();
-            this.Statuses = ko.observableArray();
             this.Communicator = function () {
                 return new (Communicator())();
             }
+            this.Fields = this.Communicator().getFields();
             this.ActiveTab = ko.observable('Create');
             this.init();
         }

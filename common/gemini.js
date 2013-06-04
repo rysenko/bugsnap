@@ -1,4 +1,14 @@
-define(['js/jquery'], function ($) {
+define(['js/jquery', 'js/knockout'], function ($, ko) {
+    var FieldInfo = (function () {
+        function FieldInfo(options) {
+            this.Id = options.Id;
+            this.Caption = ko.observable(options.Caption);
+            this.Options = ko.observableArray();
+            this.Value = ko.observable();
+        }
+        return FieldInfo;
+    })();
+
     var Communicator = (function () {
         function Communicator(settings) {
             this.Settings = function () {
@@ -17,6 +27,7 @@ define(['js/jquery'], function ($) {
             this.Key = function () {
                 return this.Settings().Key;
             };
+            this.Fields = [];
         }
         return Communicator;
     })();
@@ -83,13 +94,55 @@ define(['js/jquery'], function ($) {
             });
         };
         GeminiCommunicator.prototype.loadComponents = function (projectId) {
-            return this.ajax(this.geminiUrl() + "projects/" + projectId+ "/components", null, 'GET');
+            return this.ajax(this.geminiUrl() + "projects/" + projectId+ "/components", null, 'GET').then(function (data) {
+                var result = ko.utils.arrayMap(data, function (item) {
+                    return item.BaseEntity;
+                });
+                if(result.length == 0) {
+                    result.push({});
+                }
+                return result;
+            });
         };
         GeminiCommunicator.prototype.loadMetaData = function (control, templateId) {
             return this.ajax(this.geminiUrl() + control + "/template/" + templateId, null, 'GET');
         };
         GeminiCommunicator.prototype.test = function () {
             return this.loadProjects();
+        };
+        GeminiCommunicator.prototype.getFields = function () {
+            var project = new FieldInfo({Id: 'caption', Caption: 'Project'});
+            var component = new FieldInfo({Id: 'component', Caption: 'Component'});
+            var type = new FieldInfo({Id: 'type', Caption: 'Type'});
+            var priority = new FieldInfo({Id: 'priority', Caption: 'Priority'});
+            var severity = new FieldInfo({Id: 'severity', Caption: 'Severity'});
+            var status = new FieldInfo({Id: 'status', Caption: 'Status'});
+            project.Options(this.loadProjects());
+            var templateId = ko.computed(function () {
+                var project = project.Value();
+                return project? project.TemplateId : null;
+            });
+            project.Value.subscribe(function (projectId) {
+                this.loadComponents(projectId).done(function (data) {
+                    component.Options(data);
+                });
+            }, this);
+            templateId.subscribe(function (templateId) {
+                this.loadMetaData('type', templateId).done(function (data) {
+                    type.Options(data);
+                });
+                this.loadMetaData('priority', templateId).done(function (data) {
+                    priority.Options(data);
+                });
+                this.loadMetaData('severity', templateId).done(function (data) {
+                    severity.Options(data);
+                });
+                this.loadMetaData('status', templateId).done(function (data) {
+                    status.Options(data);
+                });
+            }, this);
+            this.Fields = [project, component, type, priority, severity, status];
+            return this.Fields;
         };
         GeminiCommunicator.prototype.ajax = function(url, data, method) {            
             var deferred = $.Deferred();
@@ -142,6 +195,13 @@ define(['js/jquery'], function ($) {
                     return {Id: item.shortName, Name: item.name};
                 });
             });
+        };
+        YouTrackCommunicator.prototype.getFields = function () {
+            var project = new FieldInfo({Id: 'project', Caption: 'Project'});
+            this.loadProjects().done(function (data) {
+                project.Options(data);
+            });
+            return [project];
         };
         YouTrackCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
