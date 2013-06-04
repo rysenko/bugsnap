@@ -125,8 +125,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                                 data = new Array(data);
                             }
                             var labeledData = $.map(data, function (item) {
-                                item.label = item.IssueKey + " " + (item.Title || item.ComponentName);
-                                item.value = item.Id || item.IssueID;
+                                item.label = item.Name;
+                                item.value = item.Id;
                                 return item;
                             });
                             response(labeledData);

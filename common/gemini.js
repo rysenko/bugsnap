@@ -51,7 +51,13 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                  Projects: "ALL",
                  MaxItemsToReturn: 10
             };
-            return this.ajax(this.geminiUrl() + "items/filtered", data);
+            return this.ajax(this.geminiUrl() + "items/filtered", data).then(function (data) {
+                return $.map(data, function (item) {
+                    item.Name = item.IssueKey + " " + (item.Title || item.ComponentName);
+                    item.Id = item.Id || item.IssueID;
+                    return item;
+                });
+            });
         };
         GeminiCommunicator.prototype.comment = function (projectId, issueId, comment) {
             var data = {
@@ -193,6 +199,20 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             return this.ajax(this.Url() + 'rest/project/all', {}, 'GET').then(function (data) {
                 return $.map(data, function (item) {
                     return {Id: item.shortName, Name: item.name};
+                });
+            });
+        };
+        YouTrackCommunicator.prototype.search = function (query) {
+            return this.ajax(this.Url() + 'rest/issue?filter=' + query, {}, 'GET').then(function (data) {
+                var getSummary = function (fields) {
+                    for (var i = 0; i < fields.length; i++) {
+                        var field = fields[i];
+                        if (field.name == 'summary') return field.value;
+                    }
+                    return '';
+                };
+                return $.map(data.issue, function (item) {
+                    return {Id: item.id, Name: getSummary(item.field)};
                 });
             });
         };
