@@ -107,7 +107,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             }, this);
             this.Communicator = function () {
                 return new (Communicator())();
-            }
+            };
             this.Fields = this.Communicator().getFields();
             this.ActiveTab = ko.observable('Create');
             this.init();
@@ -175,18 +175,12 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
             var imageData = this.Parent.Editor.getImageData();            
             var self = this;
             $("#issue_dialog").showLoading();
-            var component = this.Component();
             this.Communicator().create(
                 this.Title(),
                 this.Description(),
-                this.ProjectId(),
-                component ? component.Id : '',
-                this.Type().Id,
-                this.Priority().Id,
-                this.Severity().Id,
-                this.Status().Id
+                this.Fields
             ).then(function (data) {
-                return self.Communicator().attach(data.Project.Id, data.Id, imageData);
+                return self.Communicator().attach(data.Id, imageData, self.Fields);
             }).done(function () {
                 $("#issue_dialog").hideLoading().dialog("close");
                 window.close();

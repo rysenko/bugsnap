@@ -6,6 +6,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             this.Options = ko.observableArray();
             this.Value = ko.observable();
         }
+
         return FieldInfo;
     })();
 
@@ -27,7 +28,14 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             this.Key = function () {
                 return this.Settings().Key;
             };
-            this.Fields = [];
+            this.getHash = function (fields) {
+                var result = {};
+                for (var i = 0; i < fields.length; i++) {
+                    var field = fields[i];
+                    result[field.Id] = field.Value();
+                }
+                return result;
+            };
         }
         return Communicator;
     })();
@@ -68,9 +76,10 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             };
             return this.ajax(this.geminiUrl() + "items/" + issueId + "/comments", data);
         };
-        GeminiCommunicator.prototype.attach = function (projectId, issueId, fileContent) {
+        GeminiCommunicator.prototype.attach = function (issueId, fileContent, fields) {
+            var fieldsHash = this.getHash(fields);
             var data = {
-                    ProjectId: projectId,
+                    ProjectId: fieldsHash.project,
                     IssueId: issueId,
                     Name: "screenshot.png",
                     ContentType: "image/png",
@@ -78,16 +87,17 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 };
             return this.ajax(this.geminiUrl() + "items/" + issueId + "/attachments", data);
         };
-        GeminiCommunicator.prototype.create = function (title, description, project, component, type, priority, severity, status) {
+        GeminiCommunicator.prototype.create = function (title, description, fields) {
+            var fieldsHash = this.getHash(fields);
             var data = {
                     Title: title,
                     Description: description,
-                    ProjectId: project,
-                    Components: component,
-                    TypeId: type,
-                    PriorityId: priority,
-                    SeverityId: severity,
-                    StatusId: status,
+                    ProjectId: fieldsHash.project,
+                    Components: fieldsHash.component ? fields.component : '',
+                    TypeId: fieldsHash.type,
+                    PriorityId: fieldsHash.priority,
+                    SeverityId: fieldsHash.severity,
+                    StatusId: fieldsHash.status,
                     ReportedBy: "1"
                 };
             return this.ajax(this.geminiUrl() + "items/", data);
@@ -117,7 +127,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             return this.loadProjects();
         };
         GeminiCommunicator.prototype.getFields = function () {
-            var project = new FieldInfo({Id: 'caption', Caption: 'Project'});
+            var project = new FieldInfo({Id: 'project', Caption: 'Project'});
             var component = new FieldInfo({Id: 'component', Caption: 'Component'});
             var type = new FieldInfo({Id: 'type', Caption: 'Type'});
             var priority = new FieldInfo({Id: 'priority', Caption: 'Priority'});
@@ -147,8 +157,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                     status.Options(data);
                 });
             }, this);
-            this.Fields = [project, component, type, priority, severity, status];
-            return this.Fields;
+            return [project, component, type, priority, severity, status];
         };
         GeminiCommunicator.prototype.ajax = function(url, data, method) {            
             var deferred = $.Deferred();
@@ -223,6 +232,30 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             });
             return [project];
         };
+        YouTrackCommunicator.prototype.create = function (title, description, fields) {
+            var fieldsHash = this.getHash(fields);
+            var data = {
+                project: fieldsHash.project.Id,
+                summary: title,
+                description: description
+            };
+            var self = this;
+            return this.authenticate().then(function () {
+                return self.ajax(self.Url() + "rest/issue", data, 'PUT');
+            });
+        };
+        YouTrackCommunicator.prototype.attach = function (issueId, fileContent, fields) {
+            var fieldsHash = this.getHash(fields);
+            var data = {
+                ProjectId: fieldsHash.project,
+                IssueId: issueId,
+                Name: "screenshot.png",
+                ContentType: "image/png",
+                Content: fileContent
+            };
+            //TODO: Implement attaching for YouTrack
+            return this.ajax(this.geminiUrl() + "items/" + issueId + "/attachments", data);
+        };
         YouTrackCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
@@ -231,7 +264,8 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
+                    if (xhr.status == 200 || xhr.status == 201) {
+                        //TODO: Get Location header (id of the issue is in the end) for 201 status
                         if(xhr.responseText === "null") {
                             deferred.reject('Unable to login using supplied credentials.');
                         } else {
