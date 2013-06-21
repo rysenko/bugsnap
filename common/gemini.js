@@ -248,24 +248,27 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 return {Id: id};
             });
         };
-        YouTrackCommunicator.prototype.attach = function (issueId, fileContent, fields) {
-            var fieldsHash = this.getHash(fields);
-            var data = {
-                ProjectId: fieldsHash.project,
-                IssueId: issueId,
-                Name: "screenshot.png",
-                ContentType: "image/png",
-                Content: fileContent
-            };
-            //TODO: Implement attaching for YouTrack
-            return this.ajax(this.geminiUrl() + "items/" + issueId + "/attachments", data);
+        YouTrackCommunicator.prototype.attach = function (issueId, fileContent) {
+            var binary = atob(fileContent);
+            var arr = [];
+            for(var i = 0; i < binary.length; i++) {
+                arr.push(binary.charCodeAt(i));
+            }
+            var fileBlob = new Blob([new Uint8Array(arr)], {type: 'image/png'});
+            var data = new FormData();
+            data.append('screenshot', fileBlob, 'screenshot.png');
+            return this.ajax(this.Url() + "rest/issue/" + issueId + "/attachment", data);
         };
         YouTrackCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
             xhr.open((method || 'POST'), url, true);
             xhr.setRequestHeader('Accept', 'application/json');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            if (data instanceof FormData) {
+                xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+            } else {
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            }
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
@@ -274,7 +277,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                         } catch (e) {
                             deferred.resolve(xhr.responseText);
                         }
-                    } else if (xhr.status == 201) {
+                    } else if (xhr.status == 201 || xhr.status == 204) {
                         deferred.resolve(xhr.getResponseHeader('Location'));
                     } else {
                         if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
@@ -285,7 +288,11 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                     }
                 }
             };
-            xhr.send($.param(data));
+            if (data instanceof FormData) {
+                xhr.send(data);
+            } else {
+                xhr.send($.param(data));
+            }
             return deferred.promise();
         };
         return YouTrackCommunicator;

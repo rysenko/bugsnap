@@ -140,7 +140,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 select: function(event, ui) {
                     $("#issue").val(ui.item.label);
                     self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
-                    self.Project(ui.item.Project);
+                    //TODO: Fix setting project for chosen issue
+                    //self.Project(ui.item.Project);
                     return false;
                 }
             });
