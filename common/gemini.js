@@ -242,6 +242,10 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             var self = this;
             return this.authenticate().then(function () {
                 return self.ajax(self.Url() + "rest/issue", data, 'PUT');
+            }).then(function (location) {
+                var slashPos = location.lastIndexOf('/');
+                var id = location.substring(slashPos + 1);
+                return {Id: id};
             });
         };
         YouTrackCommunicator.prototype.attach = function (issueId, fileContent, fields) {
@@ -264,17 +268,14 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
-                    if (xhr.status == 200 || xhr.status == 201) {
-                        //TODO: Get Location header (id of the issue is in the end) for 201 status
-                        if(xhr.responseText === "null") {
-                            deferred.reject('Unable to login using supplied credentials.');
-                        } else {
-                            try {
-                                deferred.resolve(JSON.parse(xhr.responseText));
-                            } catch (e) {
-                                deferred.resolve(xhr.responseText);
-                            }
+                    if (xhr.status == 200) {
+                        try {
+                            deferred.resolve(JSON.parse(xhr.responseText));
+                        } catch (e) {
+                            deferred.resolve(xhr.responseText);
                         }
+                    } else if (xhr.status == 201) {
+                        deferred.resolve(xhr.getResponseHeader('Location'));
                     } else {
                         if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
                             deferred.reject('Unable to connect to YouTrack at specified URL.');
