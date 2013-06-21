@@ -264,9 +264,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             var xhr = new XMLHttpRequest();
             xhr.open((method || 'POST'), url, true);
             xhr.setRequestHeader('Accept', 'application/json');
-            if (data instanceof FormData) {
-                xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-            } else {
+            if (!(data instanceof FormData)) {
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             }
             xhr.onreadystatechange = function() {
@@ -277,7 +275,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                         } catch (e) {
                             deferred.resolve(xhr.responseText);
                         }
-                    } else if (xhr.status == 201 || xhr.status == 204) {
+                    } else if (xhr.status == 201) {
                         deferred.resolve(xhr.getResponseHeader('Location'));
                     } else {
                         if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
