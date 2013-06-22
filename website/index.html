@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BugSnap - capture, annotate and post a bug</title>
+    <style>
+        html, body {
+            height:100%;
+            background:-webkit-radial-gradient(center, circle cover, #555555 0%, #222222 100%);
+            background:-ms-radial-gradient(center, circle cover, #555555 0%, #222222 100%);
+            background:-moz-radial-gradient(center, circle cover, #555555 0%, #222222 100%);
+            background-color:#333;
+            margin: 0;
+            padding: 0;
+            overflow:hidden;
+        }
+        .content {
+            width: 960px;
+            margin: 100px auto;
+            font: 2em Lato,sans-serif;
+            color: #eee;
+        }
+        img {
+            display: inline-block;
+        }
+        img.screen {
+            border: 1px solid #000000;
+        }
+        h2 {
+            font-family: 'League Gothic',Impact,sans-serif;
+            text-shadow: 0px 1px #777, 0px 2px #777, 0px 3px #777;
+            text-transform: uppercase;
+            font-size: 1.4em;
+        }
+        .left {
+            float: left;
+            margin-right: 40px;
+        }
+        .center {
+            text-align: center;
+        }
+        .icon {
+            background-position: left center;
+            background-repeat: no-repeat;
+            padding-left: 37px;
+        }
+        .firefox {
+            background-image: url(firefox.png);
+        }
+        .chrome {
+            background-image: url(chrome.png);
+        }
+        a.icon {
+            color: #eee;
+            text-decoration: none;
+        }
+        a.icon:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="left">
+            <h2>BugSnap</h2>
+            <i>Capture</i><br>
+            <i>Annotate</i><br>
+            <i>Post a bug</i>
+        </div>
+        <div class="left center">
+            <img class="screen" src="screen.png" width="699" height="289"><br>
+            <a href="http://example.com" class="icon chrome"> get for chrome</a>&nbsp;&nbsp;&nbsp;
+            <a href="http://example.com" class="icon firefox">get for firefox</a>
+        </div>
+    </div>
+</body>
+</html>
