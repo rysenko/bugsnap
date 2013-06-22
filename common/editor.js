@@ -5,7 +5,7 @@ requirejs.config({
    }
 });
 
-define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jquery.ui', 'js/jquery.loading'], function ($, ko, Raphael, canvg, Communicator) {
+define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'communicator', 'js/jquery.ui', 'js/jquery.loading'], function ($, ko, Raphael, canvg, Communicator) {
 
     var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
 

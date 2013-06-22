@@ -8,7 +8,7 @@ require.config({
         'js/jquery.ui': ['jquery']
     }
 });
-define(['js/jquery', 'js/knockout', 'gemini', 'js/jquery.ui', 'js/jquery.validate'], function ($, ko, CommunicatorLoader) {
+define(['js/jquery', 'js/knockout', 'communicator', 'js/jquery.ui', 'js/jquery.validate'], function ($, ko, CommunicatorLoader) {
     var OptionsPageViewModel = (function () {
         function OptionsPageViewModel(options) {
             var settings = JSON.parse(localStorage['CommunicatorSettings'] || "{}");

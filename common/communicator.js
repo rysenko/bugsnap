@@ -197,6 +197,13 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
         YouTrackCommunicator.prototype = Object.create(_super.prototype);
         function YouTrackCommunicator(settings) {
             _super.call(this, settings);
+            this.Url = function () {
+                var url = this.Settings().Url;
+                if (url.lastIndexOf('/') != url.length - 1) {
+                    url += '/';
+                }
+                return url;
+            };
         }
         YouTrackCommunicator.prototype.authenticate = function () {
             return this.ajax(this.Url() + 'rest/user/login', {login: this.Login(), password: this.Password()});
@@ -227,8 +234,11 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
         };
         YouTrackCommunicator.prototype.getFields = function () {
             var project = new FieldInfo({Id: 'project', Caption: 'Project'});
-            this.loadProjects().done(function (data) {
-                project.Options(data);
+            var self = this;
+            this.authenticate().then(function () {
+                self.loadProjects().done(function (data) {
+                    project.Options(data);
+                });
             });
             return [project];
         };
@@ -239,10 +249,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 summary: title,
                 description: description
             };
-            var self = this;
-            return this.authenticate().then(function () {
-                return self.ajax(self.Url() + "rest/issue", data, 'PUT');
-            }).then(function (location) {
+            return this.ajax(this.Url() + "rest/issue", data, 'PUT').then(function (location) {
                 var slashPos = location.lastIndexOf('/');
                 var id = location.substring(slashPos + 1);
                 return {Id: id};
