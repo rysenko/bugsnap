@@ -259,6 +259,13 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             data.append('screenshot', fileBlob, 'screenshot.png');
             return this.ajax(this.Url() + "rest/issue/" + issueId + "/attachment", data);
         };
+        YouTrackCommunicator.prototype.comment = function (issueId, comment) {
+            var data = {
+                command: 'comment',
+                comment: comment
+            };
+            return this.ajax(this.Url() + "rest/issue/" + issueId + "/execute", data);
+        };
         YouTrackCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();

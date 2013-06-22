@@ -164,8 +164,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'gemini', 'js/jque
                 var imageData = this.Parent.Editor.getImageData();
                 var self = this;
                 $("#issue_dialog").showLoading();
-                this.Communicator().comment(this.ProjectId(), this.IssueId(), this.Comment()).then(function () {
-                    return self.Communicator().attach(self.ProjectId(), self.IssueId(), imageData);
+                this.Communicator().comment(this.IssueId(), this.Comment(), this.Fields).then(function () {
+                    return self.Communicator().attach(self.IssueId(), imageData, self.Fields);
                 }).done(function () {
                    $("#issue_dialog").hideLoading().dialog("close");
                    window.close();
