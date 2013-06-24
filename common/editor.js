@@ -5,7 +5,7 @@ requirejs.config({
    }
 });
 
-define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'communicator', 'js/jquery.ui', 'js/jquery.loading'], function ($, ko, Raphael, canvg, Communicator) {
+define(['js/jquery', 'js/knockout', 'js/knockout.validation', 'js/raphael', 'js/canvg', 'communicator', 'js/jquery.ui', 'js/jquery.loading'], function ($, ko, kov, Raphael, canvg, Communicator) {
 
     var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
 
@@ -94,10 +94,10 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'communicator', 'j
     var DetailsViewModel = (function () {
         function DetailsViewModel(options) {
             this.Parent = options.Parent;
-            this.Comment = ko.observable();
-            this.Title = ko.observable();
-            this.Description = ko.observable();
-            this.Issue = ko.observable();
+            this.Comment = ko.observable().extend({required: true});
+            this.Title = ko.observable().extend({required: true});
+            this.Description = ko.observable().extend({required: true});
+            this.Issue = ko.observable().extend({required: true});
             this.IssueId = ko.computed(function () {
                 var issue = this.Issue();
                 if (issue != null) {
@@ -114,6 +114,8 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'communicator', 'j
         }
         DetailsViewModel.prototype.init = function () {
             var self = this;
+            this.CreateErrors = ko.validation.group([this.Title, this.Description]);
+            this.AttachErrors = ko.validation.group([this.Issue, this.Comment]);
             $("#issue").autocomplete({
                 appendTo: "#issue_dialog",
                 minLength: 3,
@@ -140,7 +142,7 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'communicator', 'j
                 select: function(event, ui) {
                     $("#issue").val(ui.item.label);
                     self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
-                    //TODO: Fix setting project for chosen issue
+                    //TODO: Fix setting project for chosen issue if needed
                     //self.Project(ui.item.Project);
                     return false;
                 }
@@ -160,20 +162,26 @@ define(['js/jquery', 'js/knockout', 'js/raphael', 'js/canvg', 'communicator', 'j
             this.ActiveTab('Attach');
         };
         DetailsViewModel.prototype.send = function () {
-            if (this.Issue() != null) {
-                var imageData = this.Parent.Editor.getImageData();
-                var self = this;
-                $("#issue_dialog").showLoading();
-                this.Communicator().comment(this.IssueId(), this.Comment(), this.Fields).then(function () {
-                    return self.Communicator().attach(self.IssueId(), imageData, self.Fields);
-                }).done(function () {
-                   $("#issue_dialog").hideLoading().dialog("close");
-                   window.close();
-                });
+            if (this.AttachErrors().length > 0) {
+                this.AttachErrors.showAllMessages();
+                return;
             }
+            var imageData = this.Parent.Editor.getImageData();
+            var self = this;
+            $("#issue_dialog").showLoading();
+            this.Communicator().comment(this.IssueId(), this.Comment(), this.Fields).then(function () {
+                return self.Communicator().attach(self.IssueId(), imageData, self.Fields);
+            }).done(function () {
+               $("#issue_dialog").hideLoading().dialog("close");
+               window.close();
+            });
         };
         DetailsViewModel.prototype.createIssue = function () {
-            var imageData = this.Parent.Editor.getImageData();            
+            if (this.CreateErrors().length > 0) {
+                this.CreateErrors.showAllMessages();
+                return;
+            }
+            var imageData = this.Parent.Editor.getImageData();
             var self = this;
             $("#issue_dialog").showLoading();
             this.Communicator().create(

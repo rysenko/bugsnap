@@ -209,6 +209,12 @@ rect:hover, path:hover, text:hover {
     width: 0;
 }
 
+.validationMessage {
+    color: #f00;
+    float: right;
+    padding: 5px;
+}
+
 /* Ui Dialog customize */
 .ui-dialog .ui-dialog-titlebar {
     display: none;
