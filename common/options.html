@@ -56,7 +56,7 @@ input[type=password] {
 </head>
 <body>
 <form id="optionsForm">
-    <div id="options" class='ui-widget' title="Submit screenshot to an issue">
+    <div id="options" class='ui-widget' title="BugSnap options">
         <div>
             <label class="label" for="Type">Tracker Type:</label>
             <em>*</em><select id="Type" class="required" data-bind="value: Type">
@@ -83,7 +83,7 @@ input[type=password] {
         </div>
         <br>
         <div class="save">
-            <input id="saveBtn" class="ui-button" data-bind="click: save" type="button" value="Save"/>
+            <input id="saveBtn" title="Save options" class="ui-button" data-bind="click: save" type="button" value="Save"/>
             <span class="confirmationMessage"></span>
         </div>
     </div>
