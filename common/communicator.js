@@ -78,7 +78,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
         GeminiCommunicator.prototype.attach = function (issueId, fileContent, fields) {
             var fieldsHash = this.getHash(fields);
             var data = {
-                    ProjectId: fieldsHash.project,
+                    ProjectId: fieldsHash.project.Id,
                     IssueId: issueId,
                     Name: "screenshot.png",
                     ContentType: "image/png",
