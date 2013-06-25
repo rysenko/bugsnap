@@ -67,9 +67,8 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 });
             });
         };
-        GeminiCommunicator.prototype.comment = function (projectId, issueId, comment) {
+        GeminiCommunicator.prototype.comment = function (issueId, comment) {
             var data = {
-                ProjectId: projectId,
                 IssueId: issueId,
                 UserId: "1",
                 Comment: comment
@@ -121,7 +120,11 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             });
         };
         GeminiCommunicator.prototype.loadMetaData = function (control, templateId) {
-            return this.ajax(this.geminiUrl() + control + "/template/" + templateId, null, 'GET');
+            return this.ajax(this.geminiUrl() + control + "/template/" + templateId, null, 'GET').then(function (data) {
+                return ko.utils.arrayMap(data, function (item) {
+                    return {Id: item.Entity.Id, Name: item.Entity.Label};
+                });
+            });
         };
         GeminiCommunicator.prototype.test = function () {
             return this.loadProjects();
@@ -133,13 +136,15 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             var priority = new FieldInfo({Id: 'priority', Caption: 'Priority'});
             var severity = new FieldInfo({Id: 'severity', Caption: 'Severity'});
             var status = new FieldInfo({Id: 'status', Caption: 'Status'});
-            project.Options(this.loadProjects());
-            var templateId = ko.computed(function () {
-                var project = project.Value();
-                return project? project.TemplateId : null;
+            this.loadProjects().done(function (data) {
+                project.Options(data);
             });
-            project.Value.subscribe(function (projectId) {
-                this.loadComponents(projectId).done(function (data) {
+            var templateId = ko.computed(function () {
+                var projectVal = project.Value();
+                return projectVal ? projectVal.TemplateId : null;
+            });
+            project.Value.subscribe(function (projectVal) {
+                this.loadComponents(projectVal.Id).done(function (data) {
                     component.Options(data);
                 });
             }, this);
