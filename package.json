@@ -4,6 +4,7 @@
     "devDependencies": {
         "grunt": "*",
         "grunt-contrib-symlink": "*",
-        "grunt-contrib-clean": "*"
+        "grunt-contrib-clean": "*",
+        "grunt-crx": "*"
     }
 }
