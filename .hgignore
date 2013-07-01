@@ -1,6 +1,5 @@
 syntax: glob
 .idea
-chrome\common\
 firefox\resources\bugsnap\data\common\
 node_modules/*
 build/*
