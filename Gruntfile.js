@@ -1,22 +1,14 @@
 module.exports = function(grunt) {
-
+  var path = require('path');
   grunt.initConfig({
     symlink: {
       chrome: {
-        target: 'common',
-        link: 'chrome/common',
-        options: {
-          overwrite: true,
-          force: true
-        }
+        target: path.resolve('common'),
+        link: path.resolve('chrome/common')
       },
       firefox: {
-        target: 'common',
-        link: 'firefox/resources/bugsnap/data/common',
-        options: {
-          overwrite: true,
-          force: true
-        }
+        target: path.resolve('common'),
+        link: path.resolve('firefox/resources/bugsnap/data/common')
       }
     },
     clean: ['chrome/common', 'firefox/resources/bugsnap/data/common']
