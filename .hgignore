@@ -3,6 +3,6 @@ syntax: glob
 chrome\common\
 firefox\resources\bugsnap\data\common\
 node_modules/*
+build/*
 syntax: regexp
 ^default.build$
-\.xpi$
