@@ -1,0 +1,9 @@
+{
+    "name": "BugSnap",
+    "version": "0.1.9",
+    "devDependencies": {
+        "grunt": "*",
+        "grunt-contrib-symlink": "*",
+        "grunt-contrib-clean": "*"
+    }
+}

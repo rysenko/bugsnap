@@ -2,6 +2,7 @@ syntax: glob
 .idea
 chrome\common\
 firefox\resources\bugsnap\data\common\
+node_modules/*
 syntax: regexp
 ^default.build$
 \.xpi$
