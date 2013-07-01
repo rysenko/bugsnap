@@ -7,4 +7,5 @@ Packaging extensions
 
 Packaged extensions will appear in build folder.
 
-Chrome extension can be tested directly by using "Load unpacked extension..." button on Extensions page and pointing it to chrome directory.
+Chrome extension can be tested directly by using "Load unpacked extension..."
+button on Extensions page and pointing it to chrome directory.
