@@ -91,13 +91,12 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             var data = {
                     Title: title,
                     Description: description,
-                    ProjectId: fieldsHash.project,
-                    Components: fieldsHash.component ? fields.component : '',
-                    TypeId: fieldsHash.type,
-                    PriorityId: fieldsHash.priority,
-                    SeverityId: fieldsHash.severity,
-                    StatusId: fieldsHash.status,
-                    ReportedBy: "1"
+                    ProjectId: fieldsHash.project.Id,
+                    Components: fieldsHash.component ? fieldsHash.component.Id : '',
+                    TypeId: fieldsHash.type.Id,
+                    PriorityId: fieldsHash.priority.Id,
+                    SeverityId: fieldsHash.severity.Id,
+                    StatusId: fieldsHash.status.Id
                 };
             return this.ajax(this.geminiUrl() + "items/", data);
         };
@@ -324,6 +323,6 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 break;
         }
         return result;
-    }
+    };
     return CommunicatorLoader;
 });

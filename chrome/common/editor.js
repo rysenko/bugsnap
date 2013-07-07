@@ -120,7 +120,7 @@ define(['js/jquery', 'js/knockout', 'js/knockout.validation', 'js/raphael', 'js/
                 appendTo: "#issue_dialog",
                 minLength: 3,
                 source: function(request, response) {
-                    var search = self.Communicator().search(request.term)
+                    var search = self.Communicator().search(request.term);
                     if (search != null) {
                         search.done(function (data) {
                             if(data.constructor != Array) {
@@ -141,9 +141,7 @@ define(['js/jquery', 'js/knockout', 'js/knockout.validation', 'js/raphael', 'js/
                 },
                 select: function(event, ui) {
                     $("#issue").val(ui.item.label);
-                    self.Issue(ui.item); // Use ui.item.Title and ui.item.Priority
-                    //TODO: Fix setting project for chosen issue if needed
-                    //self.Project(ui.item.Project);
+                    self.Issue(ui.item);
                     return false;
                 }
             });
@@ -197,29 +195,6 @@ define(['js/jquery', 'js/knockout', 'js/knockout.validation', 'js/raphael', 'js/
         };
         DetailsViewModel.prototype.showDialog = function () {
             $("#issue_dialog").dialog("open");
-            var self = this;
-            this.Communicator().loadProjects().then(function(data) {
-                self.Projects(data);
-            });
-        };
-        DetailsViewModel.prototype.loadComponents = function (projectId) {
-            var self = this;
-            this.Communicator().loadComponents(projectId).then(function(data) {
-                var result = ko.utils.arrayMap(data, function (item) {
-                    return item.BaseEntity;
-                });
-                if(result.length == 0) {
-                    result.push({});
-                }
-                self.Components(result);
-            });
-        };
-        DetailsViewModel.prototype.loadMetaData = function (controlId, templateId) {
-            return this.Communicator().loadMetaData(controlId, templateId).then(function (data) {
-                return ko.utils.arrayMap(data, function (item) {
-                    return item.Entity;
-                })
-            });
         };
         DetailsViewModel.prototype.closeDialog = function () {
             $("#issue_dialog").dialog("close");
