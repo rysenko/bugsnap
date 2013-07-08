@@ -171,7 +171,7 @@ define(['js/jquery', 'js/knockout', 'js/knockout.validation', 'js/raphael', 'js/
                 return self.Communicator().attach(self.IssueId(), imageData, self.Fields);
             }).done(function () {
                $("#issue_dialog").hideLoading().dialog("close");
-               window.close();
+               location.href = self.Communicator().getUrl(self.IssueId(), self.Fields);
             });
         };
         DetailsViewModel.prototype.createIssue = function () {
@@ -182,15 +182,17 @@ define(['js/jquery', 'js/knockout', 'js/knockout.validation', 'js/raphael', 'js/
             var imageData = this.Parent.Editor.getImageData();
             var self = this;
             $("#issue_dialog").showLoading();
+            var issueId = null;
             this.Communicator().create(
                 this.Title(),
                 this.Description(),
                 this.Fields
             ).then(function (data) {
-                return self.Communicator().attach(data.Id, imageData, self.Fields);
+                issueId = data.Id;
+                return self.Communicator().attach(issueId, imageData, self.Fields);
             }).done(function () {
                 $("#issue_dialog").hideLoading().dialog("close");
-                window.close();
+                location.href = self.Communicator().getUrl(issueId, self.Fields);
             });
         };
         DetailsViewModel.prototype.showDialog = function () {

@@ -17,7 +17,11 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 return settings || stored;
             };
             this.Url = function () {
-                return this.Settings().Url;
+                var url = this.Settings().Url;
+                if (url.lastIndexOf('/') != url.length - 1) {
+                    url += '/';
+                }
+                return url;
             };
             this.Login = function () {
                 return this.Settings().Login;
@@ -45,9 +49,6 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
         GeminiCommunicator.prototype = Object.create(_super.prototype);
         function GeminiCommunicator(settings) {
             _super.call(this, settings);
-            this.geminiUrl = function () {
-                return this.Url() + '/api/';
-            };
             this.geminiUsername = function () {
                 return window.btoa(this.Login() + ':' + this.Key());
             };
@@ -59,7 +60,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                  Projects: "ALL",
                  MaxItemsToReturn: 10
             };
-            return this.ajax(this.geminiUrl() + "items/filtered", data).then(function (data) {
+            return this.ajax(this.Url() + "api/items/filtered", data).then(function (data) {
                 return $.map(data, function (item) {
                     item.Name = item.IssueKey + " " + (item.Title || item.ComponentName);
                     item.Id = item.Id || item.IssueID;
@@ -73,7 +74,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 UserId: "1",
                 Comment: comment
             };
-            return this.ajax(this.geminiUrl() + "items/" + issueId + "/comments", data);
+            return this.ajax(this.Url() + "api/items/" + issueId + "/comments", data);
         };
         GeminiCommunicator.prototype.attach = function (issueId, fileContent, fields) {
             var fieldsHash = this.getHash(fields);
@@ -84,7 +85,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                     ContentType: "image/png",
                     Content: fileContent
                 };
-            return this.ajax(this.geminiUrl() + "items/" + issueId + "/attachments", data);
+            return this.ajax(this.Url() + "api/items/" + issueId + "/attachments", data);
         };
         GeminiCommunicator.prototype.create = function (title, description, fields) {
             var fieldsHash = this.getHash(fields);
@@ -98,17 +99,17 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                     SeverityId: fieldsHash.severity.Id,
                     StatusId: fieldsHash.status.Id
                 };
-            return this.ajax(this.geminiUrl() + "items/", data);
+            return this.ajax(this.Url() + "api/items/", data);
         };
         GeminiCommunicator.prototype.loadProjects = function () {
-            return this.ajax(this.geminiUrl() + "projects/", null, 'GET').then(function (data) {
+            return this.ajax(this.Url() + "api/projects/", null, 'GET').then(function (data) {
                 return $.map(data, function (item) {
                     return item.BaseEntity;
                 });
             });
         };
         GeminiCommunicator.prototype.loadComponents = function (projectId) {
-            return this.ajax(this.geminiUrl() + "projects/" + projectId+ "/components", null, 'GET').then(function (data) {
+            return this.ajax(this.Url() + "api/projects/" + projectId+ "/components", null, 'GET').then(function (data) {
                 var result = ko.utils.arrayMap(data, function (item) {
                     return item.BaseEntity;
                 });
@@ -119,11 +120,15 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             });
         };
         GeminiCommunicator.prototype.loadMetaData = function (control, templateId) {
-            return this.ajax(this.geminiUrl() + control + "/template/" + templateId, null, 'GET').then(function (data) {
+            return this.ajax(this.Url() + 'api/' + control + "/template/" + templateId, null, 'GET').then(function (data) {
                 return ko.utils.arrayMap(data, function (item) {
                     return {Id: item.Entity.Id, Name: item.Entity.Label};
                 });
             });
+        };
+        GeminiCommunicator.prototype.getUrl = function (issueId, fields) {
+            var fieldsHash = this.getHash(fields);
+            return this.Url() + 'project/' + fieldsHash.project.Code + '/' + fieldsHash.project.Id + '/item/' + issueId;
         };
         GeminiCommunicator.prototype.test = function () {
             return this.loadProjects();
@@ -276,6 +281,9 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
                 comment: comment
             };
             return this.ajax(this.Url() + "rest/issue/" + issueId + "/execute", data);
+        };
+        YouTrackCommunicator.prototype.getUrl = function (issueId, fields) {
+            return this.Url() + 'issue/' + issueId;
         };
         YouTrackCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
