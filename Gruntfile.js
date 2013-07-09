@@ -15,7 +15,7 @@ module.exports = function(grunt) {
             }
         },
         zip: {
-            'build/firefox.xpi': ['firefox/*']
+            'build/firefox.xpi': ['firefox/**']
         }
     });
 
