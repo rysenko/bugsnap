@@ -18,7 +18,7 @@ define(['js/jquery', 'js/knockout'], function ($, ko) {
             };
             this.Url = function () {
                 var url = this.Settings().Url;
-                if (url.lastIndexOf('/') != url.length - 1) {
+                if (url && url.lastIndexOf('/') != url.length - 1) {
                     url += '/';
                 }
                 return url;
