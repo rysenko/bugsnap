@@ -1,10 +1,12 @@
 requirejs.config({
+    baseUrl: 'js',
     shim: {
         'js/jquery.ui.src': {deps: ['js/jquery.src']}
     }
 });
 
-define(['js/jquery', 'js/knockout', 'js/knockout.validation', 'communicator', 'js/jquery.ui'], function ($, ko, kov, CommunicatorLoader) {
+define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jquery.ui'],
+    function ($, ko, kov, CommunicatorLoader) {
     var OptionsPageViewModel = (function () {
         function OptionsPageViewModel(options) {
             var settings = JSON.parse(localStorage['CommunicatorSettings'] || "{}");
