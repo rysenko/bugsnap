@@ -12,7 +12,9 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             return url.substring(slashPos + 1);
         };
         RallyCommunicator.prototype.authenticate = function () {
-            return this.ajax(this.Url() + 'rest/user/login', {login: this.Login(), password: this.Password()});
+            var deferred = $.Deferred();
+            deferred.resolve();
+            return deferred.promise();
         };
         RallyCommunicator.prototype.test = function () {
             return this.loadProjects();
@@ -26,16 +28,10 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             });
         };
         RallyCommunicator.prototype.search = function (query) {
-            return this.ajax(this.Url() + 'defect?filter=' + query, {}, 'GET').then(function (data) {
-                var getSummary = function (fields) {
-                    for (var i = 0; i < fields.length; i++) {
-                        var field = fields[i];
-                        if (field.name == 'summary') return field.value;
-                    }
-                    return '';
-                };
-                return $.map(data.issue, function (item) {
-                    return {Id: item.id, Name: getSummary(item.field)};
+            var self = this;
+            return this.ajax(this.Url() + 'defect?query=' + query, {}, 'GET').then(function (data) {
+                return $.map(data.QueryResult.Results, function (item) {
+                    return {Id: self.getIdFromUrl(item._ref), Name: item._refObjectName};
                 });
             });
         };
