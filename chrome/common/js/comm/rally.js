@@ -4,28 +4,29 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
         function RallyCommunicator(settings) {
             _super.call(this, settings);
             this.Url = function () {
-                var url = this.Settings().Url;
-                if (url.lastIndexOf('/') != url.length - 1) {
-                    url += '/';
-                }
-                return url;
+                return 'https://rally1.rallydev.com/slm/webservice/v2.0/';
             };
         }
+        RallyCommunicator.prototype.getIdFromUrl = function (url) {
+            var slashPos = url.lastIndexOf('/');
+            return url.substring(slashPos + 1);
+        };
         RallyCommunicator.prototype.authenticate = function () {
             return this.ajax(this.Url() + 'rest/user/login', {login: this.Login(), password: this.Password()});
         };
         RallyCommunicator.prototype.test = function () {
-            return this.authenticate();
+            return this.loadProjects();
         };
         RallyCommunicator.prototype.loadProjects = function () {
-            return this.ajax(this.Url() + 'rest/project/all', {}, 'GET').then(function (data) {
-                return $.map(data, function (item) {
-                    return {Id: item.shortName, Name: item.name};
+            var self = this;
+            return this.ajax(this.Url() + 'project', {}, 'GET').then(function (data) {
+                return $.map(data.QueryResult.Results, function (item) {
+                    return {Id: self.getIdFromUrl(item._ref), Name: item._refObjectName};
                 });
             });
         };
         RallyCommunicator.prototype.search = function (query) {
-            return this.ajax(this.Url() + 'rest/issue?filter=' + query, {}, 'GET').then(function (data) {
+            return this.ajax(this.Url() + 'defect?filter=' + query, {}, 'GET').then(function (data) {
                 var getSummary = function (fields) {
                     for (var i = 0; i < fields.length; i++) {
                         var field = fields[i];
@@ -98,8 +99,6 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
                         } catch (e) {
                             deferred.resolve(xhr.responseText);
                         }
-                    } else if (xhr.status == 201) {
-                        deferred.resolve(xhr.getResponseHeader('Location'));
                     } else {
                         if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
                             deferred.reject('Unable to connect to Rally at standard URL.');

@@ -1,7 +1,7 @@
 requirejs.config({
     baseUrl: 'js',
     shim: {
-        'js/jquery.ui.src': {deps: ['js/jquery.src']}
+        'lib/jquery.ui.src': {deps: ['lib/jquery.src']}
     }
 });
 
