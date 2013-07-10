@@ -85,7 +85,7 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
         RallyCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
-            xhr.open((method || 'POST'), url, true);
+            xhr.open((method || 'POST'), url, true, this.Login(), this.Password());
             xhr.setRequestHeader('Accept', 'application/json');
             if (!(data instanceof FormData)) {
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -102,7 +102,7 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
                         deferred.resolve(xhr.getResponseHeader('Location'));
                     } else {
                         if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
-                            deferred.reject('Unable to connect to YouTrack at specified URL.');
+                            deferred.reject('Unable to connect to Rally at standard URL.');
                         } else {
                             deferred.reject('Unable to login using supplied credentials.');
                         }

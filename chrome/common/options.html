@@ -62,13 +62,12 @@ input[type=password] {
             <em>*</em><select id="Type" class="required" data-bind="value: Type">
                 <option value="Gemini">Gemini 5.X</option>
                 <option value="YouTrack">YouTrack 4.X</option>
-                <option value="Rally">Rally X.X (In Progress)</option>
+                <option value="Rally">Rally 2.X (In Progress)</option>
             </select>
         </div>
-        <div>
+        <div data-bind="visible: UrlVisible">
             <label class="label" for="Url">Tracker URL:</label>
             <em>*</em><input type="text" id="Url" class="required" data-bind="value: Url">
-            <label data-bind="visible: UrlInvalid()">Tracker URL must be a valid URL.</label>
         </div>
         <div>
             <label class="label" for="Login">Login:</label>

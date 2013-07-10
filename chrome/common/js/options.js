@@ -5,30 +5,37 @@ requirejs.config({
     }
 });
 
-define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jquery.ui'],
+define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'util/validators', 'lib/jquery.ui'],
     function ($, ko, kov, CommunicatorLoader) {
     var OptionsPageViewModel = (function () {
         function OptionsPageViewModel(options) {
             var settings = JSON.parse(localStorage['CommunicatorSettings'] || "{}");
-            this.Url = ko.observable(settings.Url).extend({required: true});
+            this.Url = ko.observable(settings.Url).extend({required: true, url: true});
             this.Login = ko.observable(settings.Login).extend({required: true});
             this.Password = ko.observable(settings.Password).extend({required: true});
             this.Key = ko.observable(settings.Key).extend({required: true});
             this.Type = ko.observable(localStorage['CommunicatorType'] || 'Gemini');
-            this.UrlInvalid = ko.computed(function () {
-                return !(/^http(s)?\:\/\/[a-z0-9-\\.@:%_\+~#=]+((\.)?[a-z0-9]+)*(:[0-9]{1,5})?(\/.*)*$/.test(this.Url()));
+            this.UrlVisible = ko.computed(function () {
+                return this.Type() != 'Rally';
             }, this);
             this.KeyVisible = ko.computed(function () {
                 return this.Type() == 'Gemini';
             }, this);
             this.PasswordVisible = ko.computed(function () {
-                return !this.KeyVisible();
+                return this.Type() != 'Gemini';
             }, this);
             this.Errors = ko.computed(function () {
-                if (this.KeyVisible()) {
-                    return ko.validation.group([this.Url, this.Login, this.Key]);
+                var fields = [this.Login];
+                if (this.UrlVisible()) {
+                    fields.push(this.Url);
                 }
-                return ko.validation.group([this.Url, this.Login, this.Password]);
+                if (this.KeyVisible()) {
+                    fields.push(this.Key);
+                }
+                if (this.PasswordVisible()) {
+                    fields.push(this.Password);
+                }
+                return ko.validation.group(fields);
             }, this);
             $('#optionsForm :input[type="text"]').keydown(function() {
                 $('#saveBtn').prop('value', '* Save');
@@ -43,7 +50,7 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
             };
         };
         OptionsPageViewModel.prototype.save = function () {
-            if (this.Errors()().length > 0 || this.UrlInvalid()) {
+            if (this.Errors()().length > 0) {
                 this.Errors().showAllMessages();
                 return;
             }
