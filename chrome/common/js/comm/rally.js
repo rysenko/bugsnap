@@ -29,7 +29,8 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
         };
         RallyCommunicator.prototype.search = function (query) {
             var self = this;
-            return this.ajax(this.Url() + 'defect?query=' + query, {}, 'GET').then(function (data) {
+            var rallyQuery = '(Name contains "' + query + '")';
+            return this.ajax(this.Url() + 'defect?query=' + encodeURIComponent(rallyQuery), {}, 'GET').then(function (data) {
                 return $.map(data.QueryResult.Results, function (item) {
                     return {Id: self.getIdFromUrl(item._ref), Name: item._refObjectName};
                 });
