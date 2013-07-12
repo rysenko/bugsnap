@@ -1,5 +1,5 @@
 define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jquery.ui', 'lib/jquery.loading'],
-    function ($, ko, kov, Communicator) {
+    function ($, ko, kov, CommunicatorLoader) {
 
     var DetailsViewModel = (function () {
         function DetailsViewModel(options) {
@@ -15,10 +15,8 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
                 }
                 return null;
             }, this);
-            this.Communicator = function () {
-                return new (Communicator())();
-            };
-            this.Fields = this.Communicator().getFields();
+            this.Communicator = new (CommunicatorLoader())();
+            this.Fields = this.Communicator.getFields();
             this.ActiveTab = ko.observable('Create');
             this.init();
         }
@@ -30,7 +28,7 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
                 appendTo: "#issue_dialog",
                 minLength: 3,
                 source: function(request, response) {
-                    var search = self.Communicator().search(request.term);
+                    var search = self.Communicator.search(request.term);
                     if (search != null) {
                         search.done(function (data) {
                             if(data.constructor != Array) {
@@ -77,11 +75,11 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
             var imageData = this.Parent.Editor.getImageData();
             var self = this;
             $("#issue_dialog").showLoading();
-            this.Communicator().comment(this.IssueId(), this.Comment(), this.Fields).then(function () {
-                return self.Communicator().attach(self.IssueId(), imageData, self.Fields);
+            this.Communicator.comment(this.IssueId(), this.Comment(), this.Fields).then(function () {
+                return self.Communicator.attach(self.IssueId(), imageData, self.Fields);
             }).done(function () {
                     $("#issue_dialog").hideLoading().dialog("close");
-                    location.href = self.Communicator().getUrl(self.IssueId(), self.Fields);
+                    location.href = self.Communicator.getUrl(self.IssueId(), self.Fields);
                 });
         };
         DetailsViewModel.prototype.createIssue = function () {
@@ -93,16 +91,16 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
             var self = this;
             $("#issue_dialog").showLoading();
             var issueId = null;
-            this.Communicator().create(
+            this.Communicator.create(
                     this.Title(),
                     this.Description(),
                     this.Fields
                 ).then(function (data) {
                     issueId = data.Id;
-                    return self.Communicator().attach(issueId, imageData, self.Fields);
+                    return self.Communicator.attach(issueId, imageData, self.Fields);
                 }).done(function () {
                     $("#issue_dialog").hideLoading().dialog("close");
-                    location.href = self.Communicator().getUrl(issueId, self.Fields);
+                    location.href = self.Communicator.getUrl(issueId, self.Fields);
                 });
         };
         DetailsViewModel.prototype.showDialog = function () {
