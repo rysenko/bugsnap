@@ -6,6 +6,7 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             this.Url = function () {
                 return 'https://rally1.rallydev.com/slm/webservice/v2.0/';
             };
+            this.SecurityToken = '';
             this.UserId = '';
         }
         RallyCommunicator.prototype.getIdFromUrl = function (url) {
@@ -14,8 +15,11 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
         };
         RallyCommunicator.prototype.authenticate = function () {
             var self = this;
-            return this.ajax(this.Url() + 'user', {}, 'GET').then(function (result) {
-                self.UserId = self.getIdFromUrl(result.User._ref);
+            return this.ajax(this.Url() + 'security/authorize', {}, 'GET').then(function (result) {
+                self.SecurityToken = result.OperationResult.SecurityToken;
+                return self.ajax(self.Url() + 'user', {}, 'GET').then(function (result) {
+                    self.UserId = self.getIdFromUrl(result.User._ref);
+                });
             });
         };
         RallyCommunicator.prototype.test = function () {
@@ -63,24 +67,26 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
         };
         RallyCommunicator.prototype.attach = function (issueId, fileContent) {
             var self = this;
-            return this.ajax(this.Url() + 'attachmentcontent/create', {Content: fileContent}).then(function (result) {
-                var data = {
+            var contentData = {attachmentcontent: {Content: fileContent}};
+            return this.ajax(this.Url() + 'attachmentcontent/create?key=' + this.SecurityToken, contentData).then(function (result) {
+                var attachmentData = {attachment: {
+                    Artifact: 'artifact/' + issueId,
                     Name: 'screenshot.png',
-                    Content: result._ref,
+                    Content: 'attachmentcontent/' + result.CreateResult.Object.ObjectID,
                     ContentType: 'image/png',
                     Size: atob(fileContent).length,
                     User: 'user/' + self.UserId
-                };
-                return self.ajax(self.Url() + 'attachment/create', data);
+                }};
+                return self.ajax(self.Url() + 'attachment/create?key=' + self.SecurityToken, attachmentData);
             });
         };
         RallyCommunicator.prototype.comment = function (issueId, comment) {
-            var data = {
+            var data = {conversationpost: {
                 Artifact: 'artifact/' + issueId,
                 Text: comment,
                 User: 'user/' + this.UserId
-            };
-            return this.ajax(this.Url() + 'conversationpost/create', data);
+            }};
+            return this.ajax(this.Url() + 'conversationpost/create?key=' + this.SecurityToken, data);
         };
         RallyCommunicator.prototype.getUrl = function (issueId, fields) {
             return this.Url() + 'issue/' + issueId;
