@@ -89,7 +89,8 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             return this.ajax(this.Url() + 'conversationpost/create?key=' + this.SecurityToken, data);
         };
         RallyCommunicator.prototype.getUrl = function (issueId, fields) {
-            return this.Url() + 'issue/' + issueId;
+            var fieldsHash = this.getHash(fields);
+            return 'https://rally1.rallydev.com/#/' + fieldsHash.project.Id + 'd/detail/defect/' + issueId;
         };
         RallyCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
@@ -101,7 +102,13 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
                         try {
-                            deferred.resolve(JSON.parse(xhr.responseText));
+                            var result = JSON.parse(xhr.responseText);
+                            if (result['CreateResult'] && result.CreateResult.Errors.length > 0) {
+                                console.log(result.CreateResult.Errors);
+                                deferred.reject(result.CreateResult.Errors);
+                            } else {
+                                deferred.resolve(result);
+                            }
                         } catch (e) {
                             deferred.resolve(xhr.responseText);
                         }
