@@ -54,15 +54,14 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
         };
         RallyCommunicator.prototype.create = function (title, description, fields) {
             var fieldsHash = this.getHash(fields);
-            var data = {
-                project: fieldsHash.project.Id,
-                summary: title,
-                description: description
-            };
-            return this.ajax(this.Url() + "rest/issue", data, 'PUT').then(function (location) {
-                var slashPos = location.lastIndexOf('/');
-                var id = location.substring(slashPos + 1);
-                return {Id: id};
+            var data = {defect: {
+                Project: 'project/' + fieldsHash.project.Id,
+                Name: title,
+                Description: description,
+                Owner: 'user/' + this.UserId
+            }};
+            return this.ajax(this.Url() + 'defect/create?key=' + this.SecurityToken, data).then(function (result) {
+                return {Id: result.CreateResult.Object.ObjectID};
             });
         };
         RallyCommunicator.prototype.attach = function (issueId, fileContent) {
