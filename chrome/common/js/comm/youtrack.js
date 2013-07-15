@@ -39,19 +39,20 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             });
         };
         YouTrackCommunicator.prototype.getFields = function () {
-            var project = new FieldInfo({Id: 'project', Caption: 'Project'});
+            var fields = {
+                project: new FieldInfo({Caption: 'Project'})
+            };
             var self = this;
             this.authenticate().then(function () {
                 self.loadProjects().done(function (data) {
-                    project.Options(data);
+                    fields.project.Options(data);
                 });
             });
-            return [project];
+            return fields;
         };
         YouTrackCommunicator.prototype.create = function (title, description, fields) {
-            var fieldsHash = this.getHash(fields);
             var data = {
-                project: fieldsHash.project.Id,
+                project: fields.project.Value(),
                 summary: title,
                 description: description
             };
@@ -79,7 +80,8 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             };
             return this.ajax(this.Url() + "rest/issue/" + issueId + "/execute", data);
         };
-        YouTrackCommunicator.prototype.getUrl = function (issueId, fields) {
+        YouTrackCommunicator.prototype.getRedirectUrl = function (issueId, fields) {
+            _super.prototype.getRedirectUrl.call(this, issueId, fields);
             return this.Url() + 'issue/' + issueId;
         };
         YouTrackCommunicator.prototype.ajax = function(url, data, method) {

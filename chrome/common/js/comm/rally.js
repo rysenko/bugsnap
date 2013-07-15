@@ -43,19 +43,20 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             });
         };
         RallyCommunicator.prototype.getFields = function () {
-            var project = new FieldInfo({Id: 'project', Caption: 'Project'});
+            var fields = {
+                project: new FieldInfo({Caption: 'Project'})
+            };
             var self = this;
             this.authenticate().then(function () {
                 self.loadProjects().done(function (data) {
-                    project.Options(data);
+                    fields.project.Options(data);
                 });
             });
-            return [project];
+            return fields;
         };
         RallyCommunicator.prototype.create = function (title, description, fields) {
-            var fieldsHash = this.getHash(fields);
             var data = {defect: {
-                Project: 'project/' + fieldsHash.project.Id,
+                Project: 'project/' + fields.project.Value(),
                 Name: title,
                 Description: description,
                 Owner: 'user/' + this.UserId
@@ -87,9 +88,9 @@ define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Commu
             }};
             return this.ajax(this.Url() + 'conversationpost/create?key=' + this.SecurityToken, data);
         };
-        RallyCommunicator.prototype.getUrl = function (issueId, fields) {
-            var fieldsHash = this.getHash(fields);
-            return 'https://rally1.rallydev.com/#/' + fieldsHash.project.Id + 'd/detail/defect/' + issueId;
+        RallyCommunicator.prototype.getRedirectUrl = function (issueId, fields) {
+            _super.prototype.getRedirectUrl.call(this, issueId, fields);
+            return 'https://rally1.rallydev.com/#/' + fields.project.Value() + 'd/detail/defect/' + issueId;
         };
         RallyCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();

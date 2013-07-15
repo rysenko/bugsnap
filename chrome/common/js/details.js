@@ -17,6 +17,10 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
             }, this);
             this.Communicator = new (CommunicatorLoader())();
             this.Fields = this.Communicator.getFields();
+            this.FieldsArr = [];
+            for (var i in this.Fields) {
+                this.FieldsArr.push(this.Fields[i]);
+            }
             this.ActiveTab = ko.observable('Create');
             this.init();
         }
@@ -78,9 +82,9 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
             this.Communicator.comment(this.IssueId(), this.Comment(), this.Fields).then(function () {
                 return self.Communicator.attach(self.IssueId(), imageData, self.Fields);
             }).done(function () {
-                    $("#issue_dialog").hideLoading().dialog("close");
-                    location.href = self.Communicator.getUrl(self.IssueId(), self.Fields);
-                });
+                $("#issue_dialog").hideLoading().dialog("close");
+                location.href = self.Communicator.getRedirectUrl(self.IssueId(), self.Fields);
+            });
         };
         DetailsViewModel.prototype.createIssue = function () {
             if (this.CreateErrors().length > 0) {
@@ -100,7 +104,7 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'comm', 'lib/jq
                     return self.Communicator.attach(issueId, imageData, self.Fields);
                 }).done(function () {
                     $("#issue_dialog").hideLoading().dialog("close");
-                    location.href = self.Communicator.getUrl(issueId, self.Fields);
+                    location.href = self.Communicator.getRedirectUrl(issueId, self.Fields);
                 });
         };
         DetailsViewModel.prototype.showDialog = function () {

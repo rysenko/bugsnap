@@ -7,6 +7,7 @@ define(['lib/jquery', 'lib/knockout', 'comm/communicator', 'comm/FieldInfo'], fu
             this.geminiUsername = function () {
                 return window.btoa(this.Login() + ':' + this.Key());
             };
+            this.UserId = null;
         }
         GeminiCommunicator.prototype.search = function (query) {
             var data = {
@@ -23,18 +24,20 @@ define(['lib/jquery', 'lib/knockout', 'comm/communicator', 'comm/FieldInfo'], fu
                 });
             });
         };
-        GeminiCommunicator.prototype.comment = function (issueId, comment) {
+        GeminiCommunicator.prototype.comment = function (issueId, comment, fields) {
             var data = {
                 IssueId: issueId,
-                UserId: "1",
+                UserId: this.UserId,
                 Comment: comment
             };
-            return this.ajax(this.Url() + "api/items/" + issueId + "/comments", data);
+            return this.ajax(this.Url() + "api/items/" + issueId + "/comments", data).then(function (data) {
+                fields.project.Value(data.BaseEntity.ProjectId);
+                return data;
+            });
         };
         GeminiCommunicator.prototype.attach = function (issueId, fileContent, fields) {
-            var fieldsHash = this.getHash(fields);
             var data = {
-                ProjectId: fieldsHash.project.Id,
+                ProjectId: fields.project.Value(),
                 IssueId: issueId,
                 Name: "screenshot.png",
                 ContentType: "image/png",
@@ -43,16 +46,15 @@ define(['lib/jquery', 'lib/knockout', 'comm/communicator', 'comm/FieldInfo'], fu
             return this.ajax(this.Url() + "api/items/" + issueId + "/attachments", data);
         };
         GeminiCommunicator.prototype.create = function (title, description, fields) {
-            var fieldsHash = this.getHash(fields);
             var data = {
                 Title: title,
                 Description: description,
-                ProjectId: fieldsHash.project.Id,
-                Components: fieldsHash.component ? fieldsHash.component.Id : '',
-                TypeId: fieldsHash.type.Id,
-                PriorityId: fieldsHash.priority.Id,
-                SeverityId: fieldsHash.severity.Id,
-                StatusId: fieldsHash.status.Id
+                ProjectId: fields.project.Value(),
+                Components: fields.component.Value() ? fields.component.Value() : '',
+                TypeId: fields.type.Value(),
+                PriorityId: fields.priority.Value(),
+                SeverityId: fields.severity.Value(),
+                StatusId: fields.status.Value()
             };
             return this.ajax(this.Url() + "api/items/", data);
         };
@@ -81,47 +83,59 @@ define(['lib/jquery', 'lib/knockout', 'comm/communicator', 'comm/FieldInfo'], fu
                 });
             });
         };
-        GeminiCommunicator.prototype.getUrl = function (issueId, fields) {
-            var fieldsHash = this.getHash(fields);
-            return this.Url() + 'project/' + fieldsHash.project.Code + '/' + fieldsHash.project.Id + '/item/' + issueId;
+        GeminiCommunicator.prototype.getRedirectUrl = function (issueId, fields) {
+            _super.prototype.getRedirectUrl.call(this, issueId, fields);
+            return this.Url() + 'project/' + fields.project.Option().Code + '/' + fields.project.Value() + '/item/' + issueId;
         };
         GeminiCommunicator.prototype.test = function () {
             return this.loadProjects();
         };
+        GeminiCommunicator.prototype.loadUser = function () {
+            return this.ajax(this.Url() + 'api/users/username/' + this.Login(), null, 'GET').then(function (data) {
+                this.UserId = data.BaseEntity.Id;
+            });
+        };
         GeminiCommunicator.prototype.getFields = function () {
-            var project = new FieldInfo({Id: 'project', Caption: 'Project'});
-            var component = new FieldInfo({Id: 'component', Caption: 'Component'});
-            var type = new FieldInfo({Id: 'type', Caption: 'Type'});
-            var priority = new FieldInfo({Id: 'priority', Caption: 'Priority'});
-            var severity = new FieldInfo({Id: 'severity', Caption: 'Severity'});
-            var status = new FieldInfo({Id: 'status', Caption: 'Status'});
+            var fields = {
+                project: new FieldInfo({Caption: 'Project'}),
+                component: new FieldInfo({Caption: 'Component'}),
+                type: new FieldInfo({Caption: 'Type'}),
+                priority: new FieldInfo({Caption: 'Priority'}),
+                severity: new FieldInfo({Caption: 'Severity'}),
+                status: new FieldInfo({Caption: 'Status'})
+            };
+            this.loadUser();
             this.loadProjects().done(function (data) {
-                project.Options(data);
+                fields.project.Options(data);
             });
             var templateId = ko.computed(function () {
-                var projectVal = project.Value();
-                return projectVal ? projectVal.TemplateId : null;
+                var projectOption = fields.project.Option();
+                return projectOption ? projectOption.TemplateId : undefined;
             });
-            project.Value.subscribe(function (projectVal) {
-                this.loadComponents(projectVal.Id).done(function (data) {
-                    component.Options(data);
-                });
+            fields.project.Value.subscribe(function (projectId) {
+                if (projectId) {
+                    this.loadComponents(projectId).done(function (data) {
+                        fields.component.Options(data);
+                    });
+                }
             }, this);
             templateId.subscribe(function (templateId) {
-                this.loadMetaData('type', templateId).done(function (data) {
-                    type.Options(data);
-                });
-                this.loadMetaData('priority', templateId).done(function (data) {
-                    priority.Options(data);
-                });
-                this.loadMetaData('severity', templateId).done(function (data) {
-                    severity.Options(data);
-                });
-                this.loadMetaData('status', templateId).done(function (data) {
-                    status.Options(data);
-                });
+                if (templateId) {
+                    this.loadMetaData('type', templateId).done(function (data) {
+                        fields.type.Options(data);
+                    });
+                    this.loadMetaData('priority', templateId).done(function (data) {
+                        fields.priority.Options(data);
+                    });
+                    this.loadMetaData('severity', templateId).done(function (data) {
+                        fields.severity.Options(data);
+                    });
+                    this.loadMetaData('status', templateId).done(function (data) {
+                        fields.status.Options(data);
+                    });
+                }
             }, this);
-            return [project, component, type, priority, severity, status];
+            return fields;
         };
         GeminiCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();

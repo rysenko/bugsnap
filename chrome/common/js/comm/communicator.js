@@ -21,15 +21,16 @@ define([], function () {
             this.Key = function () {
                 return this.Settings().Key;
             };
-            this.getHash = function (fields) {
-                var result = {};
-                for (var i = 0; i < fields.length; i++) {
-                    var field = fields[i];
-                    result[field.Id] = field.Value();
-                }
-                return result;
-            };
         }
+        Communicator.prototype.saveFields = function (fields) {
+            for (var i in fields) {
+                fields[i].Save();
+            }
+        };
+        Communicator.prototype.getRedirectUrl = function (issueId, fields) {
+            this.saveFields(fields);
+            return 'about:blank';
+        };
         return Communicator;
     })();
     return Communicator;

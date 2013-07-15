@@ -30,14 +30,14 @@
                     <label for="description" class="caption">Description:</label>
                     <textarea id="description" class="editor" rows="8" data-bind="value: Description"></textarea>
                 </div>
-                <!-- ko foreach: Fields -->
+                <!-- ko foreach: FieldsArr -->
                 <div class="control">
-                    <label data-bind="text: Caption, attr: {for: Id}" class="caption">Type:</label>
-                    <select class="editor" data-bind="attr: {id: Id}, options: Options, optionsText: 'Name', value: Value"></select>
+                    <label data-bind="text: Caption" class="caption">Type:</label>
+                    <select class="editor" data-bind="options: Options, optionsText: 'Name', optionsValue: 'Id', value: Value"></select>
                 </div>
                 <!-- /ko -->
                 <div class="submit-div">
-                    <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue"></input>
+                    <input class="ui-button right" data-bind="click: createIssue" type="button" value="Create Issue">
                 </div>
             </div>
             <div id="attachForm" data-bind="visible: ActiveTab() == 'Attach'">
@@ -51,7 +51,7 @@
                     <textarea id="comment" class="editor" rows="10" data-bind="value: Comment"></textarea>
                 </div>
                 <div class="submit-div">
-                    <input class="ui-button right" data-bind="click: send" type="button" value="Submit"></input>
+                    <input class="ui-button right" data-bind="click: send" type="button" value="Submit">
                 </div>
             </div>
         </div>
