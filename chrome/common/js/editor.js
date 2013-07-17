@@ -76,12 +76,15 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
             };
             this.ViewBox = ko.observable({x: 0, y: 0});
             this.FullBox = ko.observable({width: 0, height: 0});
-            this.ActiveColorOffset = ko.observable(0);
             this.History = new HistoryManager({Editor: this});
             this.Shadow = new Shadow(this);
             this.OldTransform = ko.observable('');
             this.OldInstrument = ko.observable('');
+            this.ActiveColorOffset = ko.observable(0);
             this.PaletteVisible = ko.observable(false);
+            this.CopyOffset = ko.observable(0);
+            this.CopyVisible = ko.observable(false);
+            this.CopyImage = ko.observable();
             this.init();
         }
         EditorViewModel.prototype.init = function () {
@@ -117,11 +120,19 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
             this.ActiveInstrument('Crop');
         };
         EditorViewModel.prototype.showPalette = function () {
-            this.ActiveColorOffset($('#activeColor').offset().left + $('#activeColor').outerWidth()/2 - $('#palette-cont').outerWidth()/2);
+            this.ActiveColorOffset($('#activeColor').offset().left + $('#activeColor').outerWidth()/2 - $('#palette').outerWidth()/2);
             this.PaletteVisible(true);
         };
-        EditorViewModel.prototype.hidePalette = function () {            
+        EditorViewModel.prototype.hidePalette = function () {
             this.PaletteVisible(false);
+        };
+        EditorViewModel.prototype.showCopy = function () {
+            this.CopyImage('data:image/png;base64,' + this.getImageData());
+            this.CopyOffset($('#copyButton').offset().left + $('#copyButton').outerWidth()/2 - $('#copy').outerWidth()/2);
+            this.CopyVisible(true);
+        };
+        EditorViewModel.prototype.hideCopy = function () {
+            this.CopyVisible(false);
         };
         EditorViewModel.prototype.clearEmptyText = function () {
             var activeObject = this.ActiveObject();

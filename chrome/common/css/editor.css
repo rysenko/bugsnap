@@ -188,11 +188,11 @@ rect:hover, path:hover, text:hover {
     color: white;
 }
 
-#palette-cont {
+#palette, #copy {
     position: absolute;
     display: table;
 }
-.palette {
+.popup {
     margin: 0px auto;
     padding: 5px;
     border: 1px solid gray;
@@ -200,7 +200,7 @@ rect:hover, path:hover, text:hover {
     background-color: #777;
     /*box-shadow: 2px 2px 5px #000;*/
 }
-.palette-arrow {
+.popup-arrow {
     border-color: transparent transparent #777;
     border-style: solid;
     border-width: 0 10px 10px;

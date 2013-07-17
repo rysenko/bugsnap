@@ -83,22 +83,32 @@
                 <i title="Submit" class="button" data-bind="click: send">
                     <i class="icon-large icon-ok"></i>
                 </i>
-                <i title="Save" class="button" data-bind="click: download">
+                <i title="Save" class="button" data-bind="click: download, event: { mouseover: hideCopy }">
                     <i class="icon-large icon-save"></i>
+                </i>
+                <i id="copyButton" title="Copy" class="button" data-bind="event: { mouseover: showCopy }">
+                    <i class="icon-large icon-copy"></i>
                 </i>
                 <a id="download" download="screenshot.png" style="display: none">Link ready</a>
                 <i title="Options" class="button right" data-bind="click: showOptionsPage">
                     <i class="icon-large icon-options"></i>
                 </i>
             </span>
-            <div style="display: none" id="palette-cont" data-bind="visible: PaletteVisible(), event: { mouseover: showPalette, mouseout: hidePalette }, style: {left : ActiveColorOffset() + 'px'}">
-                <div class="palette-arrow"></div>
-                <div class="palette">
+            <div style="display: none" id="palette" data-bind="visible: PaletteVisible(), event: { mouseover: showPalette, mouseout: hidePalette }, style: {left : ActiveColorOffset() + 'px'}">
+                <div class="popup-arrow"></div>
+                <div class="popup">
                     <!-- ko foreach: Colors -->
                     <i class="button color" data-bind="attr: {title: $data}, click: $parent.setColor, css: {active: $parent.ActiveColor() == $data}">
                         <i class="icon-large" data-bind="style: {backgroundColor : $data}"></i>
                     </i>
                     <!-- /ko -->
+                </div>
+            </div>
+            <div style="display: none" id="copy" data-bind="visible: CopyVisible(), event: { mouseover: showCopy, mouseout: hideCopy }, style: {left : CopyOffset() + 'px'}">
+                <div class="popup-arrow"></div>
+                <div class="popup">
+                    <img data-bind="attr: {src: CopyImage}" width="100px" height="100px"><br>
+                    RClick -> Copy
                 </div>
             </div>
         </div>
