@@ -1,4 +1,4 @@
-define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Communicator, FieldInfo) {
+define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Communicator, FieldInfo) {
     var YouTrackCommunicator = (function (_super) {
         YouTrackCommunicator.prototype = Object.create(_super.prototype);
         function YouTrackCommunicator(settings) {

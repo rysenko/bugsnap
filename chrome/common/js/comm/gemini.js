@@ -1,4 +1,4 @@
-define(['lib/jquery', 'lib/knockout', 'comm/communicator', 'comm/FieldInfo'], function ($, ko, Communicator, FieldInfo) {
+define(['lib/jquery', 'lib/knockout', 'comm/communicator', 'comm/fieldInfo'], function ($, ko, Communicator, FieldInfo) {
     var GeminiCommunicator = (function (_super) {
         var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
         GeminiCommunicator.prototype = Object.create(_super.prototype);

@@ -1,4 +1,4 @@
-define(['comm/gemini', 'comm/youtrack', 'comm/rally', 'comm/fieldInfo'],
+define(['comm/gemini', 'comm/youtrack', 'comm/rally'],
     function (GeminiCommunicator, YouTrackCommunicator, RallyCommunicator) {
     var CommunicatorLoader = function (communicatorType) {
         var type = communicatorType || localStorage['CommunicatorType'];

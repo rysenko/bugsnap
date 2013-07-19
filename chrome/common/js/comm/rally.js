@@ -1,4 +1,4 @@
-define(['lib/jquery', 'comm/Communicator', 'comm/FieldInfo'], function ($, Communicator, FieldInfo) {
+define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Communicator, FieldInfo) {
     var RallyCommunicator = (function (_super) {
         RallyCommunicator.prototype = Object.create(_super.prototype);
         function RallyCommunicator(settings) {
