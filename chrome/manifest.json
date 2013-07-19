@@ -1,5 +1,5 @@
 {
-    "manifest_version": 11,
+    "manifest_version": 2,
     "background": {
         "page": "background.html"
     },
@@ -16,13 +16,13 @@
         "default_icon": "common/img/16.png"
     },
     "optional_permissions": [ "clipboardRead" ],
-    "permissions": ["tabs", "file://*/*", "http://*/*", "https://*/*", "notifications"],
+    "permissions": ["tabs", "http://*/*", "https://*/*", "notifications"],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-	"commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Shift+Alt+Q"
-      }
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Shift+Alt+Q"
+            }
+        }
     }
-  }
 }

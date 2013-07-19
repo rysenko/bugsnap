@@ -8,23 +8,17 @@ module.exports = function(grunt) {
             }
         },
         clean: ['firefox/resources/bugsnap/data/common'],
-        crx: {
-            bugsnap: {
-                "src": "chrome/",
-                "dest": "build/chrome.crx"
-            }
-        },
         zip: {
-            'build/firefox.xpi': ['firefox/**']
+            'build/firefox.xpi': ['firefox/**'],
+            'build/chrome.zip': ['chrome/**']
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-symlink');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-crx');
     grunt.loadNpmTasks('grunt-zip');
 
-    grunt.registerTask('default', ['crx', 'zip']);
+    grunt.registerTask('default', ['zip']);
     grunt.registerTask('install', ['symlink']);
     grunt.registerTask('uninstall', ['clean']);
 };
