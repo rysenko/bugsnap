@@ -59,10 +59,12 @@ input[type=password] {
     <div id="options" class='ui-widget' title="BugSnap options">
         <div>
             <label class="label" for="Type">Tracker Type:</label>
-            <em>*</em><select id="Type" class="required" data-bind="value: Type">
+            <em>*</em>
+            <select id="Type" class="required" data-bind="value: Type">
                 <option value="Gemini">Gemini 5.X</option>
-                <option value="YouTrack">YouTrack 4.X</option>
+                <option value="Jira">Jira 6.X</option>
                 <option value="Rally">Rally 2.X</option>
+                <option value="YouTrack">YouTrack 4.X</option>
             </select>
         </div>
         <div data-bind="visible: UrlVisible">
