@@ -36,26 +36,33 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
         JiraCommunicator.prototype.getFields = function () {
             var fields = {
                 project: new FieldInfo({Caption: 'Project'}),
-                issuetype: new FieldInfo({Caption: 'Issue Type'})
+                issuetype: new FieldInfo({Caption: 'Issue Type'}),
+                assignee: new FieldInfo({Caption: 'Assignee'})
             };
             var self = this;
             this.ajax(this.Url() + 'rest/api/2/issue/createmeta', {}, 'GET').done(function (data) {
                 self.MetaData = data;
                 var projects = $.map(data.projects, function (item) {
-                    return {Id: item.id, Name: item.name};
+                    return {Id: item.key, Name: item.name};
                 });
                 fields.project.Options(projects);
             });
             fields.project.Value.subscribe(function (projectId) {
                 if (projectId) {
                     var projects = $.grep(this.MetaData.projects, function (item) {
-                        return item.id == projectId;
+                        return item.key == projectId;
                     });
                     if (projects.length > 0) {
                         var issuetypes = $.map(projects[0].issuetypes, function (item) {
                             return {Id: item.id, Name: item.name};
                         });
                         fields.issuetype.Options(issuetypes);
+                        self.ajax(this.Url() + 'rest/api/2/user/assignable/search?project=' + projectId, {}, 'GET').done(function (users) {
+                            var usersDisp = $.map(users, function (item) {
+                                return {Id: item.name, Name: item.displayName};
+                            });
+                            fields.assignee.Options(usersDisp);
+                        });
                     }
                 }
             }, this);
@@ -63,8 +70,9 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
         };
         JiraCommunicator.prototype.create = function (title, description, fields) {
             var data = { fields: {
-                project: {id: fields.project.Value()},
+                project: {key: fields.project.Value()},
                 issuetype: {id: fields.issuetype.Value()},
+                assignee: {name: fields.assignee.Value()},
                 summary: title,
                 description: description
             }};
