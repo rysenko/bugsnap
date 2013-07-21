@@ -3,5 +3,5 @@ syntax: glob
 node_modules/*
 build/*
 firefox/data/*
-firefox-sdk/*
+addon-sdk-1.14/*
 syntax: regexp

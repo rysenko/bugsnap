@@ -13,10 +13,7 @@ module.exports = function(grunt) {
             'build/chrome.zip': ['chrome/**']
         },
         unzip: {
-            firefox: {
-                src: 'firefox-sdk.zip',
-                dest: 'firefox-sdk'
-            }
+            firefox: 'addon-sdk-1.14.zip'
         }
     });
 
