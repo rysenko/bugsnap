@@ -4,10 +4,10 @@ module.exports = function(grunt) {
         symlink: {
             firefox: {
                 target: path.resolve('chrome/common'),
-                link: path.resolve('firefox/data/common')
+                link: path.resolve('firefox/data')
             }
         },
-        clean: ['firefox/data/common'],
+        clean: ['firefox/data'],
         zip: {
             'build/firefox.xpi': ['firefox/**'],
             'build/chrome.zip': ['chrome/**']
