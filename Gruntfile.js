@@ -4,13 +4,19 @@ module.exports = function(grunt) {
         symlink: {
             firefox: {
                 target: path.resolve('chrome/common'),
-                link: path.resolve('firefox/resources/bugsnap/data/common')
+                link: path.resolve('firefox/data')
             }
         },
         clean: ['firefox/resources/bugsnap/data/common'],
         zip: {
             'build/firefox.xpi': ['firefox/**'],
             'build/chrome.zip': ['chrome/**']
+        },
+        unzip: {
+            firefox: {
+                src: 'firefox-sdk.zip',
+                dest: 'firefox-sdk'
+            }
         }
     });
 
