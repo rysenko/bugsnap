@@ -122,7 +122,7 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
                         }
                     } else {
                         if(!xhr.statusText || xhr.statusText == 'timeout' || xhr.statusText == "Not Found") {
-                            deferred.reject('Unable to connect to YouTrack at specified URL.');
+                            deferred.reject('Unable to connect to Jira at specified URL.');
                         } else {
                             deferred.reject('Unable to login using supplied credentials.');
                         }
