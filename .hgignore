@@ -2,6 +2,6 @@ syntax: glob
 .idea
 node_modules/*
 build/*
-firefox/data/*
+firefox/data/common/*
 addon-sdk-1.14/*
 syntax: regexp
