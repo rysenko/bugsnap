@@ -7,13 +7,16 @@ module.exports = function(grunt) {
                 link: path.resolve('firefox/data')
             }
         },
-        clean: ['firefox/data', 'firefox-sdk'],
+        clean: ['firefox/data', 'addon-sdk-1.14'],
         zip: {
             'build/firefox.xpi': ['firefox/**'],
             'build/chrome.zip': ['chrome/**']
         },
         unzip: {
-            firefox: 'addon-sdk-1.14.zip'
+            firefox: {
+                src: 'addon-sdk-1.14.zip',
+                dst: ''
+            }
         }
     });
 
