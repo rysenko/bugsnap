@@ -9,16 +9,16 @@ var bug = widgets.Widget({
     content: '<img src="' + data.url("img/16.png") + '">',
     onClick: function() {
         var imgData = tabs.activeTab.getThumbnail();
-        //localStorage.setItem("screenshot", imgData);
+        var content = "self.port.on('image', function (data) {" +
+            "  localStorage.setItem('screenshot', data);" +
+            "});";
         tabs.open({
-            url: data.url('editor.html'),
-            onOpen: function onOpen (tab) {
+            url: data.url("editor.html"),
+            onReady: function (tab) {
                 var worker = tab.attach({
-                    contentScript: "self.port.on('alert', function(message) {" +
-                        "  localStorage.setItem('screenshot' , message);" +
-                        "})"
+                    contentScript: content
                 });
-                worker.port.emit("alert", imgData);
+                worker.port.emit("image", imgData);
             }
         });
     }

@@ -22,6 +22,9 @@ define([], function () {
                 return this.Settings().Key;
             };
         }
+        Communicator.prototype.getFields = function () {
+            return {};
+        };
         Communicator.prototype.saveFields = function (fields) {
             for (var i in fields) {
                 fields[i].Save();
