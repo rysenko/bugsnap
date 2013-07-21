@@ -8,6 +8,18 @@ var bug = widgets.Widget({
     label: "BugSnap",
     content: '<img src="' + data.url("img/16.png") + '">',
     onClick: function() {
-        tabs.open(data.url('editor.html'));
+        var imgData = tabs.activeTab.getThumbnail();
+        //localStorage.setItem("screenshot", imgData);
+        tabs.open({
+            url: data.url('editor.html'),
+            onOpen: function onOpen (tab) {
+                var worker = tab.attach({
+                    contentScript: "self.port.on('alert', function(message) {" +
+                        "  localStorage.setItem('screenshot' , message);" +
+                        "})"
+                });
+                worker.port.emit("alert", imgData);
+            }
+        });
     }
 });
