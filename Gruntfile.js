@@ -11,12 +11,6 @@ module.exports = function(grunt) {
         zip: {
             'build/firefox.xpi': ['firefox/**'],
             'build/chrome.zip': ['chrome/**']
-        },
-        unzip: {
-            firefox: {
-                src: 'addon-sdk-1.14.zip',
-                dst: ''
-            }
         }
     });
 
@@ -25,6 +19,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-zip');
 
     grunt.registerTask('default', ['zip']);
-    grunt.registerTask('install', ['unzip', 'symlink']);
+    grunt.registerTask('install', ['symlink']);
     grunt.registerTask('uninstall', ['clean']);
 };
