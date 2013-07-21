@@ -2,6 +2,7 @@ syntax: glob
 .idea
 node_modules/*
 build/*
-firefox/data/common/*
+firefox/data/common
 addon-sdk-1.14/*
+.DS_Store
 syntax: regexp
