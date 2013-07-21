@@ -5,6 +5,7 @@
         "grunt": "*",
         "grunt-contrib-symlink": "*",
         "grunt-contrib-clean": "*",
-        "grunt-zip": "*"
+        "grunt-zip": "*",
+        "grunt-shell": "*"
     }
 }
