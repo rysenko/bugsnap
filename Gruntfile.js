@@ -7,7 +7,7 @@ module.exports = function(grunt) {
                 link: path.resolve('firefox/data')
             }
         },
-        clean: ['firefox/resources/bugsnap/data/common'],
+        clean: ['firefox/data', 'firefox-sdk'],
         zip: {
             'build/firefox.xpi': ['firefox/**'],
             'build/chrome.zip': ['chrome/**']
@@ -25,6 +25,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-zip');
 
     grunt.registerTask('default', ['zip']);
-    grunt.registerTask('install', ['symlink']);
+    grunt.registerTask('install', ['unzip', 'symlink']);
     grunt.registerTask('uninstall', ['clean']);
 };
