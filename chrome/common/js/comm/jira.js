@@ -3,13 +3,6 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
         JiraCommunicator.prototype = Object.create(_super.prototype);
         function JiraCommunicator(settings) {
             _super.call(this, settings);
-            this.Url = function () {
-                var url = this.Settings().Url;
-                if (url.lastIndexOf('/') != url.length - 1) {
-                    url += '/';
-                }
-                return url;
-            };
             this.AuthToken = function () {
                 return window.btoa(this.Login() + ':' + this.Password());
             };

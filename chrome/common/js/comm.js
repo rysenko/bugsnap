@@ -1,5 +1,5 @@
-define(['comm/communicator', 'comm/gemini', 'comm/youtrack', 'comm/rally', 'comm/jira'],
-    function (Communicator, GeminiCommunicator, YouTrackCommunicator, RallyCommunicator, JiraCommunicator) {
+define(['comm/communicator', 'comm/gemini', 'comm/youtrack', 'comm/rally', 'comm/jira', 'comm/redmine'],
+    function (Communicator, GeminiCommunicator, YouTrackCommunicator, RallyCommunicator, JiraCommunicator, RedmineCommunicator) {
     var CommunicatorLoader = function (communicatorType) {
         var type = communicatorType || localStorage['CommunicatorType'];
         var result = Communicator; // Default one
@@ -15,6 +15,9 @@ define(['comm/communicator', 'comm/gemini', 'comm/youtrack', 'comm/rally', 'comm
                 break;
             case 'Rally':
                 result = RallyCommunicator;
+                break;
+            case 'Redmine':
+                result = RedmineCommunicator;
                 break;
         }
         return result;
