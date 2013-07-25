@@ -57,11 +57,10 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
             return this.ajax(this.Url() + "rest/issue/" + issueId + "/attachment", data);
         };
         RedmineCommunicator.prototype.comment = function (issueId, comment) {
-            var data = {
-                command: 'comment',
-                comment: comment
-            };
-            return this.ajax(this.Url() + "rest/issue/" + issueId + "/execute", data);
+            var data = { issue: {
+                notes: comment
+            }};
+            return this.ajax(this.Url() + 'issues/' + issueId + '.json', data, 'PUT');
         };
         RedmineCommunicator.prototype.getRedirectUrl = function (issueId, fields) {
             _super.prototype.getRedirectUrl.call(this, issueId, fields);
@@ -70,8 +69,7 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
         RedmineCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
-            xhr.open((method || 'POST'), url, true);
-            xhr.setRequestHeader('Authorization', 'Basic ' + this.AuthToken());
+            xhr.open((method || 'POST'), url, true, this.Login(), this.Password());
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.onreadystatechange = function() {

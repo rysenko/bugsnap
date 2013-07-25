@@ -97,7 +97,7 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
         JiraCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
-            xhr.open((method || 'POST'), url, true, this.Login(), this.Password());
+            xhr.open((method || 'POST'), url, true);
             xhr.setRequestHeader('Authorization', 'Basic ' + this.AuthToken());
             if (data instanceof FormData) {
                 xhr.setRequestHeader('X-Atlassian-Token', 'nocheck');
