@@ -48,6 +48,10 @@ input[type=password] {
     margin-left : 10px;
 }
 
+.note {
+    font-style: italic;
+}
+
 .ui-widget input {
     border: 1px solid gray;
     font-size: 1.1em;
@@ -67,6 +71,9 @@ input[type=password] {
                 <option value="Redmine">Redmine 2.X</option>
                 <option value="YouTrack">YouTrack 4.X</option>
             </select>
+        </div>
+        <div class="note" data-bind="visible: Type() == 'Redmine'">
+            You must check "Enable REST web service" in Administration - Settings - Authenication
         </div>
         <div data-bind="visible: UrlVisible">
             <label class="label" for="Url">Tracker URL:</label>
