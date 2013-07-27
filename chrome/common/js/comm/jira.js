@@ -108,6 +108,9 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200 || xhr.status == 201) {
+                        if (xhr.getResponseHeader('X-Seraph-LoginReason').indexOf('FAILED') != -1) {
+                            deferred.reject('Unable to login using supplied credentials.');
+                        }
                         try {
                             deferred.resolve(JSON.parse(xhr.responseText));
                         } catch (e) {
