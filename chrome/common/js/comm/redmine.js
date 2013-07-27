@@ -34,15 +34,13 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
             return fields;
         };
         RedmineCommunicator.prototype.create = function (title, description, fields) {
-            var data = {
-                project: fields.project.Value(),
-                summary: title,
+            var data = {issue: {
+                project_id: fields.project.Value(),
+                subject: title,
                 description: description
-            };
-            return this.ajax(this.Url() + "rest/issue", data, 'PUT').then(function (location) {
-                var slashPos = location.lastIndexOf('/');
-                var id = location.substring(slashPos + 1);
-                return {Id: id};
+            }};
+            return this.ajax(this.Url() + 'issues.json', data).then(function (data) {
+                return {Id: data.issue.id};
             });
         };
         RedmineCommunicator.prototype.attach = function (issueId, fileContent) {
@@ -52,9 +50,19 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
                 arr.push(binary.charCodeAt(i));
             }
             var fileBlob = new Blob([new Uint8Array(arr)], {type: 'image/png'});
-            var data = new FormData();
-            data.append('screenshot', fileBlob, 'screenshot.png');
-            return this.ajax(this.Url() + "rest/issue/" + issueId + "/attachment", data);
+            var self = this;
+            return this.ajax(this.Url() + 'uploads.json', fileBlob).then(function (data) {
+                var uploadsData = {issue: {
+                    uploads: [
+                        {
+                            token: data.upload.token,
+                            filename: 'screenshot.png',
+                            content_type: 'image/png'
+                        }
+                    ]
+                }};
+                return self.ajax(self.Url() + 'issues/' + issueId + '.json', uploadsData, 'PUT');
+            });
         };
         RedmineCommunicator.prototype.comment = function (issueId, comment) {
             var data = { issue: {
@@ -64,13 +72,18 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
         };
         RedmineCommunicator.prototype.getRedirectUrl = function (issueId, fields) {
             _super.prototype.getRedirectUrl.call(this, issueId, fields);
-            return this.Url() + 'issue/' + issueId;
+            return this.Url() + 'issues/' + issueId;
         };
         RedmineCommunicator.prototype.ajax = function(url, data, method) {
             var deferred = $.Deferred();
             var xhr = new XMLHttpRequest();
             xhr.open((method || 'POST'), url, true, this.Login(), this.Password());
-            xhr.setRequestHeader('Content-Type', 'application/json');
+            if (data instanceof Blob) {
+                xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
+            } else {
+                xhr.setRequestHeader('Content-Type', 'application/json');
+            }
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
@@ -89,7 +102,7 @@ define(['lib/jquery', 'comm/communicator', 'comm/fieldInfo'], function ($, Commu
                     }
                 }
             };
-            if (data instanceof FormData) {
+            if (data instanceof Blob) {
                 xhr.send(data);
             } else {
                 xhr.send(JSON.stringify(data));
