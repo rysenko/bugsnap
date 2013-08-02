@@ -1,0 +1,5 @@
+addon-sdk-1.14
+node_modules
+.idea
+build
+firefox/data
