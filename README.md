@@ -14,12 +14,14 @@ FireFox version will be available later.
 
 # Development
 
-Packaging extensions
+Setting environment and packaging:
 1. Install nodejs
 2. Install grunt (sudo npm install -g grunt-cli)
 3. Navigate to bugsnap root folder and install modules (npm install)
 4. Setup the environment (grunt install)
 5. Package extensions (grunt)
+
+FireFox version can be tested with "grunt run" command.
 
 Packaged extensions will appear in build folder.
 
