@@ -1,5 +1,6 @@
 # Introduction
 This is Chrome/FireFox extension that allows you to take page screenshots, annotate them and post directly to your bug tracker.
+
 Supported trackers:
 * Gemini
 * Jira
@@ -8,6 +9,7 @@ Supported trackers:
 * YouTrack
 
 [Get it for Chrome](https://chrome.google.com/webstore/detail/bugsnap/mfodpdfcbkmkdebahlkghnegochneenh)
+
 FireFox version will be available later.
 
 # Development
