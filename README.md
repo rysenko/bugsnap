@@ -2,6 +2,7 @@
 This is Chrome/FireFox extension that allows you to take page screenshots, annotate them and post directly to your bug tracker.
 
 Supported trackers:
+
 * Gemini
 * Jira
 * Rally
@@ -15,6 +16,7 @@ FireFox version will be available later.
 # Development
 
 Setting environment and packaging:
+
 1. Install nodejs
 2. Install grunt (sudo npm install -g grunt-cli)
 3. Navigate to bugsnap root folder and install modules (npm install)
