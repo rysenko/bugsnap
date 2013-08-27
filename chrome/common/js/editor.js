@@ -332,9 +332,22 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
         EditorViewModel.prototype.showOptionsPage = function () {
             window.open('options.html');
         };
-
         EditorViewModel.prototype.undo = function () {
             this.History.revert();
+        };
+        EditorViewModel.prototype.imgur = function () {
+            $.ajax({
+                url: 'https://api.imgur.com/3/image',
+                headers: {
+                    'Authorization': 'Client-ID 8c3b028fe76db03'
+                },
+                type: 'POST',
+                data: {
+                    'image': this.getImageData()
+                }
+            }).done(function (response) {
+                location.href = response.data.link;
+            });
         };
         return EditorViewModel;
     })();
