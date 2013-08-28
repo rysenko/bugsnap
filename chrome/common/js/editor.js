@@ -336,6 +336,7 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
             this.History.revert();
         };
         EditorViewModel.prototype.imgur = function () {
+            $("#canvas").showLoading();
             $.ajax({
                 url: 'https://api.imgur.com/3/image',
                 headers: {
