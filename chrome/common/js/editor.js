@@ -141,6 +141,8 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
             if (activeInstrument == 'Text' && activeObject && !activeObject.attr('text')) {
                 activeObject.remove();
                 this.History.drop();
+            } else if (activeInstrument == 'Text' && activeObject) {
+                $(activeObject[0]).css({display: ''});
             }
         };
         EditorViewModel.prototype.getOffset = function (event) {
@@ -188,7 +190,8 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
                 activeObject.attr('text-anchor', 'start');
                 $(activeObject[0]).css({
                     'font-size': '16px',
-                    'font-family': 'Arial'});
+                    'font-family': 'Arial',
+                    display: 'none'});
                 this.ActiveObject(activeObject);
                 this.ActiveText('');
                 $('#texted').show().focus().css({
