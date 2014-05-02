@@ -10,8 +10,6 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
     'shadow', 'details'],
     function ($, ko, kov, Raphael, canvg, HistoryManager, Shadow, DetailsViewModel) {
 
-    var isFF = window.navigator.userAgent.indexOf('Firefox') != -1;
-
     var EditorViewModel = (function () {
         function EditorViewModel(options) {
             this.Parent = options.Parent;
@@ -41,7 +39,7 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
                 activeText.attr('text', value);
                 for (var i = 0; i < activeText[0].childNodes.length; i++) {
                     var node = activeText[0].childNodes[i];
-                    var lineHeight = 19 + (isFF ? 1 : 0);
+                    var lineHeight = 19;
                     var emptyPrevsCount = 0;
                     $(node).prevAll().each(function(index) {
                         if($(this).text()) {
@@ -195,8 +193,8 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
                 this.ActiveObject(activeObject);
                 this.ActiveText('');
                 $('#texted').show().focus().css({
-                    left: event.pageX - (isFF ? 1 : 0),
-                    top: event.pageY - 15 - (isFF ? 1 : 0),
+                    left: event.pageX,
+                    top: event.pageY - 14,
                     'font-size': '16px',
                     'font-family': 'Arial',
                     color: this.ActiveColor()

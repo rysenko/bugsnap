@@ -1,5 +1,5 @@
 # Introduction
-This is Chrome/FireFox extension that allows you to take page screenshots, annotate them and post directly to your bug tracker.
+This is Chrome extension that allows you to take page screenshots, annotate them and post directly to your bug tracker.
 
 Supported trackers:
 
@@ -22,8 +22,6 @@ Setting environment and packaging:
 3. Navigate to bugsnap root folder and install modules (npm install)
 4. Setup the environment (grunt install)
 5. Package extensions (grunt)
-
-FireFox version can be tested with "grunt run" command.
 
 Packaged extensions will appear in build folder.
 
