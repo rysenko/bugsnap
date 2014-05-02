@@ -16,7 +16,7 @@
         "default_icon": "common/img/16.png"
     },
     "optional_permissions": [ "clipboardRead" ],
-    "permissions": ["tabs", "activeTab", "notifications"],
+    "permissions": ["tabs", "http://*/*", "https://*/*", "activeTab", "notifications"],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "commands": {
         "_execute_browser_action": {
