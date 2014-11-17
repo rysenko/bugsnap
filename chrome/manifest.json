@@ -6,7 +6,7 @@
     "options_page": "common/options.html",
     "name": "BugSnap",
     "description": "Shoot your bug and send photo to your tracker.",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "icons": {
         "16": "common/img/16.png",
         "48": "common/img/48.png",

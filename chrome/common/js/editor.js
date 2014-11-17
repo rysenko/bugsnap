@@ -90,9 +90,8 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
             var width = window.innerWidth, height = window.innerHeight;
             var imageObj = new Image();
             imageObj.onload = function() {
-                var pixelRatio =  window.devicePixelRatio || 1;
-                width = this.naturalWidth / pixelRatio;
-                height = this.naturalHeight / pixelRatio;
+                width = this.naturalWidth;
+                height = this.naturalHeight;
                 self.Paper = new Raphael(document.getElementById('editor'), width, height);
                 self.setViewBox(0, 0, width, height);
                 self.FullBox({width: width, height: height});
@@ -295,9 +294,8 @@ define(['lib/jquery', 'lib/knockout', 'lib/knockout.validation', 'lib/raphael', 
             var imageObj = new Image();
             var self = this;
             imageObj.onload = function() {
-                var pixelRatio =  window.devicePixelRatio || 1;
-                sourceCanvas.getContext('2d').drawImage(this, x * pixelRatio, y * pixelRatio, width * pixelRatio, height * pixelRatio, 0, 0, width, height);
-                outputCanvas.getContext('2d').drawImage(this, x * pixelRatio, y * pixelRatio, width * pixelRatio, height * pixelRatio, 0, 0, width, height);
+                sourceCanvas.getContext('2d').drawImage(this, x, y, width, height, 0, 0, width, height);
+                outputCanvas.getContext('2d').drawImage(this, x, y, width, height, 0, 0, width, height);
                 self.ViewBox({x: x, y: y, width: width, height: height});
                 self.setCenter();
                 deferred.resolve();
